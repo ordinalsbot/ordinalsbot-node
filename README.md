@@ -28,8 +28,18 @@ ordinalsbot.setCredentials('MY_API_KEY', 'dev'); //if no parameter given, defaul
 
 try {
   const order = await ordinalsbot.createOrder({
-    // TODO
-  });
+    files: [
+        {
+          size: 10,
+          type: "plain/text",
+          name: "my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+        }
+    ],
+    lowPostage: true,
+    receiveAddress: "",
+    fee: 11
+});
 }
 catch (error) {
   console.error(`${error.status} | ${error.message}`);
@@ -44,7 +54,17 @@ callback:
 ```js
 // Create a new order
 ordinalsbot.createOrder({
-  // TODO
+    files: [
+        {
+          size: 10,
+          type: "plain/text",
+          name: "my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+        }
+    ],
+    lowPostage: true,
+    receiveAddress: "",
+    fee: 11
 }).then(charge => {
   console.log(charge);
 })
