@@ -1,0 +1,31 @@
+{
+  "name": "ordinalsbot-node",
+  "version": "0.0.1",
+  "description": "Node.js library for OrdinalsBot API",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "pnpm build && mocha",
+    "build": "rm -rf dist/ && tsc",
+    "prepack": "pnpm build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ordinalsbot/ordinalsbot-node.git"
+  },
+  "author": "OrdinalsBot",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ordinalsbot/ordinalsbot-node/issues"
+  },
+  "homepage": "https://github.com/ordinalsbot/ordinalsbot-node#readme",
+  "dependencies": {
+    "axios": "^1.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.3",
+    "chai": "^4.3.6",
+    "mocha": "^9.2.2",
+    "pnpm": "^8.6.12",
+    "typescript": "^4.9.5"
+  }
+}
