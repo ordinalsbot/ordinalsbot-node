@@ -8,7 +8,7 @@ applications written in JavaScript.
 
 ## Documentation
 
-You can find examples [here](examples/example.js). For more information refer to our [API docs](https://docs.ordinalsbot.com).
+You can find examples [here](examples/example.ts). For more information refer to our [API docs](https://docs.ordinalsbot.com).
 
 ## Installation
 
@@ -42,9 +42,8 @@ try {
     lowPostage: true,
     receiveAddress: "",
     fee: 11
-});
-}
-catch (error) {
+  });
+} catch (error) {
   console.error(`${error.status} | ${error.message}`);
 }
 ```
@@ -68,10 +67,9 @@ ordinalsbot.createOrder({
     lowPostage: true,
     receiveAddress: "",
     fee: 11
-}).then(charge => {
-  console.log(charge);
-})
-.catch(error => {
+}).then(order => {
+  console.log(order);
+}).catch(error => {
   console.error(`${error.status} | ${error.message}`);
 });
 ```
