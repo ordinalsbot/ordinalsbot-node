@@ -68,8 +68,8 @@ ordinalsbot.createOrder({
     lowPostage: true,
     receiveAddress: "",
     fee: 11
-}).then(charge => {
-  console.log(charge);
+}).then(order => {
+  console.log(order);
 })
 .catch(error => {
   console.error(`${error.status} | ${error.message}`);
