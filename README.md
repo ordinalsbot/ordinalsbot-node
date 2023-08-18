@@ -24,7 +24,10 @@ The package needs to be configured with your account's API key which you can get
 
 ``` js
 const ordinalsbot = require('ordinalsbot');
-ordinalsbot.setCredentials('MY_API_KEY', 'dev'); //if no parameter given, default environment is 'live'
+
+// if no parameter given, default environment is 'live'
+// API_KEY only required for creating collection orders
+ordinalsbot.setCredentials('MY_API_KEY', 'dev'); 
 
 try {
   const order = await ordinalsbot.createOrder({
