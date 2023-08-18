@@ -1,6 +1,7 @@
 # OrdinalsBot Node.js Library
 
 [![Version](https://img.shields.io/npm/v/ordinalsbot.svg)](https://www.npmjs.org/package/ordinalsbot)
+[![](https://badgen.net/npm/dt/ordinalsbot)](https://www.npmjs.com/package/ordinalsbot)
 [![Try ordinalsbot on RunKit](https://badge.runkitcdn.com/ordinalsbot.svg)](https://npm.runkit.com/ordinalsbot)
 
 The OrdinalsBot Node library provides convenient access to the OrdinalsBot API from
