@@ -8,15 +8,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - run: npm i
-      - run: npm test
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm i
+
+    - name: Test
+      run: npm test
 
   publish-npm:
     needs: build
