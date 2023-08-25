@@ -55,6 +55,10 @@ Every method returns a chainable promise which can be used instead of a regular
 callback:
 
 ```js
+// You can also use import
+import ordinalsbot from 'ordinalsbot'
+ordinalsbot.setCredentials('', 'dev');
+
 // Create a new order
 ordinalsbot.createOrder({
     files: [
