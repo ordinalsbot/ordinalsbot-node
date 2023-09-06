@@ -40,7 +40,8 @@ describe('order', function () {
           ],
           lowPostage: true,
           receiveAddress: "",
-          fee: 10
+          fee: 10,
+          timeout: 1440,
         });
       } catch (error) {
         err = error;

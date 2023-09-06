@@ -39,6 +39,12 @@ export interface OrdinalsBotOrderRequest {
   */
   additionalFee?: number,
 
+  /* Order timeout in minutes. 
+    Generated payment invoice will be valid for this duration only. Payments that are sent after this will not be processed.
+    default=4320 (3 days)
+  */
+  timeout?: number,
+
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string,
 }
