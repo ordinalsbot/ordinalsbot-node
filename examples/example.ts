@@ -82,3 +82,24 @@ ordinalsbot
     console.error(`${error.status} | ${error.message}`);
   }
 })();
+
+/**
+ *
+ * Creating a text order
+ */
+
+const textOrder = {
+    texts: ["This is an example text inscription."],
+    lowPostage: true,
+    receiveAddress: "",
+    fee: 11
+}
+
+ordinalsbot
+    .createTextOrder(textOrder)
+    .then((response) => {
+        console.log(response);
+    })
+    .catch((error) => {
+        console.error(`${error.status} | ${error.message}`);
+    });
