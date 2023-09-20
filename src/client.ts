@@ -33,7 +33,7 @@ export class OrdinalsBotClient {
       const client = axios.create({
         baseURL:
           environment === "live"
-            ? `https://api2.ordinalsbot.com`
+            ? `https://api.ordinalsbot.com`
             : `https://signet.ordinalsbot.com/api`,
         timeout: 30000,
         headers: {
