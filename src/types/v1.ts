@@ -1,3 +1,23 @@
+export interface InscriptionTransaction {
+  /** Transaction ID of the commit transaction */
+  commit: string;
+
+  /** Transaction ID of the reveal transaction */
+  reveal: string;
+
+  /** Inscription ID */
+  inscription: string;
+
+  /** Fees paid for the inscription in satoshis */
+  fees: number;
+
+  /** Satpoint of the inscription */
+  satpoint?: string;
+
+  /** ISO timestamp of inscription */
+  updatedAt?: string;
+}
+
 export interface OrdinalsBotFile {
   /** Size of the file to be inscribed in bytes */
   size: number;
@@ -13,6 +33,9 @@ export interface OrdinalsBotFile {
 
   /** publicly accessible file URL */
   url?: string;
+
+  /** Inscription transaction details */
+  tx?: InscriptionTransaction;
 };
 
 export interface OrdinalsBotOrderRequest {
