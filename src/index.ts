@@ -1,9 +1,10 @@
-import { OrdinalsBotClient } from "./client";
+import { OrdinalsBotClient } from "./ordinalsbot";
 import { OrdinalsBotEnv, v1 } from "./types";
 
-export { OrdinalsBotClient } from "./client";
+export { OrdinalsBotClient } from "./ordinalsbot";
 export { OrdinalsBotError } from "./OrdinalsBotError";
 export * from "./types";
+export { MarketPlace } from "./marketplace";
 
 let instance!: OrdinalsBotClient;
 
@@ -12,9 +13,7 @@ export function setCredentials(
   environment: OrdinalsBotEnv = "live"
 ): void {
   if (instance !== undefined) {
-    console.error(
-      "ordinalsbot.setCredentials was called multiple times",
-    );
+    console.error("ordinalsbot.setCredentials was called multiple times");
     return;
   }
   instance = new OrdinalsBotClient(key, environment);

@@ -37,7 +37,7 @@ export class OrdinalsBotClient {
             : `https://signet.ordinalsbot.com/api`,
         timeout: 30000,
         headers: {
-          'x-api-key': this.api_key,
+          "x-api-key": this.api_key,
           Connection: "Keep-Alive",
           "Content-Type": "application/json",
           "Keep-Alive": "timeout=10",
@@ -70,7 +70,9 @@ export class OrdinalsBotClient {
     this.instanceV1 = createInstance();
   }
 
-  async getPrice(priceRequest: OrdinalsBotPriceRequest): Promise<OrdinalsBotPriceResponse> {
+  async getPrice(
+    priceRequest: OrdinalsBotPriceRequest
+  ): Promise<OrdinalsBotPriceResponse> {
     return this.instanceV1.get(`/order`, {
       params: priceRequest,
     });
@@ -86,15 +88,21 @@ export class OrdinalsBotClient {
     });
   }
 
-  async createCollection(collection: OrdinalsBotCollectionCreateRequest): Promise<OrdinalsBotCollectionCreateResponse> {
+  async createCollection(
+    collection: OrdinalsBotCollectionCreateRequest
+  ): Promise<OrdinalsBotCollectionCreateResponse> {
     return this.instanceV1.post(`/collection-create`, collection);
   }
 
-  async createCollectionOrder(collectionOrder: OrdinalsBotCollectionOrderRequest): Promise<OrdinalsBotOrder> {
+  async createCollectionOrder(
+    collectionOrder: OrdinalsBotCollectionOrderRequest
+  ): Promise<OrdinalsBotOrder> {
     return this.instanceV1.post(`/collection-order`, collectionOrder);
   }
 
-  async createTextOrder(order: OrdinalsBotTextOrderRequest): Promise<OrdinalsBotOrder> {
+  async createTextOrder(
+    order: OrdinalsBotTextOrderRequest
+  ): Promise<OrdinalsBotOrder> {
     return this.instanceV1.post(`/text-order`, order);
   }
 
@@ -102,14 +110,17 @@ export class OrdinalsBotClient {
     return this.instanceV1.get(`/inventory`);
   }
 
-  async setReferralCode(referral: OrdinalsBotReferralRequest): Promise<OrdinalsBotReferralSetResponse> {
+  async setReferralCode(
+    referral: OrdinalsBotReferralRequest
+  ): Promise<OrdinalsBotReferralSetResponse> {
     return this.instanceV1.post(`/referrals`, referral);
   }
 
-  async getReferralStatus(referral: OrdinalsBotReferralRequest): Promise<OrdinalsBotReferralStatusResponse> {
+  async getReferralStatus(
+    referral: OrdinalsBotReferralRequest
+  ): Promise<OrdinalsBotReferralStatusResponse> {
     return this.instanceV1.get(`/referrals`, {
       params: referral,
     });
   }
-
 }
