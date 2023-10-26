@@ -1,8 +1,18 @@
 import axios, { AxiosInstance } from 'axios';
 import { OrdinalsBotError } from './OrdinalsBotError';
 import {
+  MarketplaceCheckPaddingOutputRequest,
+  MarketplaceCheckPaddingOutputResponse,
+  MarketplaceCreateBuyOfferRequest,
+  MarketplaceCreateBuyOfferResponse,
+  MarketplaceCreatePaddingOutputsRequest,
+  MarketplaceCreatePaddingOutputsResponse,
   MarketplaceCreateRequest,
   MarketplaceCreateResponse,
+  MarketplaceListOridnalForSaleRequest,
+  MarketplaceListOridnalForSaleResponse,
+  MarketplaceSubmitBuyOfferRequest,
+  MarketplaceSubmitBuyOfferResponse,
 } from './types/markeplace_types';
 
 export class MarketPlaceClient {
@@ -14,7 +24,7 @@ export class MarketPlaceClient {
 
     const createInstance = (): AxiosInstance => {
       const client = axios.create({
-        baseURL: 'https://signet.ordinalsbot.com/api',
+        baseURL: 'https://api.ordinalsbot.com/marketplace/',
         headers: {
           'x-api-key': this.api_key,
           Connection: 'Keep-Alive',
@@ -23,11 +33,9 @@ export class MarketPlaceClient {
       });
 
       client.interceptors.response.use(
-        // normalize responses
         ({ data }) => ('data' in data ? data.data : data),
         (err) => {
           if (axios.isAxiosError(err)) {
-            // added to keep compatibility with previous versions
             throw new OrdinalsBotError(
               err.message,
               err.response?.statusText,
@@ -50,8 +58,48 @@ export class MarketPlaceClient {
   async createMarketPlace(
     createMarketplaceRequest: MarketplaceCreateRequest
   ): Promise<MarketplaceCreateResponse> {
-    return this.instanceV1.post(`/marketplace/create-marketplace`, {
+    return this.instanceV1.post(`/create-marketplace`, {
       params: createMarketplaceRequest,
+    });
+  }
+
+  async listSaleForOrdinal(
+    listSaleForOrdinalRequest: MarketplaceListOridnalForSaleRequest
+  ): Promise<MarketplaceListOridnalForSaleResponse> {
+    return this.instanceV1.post(`/create-listing`, {
+      params: listSaleForOrdinalRequest,
+    });
+  }
+
+  async createBuyOffer(
+    createBuyOfferRequest: MarketplaceCreateBuyOfferRequest
+  ): Promise<MarketplaceCreateBuyOfferResponse> {
+    return this.instanceV1.post(`/create-offer`, {
+      params: createBuyOfferRequest,
+    });
+  }
+
+  async submitBuyOffer(
+    submitBuyOfferRequest: MarketplaceSubmitBuyOfferRequest
+  ): Promise<MarketplaceSubmitBuyOfferResponse> {
+    return this.instanceV1.post(`/submit-offer`, {
+      params: submitBuyOfferRequest,
+    });
+  }
+
+  async checkPaddingOutput(
+    checkPaddingOutputRequest: MarketplaceCheckPaddingOutputRequest
+  ): Promise<MarketplaceCheckPaddingOutputResponse> {
+    return this.instanceV1.post(`/confirm-padding-outputs`, {
+      params: checkPaddingOutputRequest,
+    });
+  }
+
+  async createPaddingOutput(
+    createPaddingOutputRequest: MarketplaceCreatePaddingOutputsRequest
+  ): Promise<MarketplaceCreatePaddingOutputsResponse> {
+    return this.instanceV1.post(`/setup-padding-outputs`, {
+      params: createPaddingOutputRequest,
     });
   }
 }
