@@ -9,6 +9,7 @@ import {
   MarketplaceCreatePaddingOutputsResponse,
   MarketplaceCreateRequest,
   MarketplaceCreateResponse,
+  MarketplaceGetListingResponse,
   MarketplaceListOridnalForSaleRequest,
   MarketplaceListOridnalForSaleResponse,
   MarketplaceSubmitBuyOfferRequest,
@@ -101,5 +102,9 @@ export class MarketPlaceClient {
     return this.instanceV1.post(`/setup-padding-outputs`, {
       params: createPaddingOutputRequest,
     });
+  }
+
+  async getListing(): Promise<MarketplaceGetListingResponse> {
+    return this.instanceV1.get(`/get-listing`);
   }
 }

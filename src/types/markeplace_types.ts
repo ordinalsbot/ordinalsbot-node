@@ -116,8 +116,11 @@ export interface MarketplaceCreatePaddingOutputsRequest {
   feeRateTier?: ReeRateTier;
 }
 
-
 export interface MarketplaceCreatePaddingOutputsResponse {
   /** base64 transaction to be signed */
   psbt: string;
+}
+
+export interface MarketplaceGetListingResponse {
+  ordinals: Array<SellerOrdinal>;
 }

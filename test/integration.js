@@ -7,46 +7,46 @@ ordinalsbot.setCredentials('', 'dev');
 describe('order', function () {
   describe('get order', function () {
     it('should return a order object', async () => {
-
-      let order, err
+      let order, err;
 
       try {
-        order = await ordinalsbot.getOrder('616162ac-6392-4a22-8e7d-3a87cf0c9c28');
+        order = await ordinalsbot.getOrder(
+          '616162ac-6392-4a22-8e7d-3a87cf0c9c28'
+        );
       } catch (error) {
         err = error;
-      }
-      finally {
+      } finally {
         expect(err).to.be.an('undefined');
-        assert.deepEqual(order.charge.id, '616162ac-6392-4a22-8e7d-3a87cf0c9c28');
+        assert.deepEqual(
+          order.charge.id,
+          '616162ac-6392-4a22-8e7d-3a87cf0c9c28'
+        );
       }
-
     });
   });
 
   describe('create order', function () {
     it('should return a order object', async () => {
-
-      let order, err
+      let order, err;
 
       try {
         order = await ordinalsbot.createOrder({
           files: [
-              {
-                size: 10,
-                type: "plain/text",
-                name: "test-my-text-inscription-file.txt",
-                dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
-              }
+            {
+              size: 10,
+              type: 'plain/text',
+              name: 'test-my-text-inscription-file.txt',
+              dataURL: 'data:plain/text;base64,dGVzdCBvcmRlcg==',
+            },
           ],
           lowPostage: true,
-          receiveAddress: "",
+          receiveAddress: '',
           fee: 10,
           timeout: 1440,
         });
       } catch (error) {
         err = error;
-      }
-      finally {
+      } finally {
         expect(err).to.be.an('undefined');
         assert.deepEqual(order.status, 'ok');
       }
@@ -55,17 +55,15 @@ describe('order', function () {
 
   describe('create order with invalid parameters', function () {
     it('should return a (400) Bad Request', async () => {
-
-      let order, err
+      let order, err;
 
       try {
         order = await ordinalsbot.createOrder({
-          "description": "hello world"
+          description: 'hello world',
         });
       } catch (error) {
         err = error;
-      }
-      finally {
+      } finally {
         assert.deepEqual(order.status, 'error');
       }
     });
@@ -74,8 +72,7 @@ describe('order', function () {
 
 describe('client', function () {
   it('should allow multiple clients with different credentials', async () => {
-
-    let order1, order2, err
+    let order1, order2, err;
     const client1 = new ordinalsbot.OrdinalsBotClient('test1', 'dev');
     const order1Id = '616162ac-6392-4a22-8e7d-3a87cf0c9c28';
     const client2 = new ordinalsbot.OrdinalsBotClient('test2', 'dev');
@@ -86,8 +83,7 @@ describe('client', function () {
       order2 = await client2.getOrder(order2Id);
     } catch (error) {
       err = error;
-    }
-    finally {
+    } finally {
       expect(err).to.be.an('undefined');
       assert.deepEqual(order1.charge.id, order1Id);
       assert.deepEqual(order2.charge.id, order2Id);

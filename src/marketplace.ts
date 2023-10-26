@@ -1,4 +1,4 @@
-import { MarketPlaceClient } from "./marketplace_client";
+import { MarketPlaceClient } from './marketplace_client';
 import {
   MarketplaceCheckPaddingOutputRequest,
   MarketplaceCheckPaddingOutputResponse,
@@ -8,17 +8,18 @@ import {
   MarketplaceCreatePaddingOutputsResponse,
   MarketplaceCreateRequest,
   MarketplaceCreateResponse,
+  MarketplaceGetListingResponse,
   MarketplaceListOridnalForSaleRequest,
   MarketplaceListOridnalForSaleResponse,
   MarketplaceSubmitBuyOfferRequest,
   MarketplaceSubmitBuyOfferResponse,
-} from "./types/markeplace_types";
+} from './types/markeplace_types';
 
 export class MarketPlace {
   private marketplaceInstance!: MarketPlaceClient;
-  constructor(key: string = "") {
+  constructor(key: string = '') {
     if (this.marketplaceInstance !== undefined) {
-      console.error("marketplace constructore was called multiple times");
+      console.error('marketplace constructore was called multiple times');
       return;
     }
     this.marketplaceInstance = new MarketPlaceClient(key);
@@ -33,7 +34,9 @@ export class MarketPlace {
   listSaleForOrdinal(
     listSaleForOrdinalRequest: MarketplaceListOridnalForSaleRequest
   ): Promise<MarketplaceListOridnalForSaleResponse> {
-    return this.marketplaceInstance.listSaleForOrdinal(listSaleForOrdinalRequest);
+    return this.marketplaceInstance.listSaleForOrdinal(
+      listSaleForOrdinalRequest
+    );
   }
 
   createBuyOffer(
@@ -51,12 +54,20 @@ export class MarketPlace {
   checkPaddingOutput(
     checkPaddingOutputRequest: MarketplaceCheckPaddingOutputRequest
   ): Promise<MarketplaceCheckPaddingOutputResponse> {
-    return this.marketplaceInstance.checkPaddingOutput(checkPaddingOutputRequest);
+    return this.marketplaceInstance.checkPaddingOutput(
+      checkPaddingOutputRequest
+    );
   }
 
   createPaddingOutput(
     createPaddingOutputRequest: MarketplaceCreatePaddingOutputsRequest
   ): Promise<MarketplaceCreatePaddingOutputsResponse> {
-    return this.marketplaceInstance.createPaddingOutput(createPaddingOutputRequest);
+    return this.marketplaceInstance.createPaddingOutput(
+      createPaddingOutputRequest
+    );
+  }
+
+  getListing(): Promise<MarketplaceGetListingResponse> {
+    return this.marketplaceInstance.getListing();
   }
 }
