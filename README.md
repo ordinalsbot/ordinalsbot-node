@@ -78,3 +78,19 @@ ordinalsbot.createOrder({
   console.error(`${error.status} | ${error.message}`);
 });
 ```
+
+
+``` js
+import { MarketPlace } from 'ordinalsbot';
+
+const testMarketPlace = async () => {
+  try {
+    let marketplace = new MarketPlace('test');
+    const data = await marketplace.createMarketplace({ name: 'HHE' });
+    console.log(data);
+  } catch (e) {
+    console.log('Exception handled ====>', e);
+  }
+};
+
+testMarketPlace();
