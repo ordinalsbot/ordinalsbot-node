@@ -1,4 +1,4 @@
-import { MarketPlaceClient } from './marketplace_client';
+import { MarketPlaceClient } from "./marketplace_client";
 import {
   MarketplaceCheckPaddingOutputRequest,
   MarketplaceCheckPaddingOutputResponse,
@@ -13,13 +13,13 @@ import {
   MarketplaceListOridnalForSaleResponse,
   MarketplaceSubmitBuyOfferRequest,
   MarketplaceSubmitBuyOfferResponse,
-} from './types/markeplace_types';
+} from "./types/markeplace_types";
 
 export class MarketPlace {
   private marketplaceInstance!: MarketPlaceClient;
-  constructor(key: string = '') {
+  constructor(key: string = "") {
     if (this.marketplaceInstance !== undefined) {
-      console.error('marketplace constructore was called multiple times');
+      console.error("marketplace constructore was called multiple times");
       return;
     }
     this.marketplaceInstance = new MarketPlaceClient(key);

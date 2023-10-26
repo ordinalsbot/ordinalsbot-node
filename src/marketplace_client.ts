@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from 'axios';
-import { OrdinalsBotError } from './OrdinalsBotError';
+import axios, { AxiosInstance } from "axios";
+import { OrdinalsBotError } from "./OrdinalsBotError";
 import {
   MarketplaceCheckPaddingOutputRequest,
   MarketplaceCheckPaddingOutputResponse,
@@ -14,27 +14,27 @@ import {
   MarketplaceListOridnalForSaleResponse,
   MarketplaceSubmitBuyOfferRequest,
   MarketplaceSubmitBuyOfferResponse,
-} from './types/markeplace_types';
+} from "./types/markeplace_types";
 
 export class MarketPlaceClient {
   private api_key: string;
   private instanceV1: AxiosInstance;
 
-  constructor(key: string = '') {
+  constructor(key: string = "") {
     this.api_key = key;
 
     const createInstance = (): AxiosInstance => {
       const client = axios.create({
-        baseURL: 'https://api.ordinalsbot.com/marketplace/',
+        baseURL: "https://api.ordinalsbot.com/marketplace/",
         headers: {
-          'x-api-key': this.api_key,
-          Connection: 'Keep-Alive',
-          'Content-Type': 'application/json',
+          "x-api-key": this.api_key,
+          Connection: "Keep-Alive",
+          "Content-Type": "application/json",
         },
       });
 
       client.interceptors.response.use(
-        ({ data }) => ('data' in data ? data.data : data),
+        ({ data }) => ("data" in data ? data.data : data),
         (err) => {
           if (axios.isAxiosError(err)) {
             throw new OrdinalsBotError(
