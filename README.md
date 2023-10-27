@@ -23,26 +23,26 @@ Install the package with:
 
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
-``` js
+```js
 const ordinalsbot = require('ordinalsbot');
 
 // if no parameter given, default environment is 'live'
 // API_KEY only required for creating collection orders
-ordinalsbot.setCredentials('MY_API_KEY', 'dev'); 
+ordinalsbot.setCredentials('MY_API_KEY', 'dev');
 
 try {
   const order = await ordinalsbot.createOrder({
     files: [
-        {
-          size: 10,
-          type: "plain/text",
-          name: "my-text-inscription-file.txt",
-          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
-        }
+      {
+        size: 10,
+        type: 'plain/text',
+        name: 'my-text-inscription-file.txt',
+        dataURL: 'data:plain/text;base64,dGVzdCBvcmRlcg==',
+      },
     ],
     lowPostage: true,
-    receiveAddress: "",
-    fee: 11
+    receiveAddress: '',
+    fee: 11,
   });
 } catch (error) {
   console.error(`${error.status} | ${error.message}`);
@@ -56,41 +56,71 @@ callback:
 
 ```js
 // You can also use import
-import ordinalsbot from 'ordinalsbot'
+import ordinalsbot from 'ordinalsbot';
 ordinalsbot.setCredentials('', 'dev');
 
 // Create a new order
-ordinalsbot.createOrder({
+ordinalsbot
+  .createOrder({
     files: [
-        {
-          size: 10,
-          type: "plain/text",
-          name: "my-text-inscription-file.txt",
-          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
-        }
+      {
+        size: 10,
+        type: 'plain/text',
+        name: 'my-text-inscription-file.txt',
+        dataURL: 'data:plain/text;base64,dGVzdCBvcmRlcg==',
+      },
     ],
     lowPostage: true,
-    receiveAddress: "",
-    fee: 11
-}).then(order => {
-  console.log(order);
-}).catch(error => {
-  console.error(`${error.status} | ${error.message}`);
-});
+    receiveAddress: '',
+    fee: 11,
+  })
+  .then((order) => {
+    console.log(order);
+  })
+  .catch((error) => {
+    console.error(`${error.status} | ${error.message}`);
+  });
 ```
 
+### Using combined
+```js
+import { MarketPlace, OrdinalsBot } from 'ordinalsbot';
 
-``` js
-import { MarketPlace } from 'ordinalsbot';
+/** Test ordinalsbot code */
+const testOrdinalsBot = async () => {
+  let oridnalsBot = new OrdinalsBot('MY_API_KEY', 'dev');
+  try {
+    const order = await oridnalsBot.createOrder({
+      files: [
+        {
+          size: 10,
+          type: 'plain/text',
+          name: 'my-text-inscription-file.txt',
+          dataURL: 'data:plain/text;base64,dGVzdCBvcmRlcg==',
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: '',
+      fee: 11,
+    });
+    console.log('Order created', order);
+  } catch (error) {
+    console.log('Exception handled ====>', error);
+  }
+};
+testOrdinalsBot();
 
+/** Test marketplace code */
 const testMarketPlace = async () => {
   try {
-    let marketplace = new MarketPlace('test');
-    const data = await marketplace.createMarketplace({ name: 'HHE' });
-    console.log(data);
+    let marketplace = new MarketPlace('API_KEY');
+    const listing = await marketplace.getListing();
+    console.log('====>', listing);
   } catch (e) {
     console.log('Exception handled ====>', e);
   }
 };
 
 testMarketPlace();
+
+```
