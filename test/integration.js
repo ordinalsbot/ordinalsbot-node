@@ -1,8 +1,8 @@
 const { assert, expect } = require('chai');
-const ordinalsbot = require('../dist');
+const { OrdinalsBot } = require('../dist');
 
 // empty credentials should work except for collection-order
-ordinalsbot.setCredentials('', 'dev');
+const ordinalsbot = new OrdinalsBot('', 'dev');
 
 describe('order', function () {
   describe('get order', function () {
@@ -73,9 +73,9 @@ describe('order', function () {
 describe('client', function () {
   it('should allow multiple clients with different credentials', async () => {
     let order1, order2, err;
-    const client1 = new ordinalsbot.OrdinalsBotClient('test1', 'dev');
+    const client1 = new OrdinalsBot('test1', 'dev');
     const order1Id = '616162ac-6392-4a22-8e7d-3a87cf0c9c28';
-    const client2 = new ordinalsbot.OrdinalsBotClient('test2', 'dev');
+    const client2 = new OrdinalsBot('test2', 'dev');
     const order2Id = 'c5fd6dc5-9ed5-453e-96e7-b9b7ca1c6082';
 
     try {
