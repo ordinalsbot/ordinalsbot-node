@@ -4,6 +4,9 @@ const ordinalsbot = require('../dist');
 // empty credentials should work except for collection-order
 ordinalsbot.setCredentials('', 'dev');
 
+const sampleOrderId1 = '1be4ea8a-587d-43c2-85bb-d6fe6f15fcb8'
+const sampleOrderId2 = '1adb8300-c89d-4ab1-8323-7797a483747c'
+
 describe('order', function () {
   describe('get order', function () {
     it('should return a order object', async () => {
@@ -11,13 +14,13 @@ describe('order', function () {
       let order, err
 
       try {
-        order = await ordinalsbot.getOrder('616162ac-6392-4a22-8e7d-3a87cf0c9c28');
+        order = await ordinalsbot.getOrder(sampleOrderId1);
       } catch (error) {
         err = error;
       }
       finally {
         expect(err).to.be.an('undefined');
-        assert.deepEqual(order.charge.id, '616162ac-6392-4a22-8e7d-3a87cf0c9c28');
+        assert.deepEqual(order.id, sampleOrderId1);
       }
 
     });
@@ -63,10 +66,7 @@ describe('order', function () {
           "description": "hello world"
         });
       } catch (error) {
-        err = error;
-      }
-      finally {
-        assert.deepEqual(order.status, 'error');
+        assert.deepEqual(error.status, 400);
       }
     });
   });
@@ -77,20 +77,18 @@ describe('client', function () {
 
     let order1, order2, err
     const client1 = new ordinalsbot.OrdinalsBotClient('test1', 'dev');
-    const order1Id = '616162ac-6392-4a22-8e7d-3a87cf0c9c28';
     const client2 = new ordinalsbot.OrdinalsBotClient('test2', 'dev');
-    const order2Id = 'c5fd6dc5-9ed5-453e-96e7-b9b7ca1c6082';
 
     try {
-      order1 = await client1.getOrder(order1Id);
-      order2 = await client2.getOrder(order2Id);
+      order1 = await client1.getOrder(sampleOrderId1);
+      order2 = await client2.getOrder(sampleOrderId2);
     } catch (error) {
       err = error;
     }
     finally {
       expect(err).to.be.an('undefined');
-      assert.deepEqual(order1.charge.id, order1Id);
-      assert.deepEqual(order2.charge.id, order2Id);
+      assert.deepEqual(order1.id, sampleOrderId1);
+      assert.deepEqual(order2.id, sampleOrderId2);
     }
   });
 });
