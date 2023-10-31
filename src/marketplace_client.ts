@@ -15,17 +15,23 @@ import {
   MarketplaceSubmitBuyOfferRequest,
   MarketplaceSubmitBuyOfferResponse,
 } from "./types/markeplace_types";
+import { OrdinalsBotEnv } from "./types";
 
 export class MarketPlaceClient {
+  public env: OrdinalsBotEnv;
   private api_key: string;
   private instanceV1: AxiosInstance;
 
-  constructor(key: string = "") {
+  constructor(key: string = "", environment: OrdinalsBotEnv = "live") {
     this.api_key = key;
+    this.env = environment;
 
     const createInstance = (): AxiosInstance => {
       const client = axios.create({
-        baseURL: "https://api.ordinalsbot.com/marketplace/",
+        baseURL:
+          environment === "live"
+            ? `https://api.ordinalsbot.com/marketplace/`
+            : `https://testnet-api.ordinalsbot.com/marketplace/`,
         headers: {
           "x-api-key": this.api_key,
           Connection: "Keep-Alive",

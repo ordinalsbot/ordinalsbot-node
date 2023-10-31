@@ -34,7 +34,7 @@ export class OrdinalsBotClient {
         baseURL:
           environment === "live"
             ? `https://api.ordinalsbot.com`
-            : `https://signet.ordinalsbot.com/api`,
+            : `https://testnet-api.ordinalsbot.com`,
         timeout: 30000,
         headers: {
           "x-api-key": this.api_key,
