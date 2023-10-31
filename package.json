@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/ordinalsbot/ordinalsbot-node#readme",
   "dependencies": {
-    "axios": "^1.3.4"
+    "axios": "^1.3.4",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^18.15.3",
@@ -27,6 +28,7 @@
     "mocha": "^9.2.2",
     "nyc": "^15.1.0",
     "pnpm": "^8.6.12",
+    "qs": "^6.11.2",
     "typescript": "^4.9.5"
   },
   "keywords": [

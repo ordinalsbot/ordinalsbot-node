@@ -16,6 +16,7 @@ import {
   OrdinalsBotReferralStatusResponse,
 } from "./types/v1";
 
+const qs = require("qs");
 const version = require("../package.json")?.version || "local";
 const packageVersion = `npm-ordinalsbot-v${version}`;
 
@@ -73,7 +74,7 @@ export class OrdinalsBotClient {
   async getPrice(
     priceRequest: OrdinalsBotPriceRequest
   ): Promise<OrdinalsBotPriceResponse> {
-    return this.instanceV1.get(`/order`, {
+    return this.instanceV1.get(`/price`, {
       params: priceRequest,
     });
   }
@@ -91,13 +92,37 @@ export class OrdinalsBotClient {
   async createCollection(
     collection: OrdinalsBotCollectionCreateRequest
   ): Promise<OrdinalsBotCollectionCreateResponse> {
-    return this.instanceV1.post(`/collection-create`, collection);
+    // modify normal json to valid form data for files
+    let plainObject = Object.assign({ ...collection });
+    let files = collection?.files;
+    for (let index in files) {
+      let file: any = files[index];
+      let keys = Object.keys(file);
+      for (let key in keys) {
+        let propName = keys[key];
+        plainObject[`files[${index}][${propName}]`] = file[propName];
+      }
+    }
+    delete plainObject.files;
+    let data = qs.stringify(plainObject);
+    // modify normal json to valid form data for files
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: this.instanceV1.getUri() + "/collectioncreate",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: data,
+    };
+    return axios.request(config);
   }
 
   async createCollectionOrder(
     collectionOrder: OrdinalsBotCollectionOrderRequest
   ): Promise<OrdinalsBotOrder> {
-    return this.instanceV1.post(`/collection-order`, collectionOrder);
+    return this.instanceV1.post(`/collectionorder`, collectionOrder);
   }
 
   async createTextOrder(
