@@ -1,26 +1,26 @@
-const { assert, expect } = require('chai');
-const ordinalsbot = require('../dist');
+const { assert, expect } = require("chai");
+const ordinalsbot = require("../dist");
 
-const marketPlace = new ordinalsbot.MarketPlace('API_KEY');
+const marketPlace = new ordinalsbot.MarketPlace("API_KEY");
 const authenticationErrorStatus = 401;
-const authenticationErrorMessage = 'Request failed with status code 401';
+const authenticationErrorMessage = "Request failed with status code 401";
 
-const sellerOrdinal = { id: 'test_id', price: 1000 };
+const sellerOrdinal = { id: "test_id", price: 1000 };
 const mockData = {
-  ordinalId: 'test_id',
-  buyerPaymentAddress: 'test_payment_address',
-  buyerOrdinalAddress: 'test_ordinal_address',
-  signedPsbt: 'test_signed_psbt',
-  publicKey: 'test_public_key',
+  ordinalId: "test_id",
+  buyerPaymentAddress: "test_payment_address",
+  buyerOrdinalAddress: "test_ordinal_address",
+  signedPsbt: "test_signed_psbt",
+  publicKey: "test_public_key",
 };
 
-describe('marketplace', function () {
-  describe('create marketplace', async function () {
-    it('should return a markplace', async () => {
+describe("marketplace", function () {
+  describe("create marketplace", async function () {
+    it("should return a markplace", async () => {
       let marketplaceObj, err;
       try {
         marketplaceObj = await marketPlace.createMarketplace({
-          name: 'Marketplace',
+          name: "Marketplace",
         });
       } catch (error) {
         err = error;
@@ -32,8 +32,8 @@ describe('marketplace', function () {
     });
   });
 
-  describe('List ordinal for sale', async function () {
-    it('should return a base64 transaction to be signed', async () => {
+  describe("List ordinal for sale", async function () {
+    it("should return a base64 transaction to be signed", async () => {
       let ordinal, err;
       try {
         ordinal = await marketPlace.listSaleForOrdinal({
@@ -49,8 +49,8 @@ describe('marketplace', function () {
     });
   });
 
-  describe('Create Buy Offer', async function () {
-    it('should return create buy offer response', async () => {
+  describe("Create Buy Offer", async function () {
+    it("should return create buy offer response", async () => {
       let buyOffer, err;
       try {
         buyOffer = await marketPlace.createBuyOffer({
@@ -68,8 +68,8 @@ describe('marketplace', function () {
     });
   });
 
-  describe('Submit Buy Offer', async function () {
-    it('should return txid', async () => {
+  describe("Submit Buy Offer", async function () {
+    it("should return txid", async () => {
       let submitOffer, err;
       try {
         submitOffer = await marketPlace.submitBuyOffer({
@@ -86,8 +86,8 @@ describe('marketplace', function () {
     });
   });
 
-  describe('Check padding output', async function () {
-    it('should check if padding output exists or not', async () => {
+  describe("Check padding output", async function () {
+    it("should check if padding output exists or not", async () => {
       let paddingExists, err;
       try {
         paddingExists = await marketPlace.checkPaddingOutput({
@@ -103,8 +103,8 @@ describe('marketplace', function () {
     });
   });
 
-  describe('Create padding output', async function () {
-    it('should return base64 transaction to be signed', async () => {
+  describe("Create padding output", async function () {
+    it("should return base64 transaction to be signed", async () => {
       let paddingOutput, err;
       try {
         paddingOutput = await marketPlace.createPaddingOutput({
@@ -121,8 +121,8 @@ describe('marketplace', function () {
     });
   });
 
-  describe('Get ordinal listing', async function () {
-    it('should return array of ordinals', async () => {
+  describe("Get ordinal listing", async function () {
+    it("should return array of ordinals", async () => {
       let ordinals, err;
       try {
         ordinals = await marketPlace.getListing();

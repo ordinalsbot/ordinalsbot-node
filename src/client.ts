@@ -128,7 +128,7 @@ export class OrdinalsBotClient {
   async createTextOrder(
     order: OrdinalsBotTextOrderRequest
   ): Promise<OrdinalsBotOrder> {
-    return this.instanceV1.post(`/text-order`, order);
+    return this.instanceV1.post(`/textorder`, order);
   }
 
   async getInventory(): Promise<OrdinalsBotInventoryResponse[]> {

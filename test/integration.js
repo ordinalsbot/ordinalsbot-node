@@ -7,6 +7,7 @@ const ordinalsbot = new OrdinalsBot("", "dev");
 
 const sampleOrderId1 = "1be4ea8a-587d-43c2-85bb-d6fe6f15fcb8";
 const sampleOrderId2 = "1adb8300-c89d-4ab1-8323-7797a483747c";
+const sampleTestNetAddress = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
 
 describe("order", function () {
   describe("get price", function () {
@@ -78,12 +79,12 @@ describe("order", function () {
       } catch (error) {
         err = error;
       } finally {
-        assert.deepEqual(order.status, "error");
+        assert.deepEqual(err.status, 400);
       }
     });
   });
 
-  describe("create collection order", function () {
+  describe("create collection", function () {
     it("should return a collection object", async () => {
       let collection, err;
 
@@ -102,6 +103,75 @@ describe("order", function () {
       } finally {
         expect(err).to.be.an("undefined");
         assert.deepEqual(collection.status, 200);
+      }
+    });
+  });
+
+  describe("create text inscription order", function () {
+    it("should return text inscription order", async () => {
+      let order, err;
+
+      try {
+        order = await ordinalsbot.createTextOrder({
+          texts: ["test", "test1"],
+          fee: 10,
+          receiveAddress: sampleTestNetAddress,
+          lowPostage: false,
+        });
+      } catch (error) {
+        err = error;
+      } finally {
+        expect(err).to.be.an("undefined");
+        assert.notEqual(order.id, null);
+      }
+    });
+  });
+
+  describe("Referrals", function () {
+    let sampleReferralId = v4();
+    it("should save referral code", async () => {
+      let response, err;
+
+      try {
+        response = await ordinalsbot.setReferralCode({
+          referral: sampleReferralId,
+          address: sampleTestNetAddress,
+        });
+      } catch (error) {
+        err = error;
+      } finally {
+        expect(err).to.be.an("undefined");
+        assert.equal(response.status, "ok");
+      }
+    });
+
+    it("should get referral from code", async () => {
+      let response, err;
+
+      try {
+        response = await ordinalsbot.getReferralStatus({
+          referral: sampleReferralId,
+          address: sampleTestNetAddress,
+        });
+      } catch (error) {
+        err = error;
+      } finally {
+        expect(err).to.be.an("undefined");
+        assert.equal(response.address, sampleTestNetAddress);
+      }
+    });
+  });
+
+  describe("Inventory", function () {
+    it("check rare sats inventory", async () => {
+      let response, err;
+
+      try {
+        response = await ordinalsbot.getInventory();
+      } catch (error) {
+        err = error;
+      } finally {
+        expect(err).to.be.an("undefined");
       }
     });
   });

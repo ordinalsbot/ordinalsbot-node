@@ -19,19 +19,24 @@ Install the package with:
     or
     yarn add ordinalsbot
 
-## Usage
+## Import and intialization
 
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
 ```js
-const ordinalsbot = require("ordinalsbot");
+import { MarketPlace, OrdinalsBot } from "ordinalsbot";
 
 // if no parameter given, default environment is 'live'
-// API_KEY only required for creating collection orders
-ordinalsbot.setCredentials("MY_API_KEY", "dev");
+let oridnalsBot = new OrdinalsBot("MY_API_KEY", "dev");
+let marketplace = new MarketPlace("API_KEY", "dev");
+```
 
+## Usage
+
+```js
 try {
-  const order = await ordinalsbot.createOrder({
+  // create new order
+  const order = await oridnalsBot.createOrder({
     files: [
       {
         size: 10,
@@ -44,8 +49,17 @@ try {
     receiveAddress: "",
     fee: 11,
   });
+  console.log("Order: ", order);
 } catch (error) {
-  console.error(`${error.status} | ${error.message}`);
+  console.log("Exception: ", error);
+}
+
+try {
+  // get marketplace listings
+  const listing = await marketplace.getListing();
+  console.log("Marketplaces: ", listing);
+} catch (e) {
+  console.log("Exception: ", e);
 }
 ```
 
@@ -55,12 +69,8 @@ Every method returns a chainable promise which can be used instead of a regular
 callback:
 
 ```js
-// You can also use import
-import ordinalsbot from "ordinalsbot";
-ordinalsbot.setCredentials("", "dev");
-
-// Create a new order
-ordinalsbot
+// create new order
+oridnalsBot
   .createOrder({
     files: [
       {
@@ -75,52 +85,19 @@ ordinalsbot
     fee: 11,
   })
   .then((order) => {
-    console.log(order);
+    console.log("Order: ", order);
   })
   .catch((error) => {
-    console.error(`${error.status} | ${error.message}`);
+    console.log("Exception: ", error);
   });
-```
 
-### Using combined
-```js
-import { MarketPlace, OrdinalsBot } from "ordinalsbot";
-
-/** Test ordinalsbot code */
-const testOrdinalsBot = async () => {
-  let oridnalsBot = new OrdinalsBot("MY_API_KEY", "dev");
-  try {
-    const order = await oridnalsBot.createOrder({
-      files: [
-        {
-          size: 10,
-          type: "plain/text",
-          name: "my-text-inscription-file.txt",
-          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
-        },
-      ],
-      lowPostage: true,
-      receiveAddress: "",
-      fee: 11,
-    });
-    console.log("Order created", order);
-  } catch (error) {
-    console.log("Exception handled ====>", error);
-  }
-};
-testOrdinalsBot();
-
-/** Test marketplace code */
-const testMarketPlace = async () => {
-  try {
-    let marketplace = new MarketPlace("API_KEY");
-    const listing = await marketplace.getListing();
-    console.log("====>", listing);
-  } catch (e) {
-    console.log("Exception handled ====>", e);
-  }
-};
-
-testMarketPlace();
-
+// get marketplace listings
+marketplace
+  .getListing()
+  .then((listings) => {
+    console.log("Order: ", listings);
+  })
+  .catch((error) => {
+    console.log("Exception: ", error);
+  });
 ```
