@@ -1,5 +1,5 @@
 import { MarketPlaceClient } from "./marketplace_client";
-import { OrdinalsBotEnv } from "./types";
+import { InscriptionEnv } from "./types";
 import {
   MarketplaceCheckPaddingOutputRequest,
   MarketplaceCheckPaddingOutputResponse,
@@ -18,7 +18,7 @@ import {
 
 export class MarketPlace {
   private marketplaceInstance!: MarketPlaceClient;
-  constructor(key: string = "", environment: OrdinalsBotEnv = "dev") {
+  constructor(key: string = "", environment: InscriptionEnv = "dev") {
     if (this.marketplaceInstance !== undefined) {
       console.error("marketplace constructore was called multiple times");
       return;

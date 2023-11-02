@@ -1,42 +1,42 @@
 import axios, { AxiosInstance } from "axios";
-import { OrdinalsBotError } from "./OrdinalsBotError";
-import { OrdinalsBotEnv } from "./types";
+import { InscriptionError } from "./InscriptionError";
+import { InscriptionEnv } from "./types";
 import {
-  OrdinalsBotPriceRequest,
-  OrdinalsBotPriceResponse,
-  OrdinalsBotOrderRequest,
-  OrdinalsBotOrder,
-  OrdinalsBotCollectionCreateRequest,
-  OrdinalsBotCollectionCreateResponse,
-  OrdinalsBotCollectionOrderRequest,
-  OrdinalsBotTextOrderRequest,
-  OrdinalsBotInventoryResponse,
-  OrdinalsBotReferralRequest,
-  OrdinalsBotReferralSetResponse,
-  OrdinalsBotReferralStatusResponse,
+  InscriptionPriceRequest,
+  InscriptionPriceResponse,
+  InscriptionOrderRequest,
+  InscriptionOrder,
+  InscriptionCollectionCreateRequest,
+  InscriptionCollectionCreateResponse,
+  InscriptionCollectionOrderRequest,
+  InscriptionTextOrderRequest,
+  InscriptionInventoryResponse,
+  InscriptionReferralRequest,
+  InscriptionReferralSetResponse,
+  InscriptionReferralStatusResponse,
 } from "./types/v1";
 
 const qs = require("qs");
 const version = require("../package.json")?.version || "local";
-const packageVersion = `npm-ordinalsbot-v${version}`;
+const packageVersion = `npm-inscription-v${version}`;
 
-export class OrdinalsBotClient {
-  public env: OrdinalsBotEnv;
+export class InscriptionClient {
+  public env: InscriptionEnv;
 
   private api_key: string;
   private instanceV1: AxiosInstance;
 
-  constructor(key: string = "", environment: OrdinalsBotEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
     this.api_key = key;
     this.env = environment;
 
     const createInstance = (): AxiosInstance => {
       const client = axios.create({
         baseURL:
-          environment === "live"
-            ? `https://api.ordinalsbot.com`
-            : `https://testnet-api.ordinalsbot.com`,
-        timeout: 30000,
+        environment === "live"
+        ? `https://api.ordinalsbot.com`
+        : `https://testnet-api.ordinalsbot.com`,
+    timeout: 30000,
         headers: {
           "x-api-key": this.api_key,
           Connection: "Keep-Alive",
@@ -52,7 +52,7 @@ export class OrdinalsBotClient {
         (err) => {
           if (axios.isAxiosError(err)) {
             // added to keep compatibility with previous versions
-            throw new OrdinalsBotError(
+            throw new InscriptionError(
               err.message,
               err.response?.statusText,
               err.response?.status
@@ -72,26 +72,26 @@ export class OrdinalsBotClient {
   }
 
   async getPrice(
-    priceRequest: OrdinalsBotPriceRequest
-  ): Promise<OrdinalsBotPriceResponse> {
+    priceRequest: InscriptionPriceRequest
+  ): Promise<InscriptionPriceResponse> {
     return this.instanceV1.get(`/price`, {
       params: priceRequest,
     });
   }
 
-  async createOrder(order: OrdinalsBotOrderRequest): Promise<OrdinalsBotOrder> {
+  async createOrder(order: InscriptionOrderRequest): Promise<InscriptionOrder> {
     return this.instanceV1.post(`/order`, order);
   }
 
-  async getOrder(id: string): Promise<OrdinalsBotOrder> {
+  async getOrder(id: string): Promise<InscriptionOrder> {
     return this.instanceV1.get(`/order`, {
       params: { id },
     });
   }
 
   async createCollection(
-    collection: OrdinalsBotCollectionCreateRequest
-  ): Promise<OrdinalsBotCollectionCreateResponse> {
+    collection: InscriptionCollectionCreateRequest
+  ): Promise<InscriptionCollectionCreateResponse> {
     // modify normal json to valid form data for files
     let plainObject = Object.assign({ ...collection });
     let files = collection?.files;
@@ -120,30 +120,30 @@ export class OrdinalsBotClient {
   }
 
   async createCollectionOrder(
-    collectionOrder: OrdinalsBotCollectionOrderRequest
-  ): Promise<OrdinalsBotOrder> {
+    collectionOrder: InscriptionCollectionOrderRequest
+  ): Promise<InscriptionOrder> {
     return this.instanceV1.post(`/collectionorder`, collectionOrder);
   }
 
   async createTextOrder(
-    order: OrdinalsBotTextOrderRequest
-  ): Promise<OrdinalsBotOrder> {
+    order: InscriptionTextOrderRequest
+  ): Promise<InscriptionOrder> {
     return this.instanceV1.post(`/textorder`, order);
   }
 
-  async getInventory(): Promise<OrdinalsBotInventoryResponse[]> {
+  async getInventory(): Promise<InscriptionInventoryResponse[]> {
     return this.instanceV1.get(`/inventory`);
   }
 
   async setReferralCode(
-    referral: OrdinalsBotReferralRequest
-  ): Promise<OrdinalsBotReferralSetResponse> {
+    referral: InscriptionReferralRequest
+  ): Promise<InscriptionReferralSetResponse> {
     return this.instanceV1.post(`/referrals`, referral);
   }
 
   async getReferralStatus(
-    referral: OrdinalsBotReferralRequest
-  ): Promise<OrdinalsBotReferralStatusResponse> {
+    referral: InscriptionReferralRequest
+  ): Promise<InscriptionReferralStatusResponse> {
     return this.instanceV1.get(`/referrals`, {
       params: referral,
     });
