@@ -1,7 +1,7 @@
 const { assert, expect } = require("chai");
 const ordinalsbot = require("../dist");
-
-const marketPlace = new ordinalsbot.MarketPlace("API_KEY");
+const API_KEY = "";
+const marketPlace = new ordinalsbot.MarketPlace(API_KEY);
 const authenticationErrorStatus = 401;
 const authenticationErrorMessage = "Request failed with status code 401";
 
@@ -16,7 +16,7 @@ const mockData = {
 
 describe("marketplace", function () {
   describe("create marketplace", async function () {
-    it("should return a markplace", async () => {
+    it("should return a marketplace", async () => {
       let marketplaceObj, err;
       try {
         marketplaceObj = await marketPlace.createMarketplace({

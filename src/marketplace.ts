@@ -18,7 +18,7 @@ import {
 
 export class MarketPlace {
   private marketplaceInstance!: MarketPlaceClient;
-  constructor(key: string = "", environment: OrdinalsBotEnv = "live") {
+  constructor(key: string = "", environment: OrdinalsBotEnv = "dev") {
     if (this.marketplaceInstance !== undefined) {
       console.error("marketplace constructore was called multiple times");
       return;

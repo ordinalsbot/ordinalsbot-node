@@ -17,6 +17,12 @@ import {
 } from "./types/markeplace_types";
 import { OrdinalsBotEnv } from "./types";
 
+interface CustomHeaders {
+  "Connection": string;
+  "Content-Type": string;
+  "x-api-key"?: string; // Optional header
+}
+
 export class MarketPlaceClient {
   public env: OrdinalsBotEnv;
   private api_key: string;
@@ -27,18 +33,24 @@ export class MarketPlaceClient {
     this.env = environment;
 
     const createInstance = (): AxiosInstance => {
-      const client = axios.create({
-        baseURL:
-          environment === "live"
-            ? `https://api.ordinalsbot.com/marketplace/`
-            : `https://testnet-api.ordinalsbot.com/marketplace/`,
-        headers: {
-          "x-api-key": this.api_key,
-          Connection: "Keep-Alive",
-          "Content-Type": "application/json",
-        },
-      });
 
+      const headers: Record<string, string> = {
+        Connection: "Keep-Alive",
+        "Content-Type": "application/json",
+      };
+      
+      // Add the API key header only if this.api_key has a value
+      if (this.api_key) {
+        headers["x-api-key"] = this.api_key;
+      }
+      
+      const client = axios.create({
+        baseURL: this.env === "live"
+          ? `https://api.ordinalsbot.com/marketplace/`
+          : `https://testnet-api.ordinalsbot.com/marketplace/`,
+        headers: headers
+      });
+      
       client.interceptors.response.use(
         ({ data }) => ("data" in data ? data.data : data),
         (err) => {
