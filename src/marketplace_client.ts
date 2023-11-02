@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { OrdinalsBotError } from "./OrdinalsBotError";
+import { InscriptionError } from "./InscriptionError";
 import {
   MarketplaceCheckPaddingOutputRequest,
   MarketplaceCheckPaddingOutputResponse,
@@ -15,7 +15,7 @@ import {
   MarketplaceSubmitBuyOfferRequest,
   MarketplaceSubmitBuyOfferResponse,
 } from "./types/markeplace_types";
-import { OrdinalsBotEnv } from "./types";
+import { InscriptionEnv } from "./types";
 
 interface CustomHeaders {
   "Connection": string;
@@ -24,11 +24,11 @@ interface CustomHeaders {
 }
 
 export class MarketPlaceClient {
-  public env: OrdinalsBotEnv;
+  public env: InscriptionEnv;
   private api_key: string;
   private instanceV1: AxiosInstance;
 
-  constructor(key: string = "", environment: OrdinalsBotEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
     this.api_key = key;
     this.env = environment;
 
@@ -55,7 +55,7 @@ export class MarketPlaceClient {
         ({ data }) => ("data" in data ? data.data : data),
         (err) => {
           if (axios.isAxiosError(err)) {
-            throw new OrdinalsBotError(
+            throw new InscriptionError(
               err.message,
               err.response?.statusText,
               err.response?.status
