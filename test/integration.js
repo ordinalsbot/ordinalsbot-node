@@ -1,13 +1,18 @@
 const { assert, expect } = require("chai");
-const { OrdinalsBot } = require("../dist");
+const { Inscription } = require("../dist");
 const { v4 } = require("uuid");
 
 // empty credentials should work except for collection-order
-const ordinalsbot = new OrdinalsBot("", "dev");
+const inscription = new Inscription("", "dev");
 
 const sampleOrderId1 = "1be4ea8a-587d-43c2-85bb-d6fe6f15fcb8";
 const sampleOrderId2 = "1adb8300-c89d-4ab1-8323-7797a483747c";
 const sampleTestNetAddress = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
+
+// Utility function for waiting a specific amount of time
+function delay(duration) {
+  return new Promise((resolve) => setTimeout(resolve, duration));
+}
 
 describe("order", function () {
   describe("get price", function () {
@@ -15,7 +20,7 @@ describe("order", function () {
       let price, err;
 
       try {
-        price = await ordinalsbot.getPrice({ size: 150, fee: 2 });
+        price = await inscription.getPrice({ size: 150, fee: 2 });
       } catch (error) {
         err = error;
       } finally {
@@ -30,7 +35,7 @@ describe("order", function () {
       let order, err;
 
       try {
-        order = await ordinalsbot.createOrder({
+        order = await inscription.createOrder({
           files: [
             {
               size: 10,
@@ -58,7 +63,7 @@ describe("order", function () {
       let order, err;
 
       try {
-        order = await ordinalsbot.getOrder(sampleOrderId1);
+        order = await inscription.getOrder(sampleOrderId1);
       } catch (error) {
         err = error;
       } finally {
@@ -73,7 +78,7 @@ describe("order", function () {
       let order, err;
 
       try {
-        order = await ordinalsbot.createOrder({
+        order = await inscription.createOrder({
           description: "hello world",
         });
       } catch (error) {
@@ -89,7 +94,7 @@ describe("order", function () {
       let collection, err;
 
       try {
-        collection = await ordinalsbot.createCollection({
+        collection = await inscription.createCollection({
           id: v4(),
           name: "collection name",
           description: "test description",
@@ -112,8 +117,8 @@ describe("order", function () {
       let order, err;
 
       try {
-        order = await ordinalsbot.createTextOrder({
-          texts: ["test", "test1"],
+        order = await inscription.createTextOrder({
+          texts: ["text inscription 1", "text inscription 2"],
           fee: 10,
           receiveAddress: sampleTestNetAddress,
           lowPostage: false,
@@ -133,7 +138,7 @@ describe("order", function () {
       let response, err;
 
       try {
-        response = await ordinalsbot.setReferralCode({
+        response = await inscription.setReferralCode({
           referral: sampleReferralId,
           address: sampleTestNetAddress,
         });
@@ -149,7 +154,7 @@ describe("order", function () {
       let response, err;
 
       try {
-        response = await ordinalsbot.getReferralStatus({
+        response = await inscription.getReferralStatus({
           referral: sampleReferralId,
           address: sampleTestNetAddress,
         });
@@ -167,7 +172,7 @@ describe("order", function () {
       let response, err;
 
       try {
-        response = await ordinalsbot.getInventory();
+        response = await inscription.getInventory();
       } catch (error) {
         err = error;
       } finally {
@@ -180,8 +185,8 @@ describe("order", function () {
 describe("client", function () {
   it("should allow multiple clients with different credentials", async () => {
     let order1, order2, err;
-    const client1 = new OrdinalsBot("test1", "dev");
-    const client2 = new OrdinalsBot("test2", "dev");
+    const client1 = new Inscription("test1", "dev");
+    const client2 = new Inscription("test2", "dev");
 
     try {
       order1 = await client1.getOrder(sampleOrderId1);

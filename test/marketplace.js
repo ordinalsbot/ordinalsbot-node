@@ -1,7 +1,7 @@
 const { assert, expect } = require("chai");
-const ordinalsbot = require("../dist");
+const inscription = require("../dist");
 const API_KEY = "";
-const marketPlace = new ordinalsbot.MarketPlace(API_KEY);
+const marketPlace = new inscription.MarketPlace(API_KEY);
 const authenticationErrorStatus = 401;
 const authenticationErrorMessage = "Request failed with status code 401";
 
