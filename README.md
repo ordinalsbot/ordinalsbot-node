@@ -24,10 +24,10 @@ Install the package with:
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
 ```js
-import { MarketPlace, OrdinalsBot } from "ordinalsbot";
+import { MarketPlace, Inscription } from "ordinalsbot";
 
 // if no parameter given, default environment is 'live'
-let oridnalsBot = new OrdinalsBot("MY_API_KEY", "dev");
+let inscription = new Inscription("API_KEY", "dev");
 let marketplace = new MarketPlace("API_KEY", "dev");
 ```
 
@@ -36,7 +36,7 @@ let marketplace = new MarketPlace("API_KEY", "dev");
 ```js
 try {
   // create new order
-  const order = await oridnalsBot.createOrder({
+  const order = await inscription.createOrder({
     files: [
       {
         size: 10,
@@ -70,7 +70,7 @@ callback:
 
 ```js
 // create new order
-oridnalsBot
+inscription
   .createOrder({
     files: [
       {
