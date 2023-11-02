@@ -1,5 +1,5 @@
-export { OrdinalsBotClient } from "./client";
-export { OrdinalsBotError } from "./OrdinalsBotError";
+export { InscriptionClient } from "./client";
+export { InscriptionError } from "./InscriptionError";
 export * from "./types";
 export { MarketPlace } from "./marketplace";
-export { OrdinalsBot } from "./ordinalsbot";
+export { Inscription } from "./inscription";

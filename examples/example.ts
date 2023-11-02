@@ -1,9 +1,9 @@
-import * as ordinalsbot from "../src";
+import * as inscription from "../src";
 
 /**
  * Setup your API Key and environment
  */
-ordinalsbot.setCredentials("MY_API_KEY", "dev");
+inscription.setCredentials("MY_API_KEY", "dev");
 
 /**
  *
@@ -14,7 +14,7 @@ ordinalsbot.setCredentials("MY_API_KEY", "dev");
  * Using promises
  */
 
-ordinalsbot
+inscription
   .getOrder("6a245608-5e81-46f6-b533-5741e3a06c42")
   .then((order) => {
     console.log(order);
@@ -29,7 +29,7 @@ ordinalsbot
  */
 (async () => {
   try {
-    const data = await ordinalsbot.getOrder(
+    const data = await inscription.getOrder(
       "6a245608-5e81-46f6-b533-5741e3a06c42"
     );
     console.log(data);
@@ -61,7 +61,7 @@ const order = {
  * Using promises
  */
 
-ordinalsbot
+inscription
   .createOrder(order)
   .then((response) => {
     console.log(response);
@@ -76,7 +76,7 @@ ordinalsbot
 
 (async () => {
   try {
-    const response = await ordinalsbot.createOrder(order);
+    const response = await inscription.createOrder(order);
     console.log(response);
   } catch (error) {
     console.error(`${error.status} | ${error.message}`);
@@ -95,7 +95,7 @@ const textOrder = {
     fee: 11
 }
 
-ordinalsbot
+inscription
     .createTextOrder(textOrder)
     .then((response) => {
         console.log(response);
