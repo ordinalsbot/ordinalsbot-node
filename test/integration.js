@@ -32,6 +32,7 @@ describe("order", function () {
 
   describe("create order", function () {
     it("should return a order object", async () => {
+      await delay(1000); // to avoid rate limit
       let order, err;
 
       try {
@@ -60,6 +61,7 @@ describe("order", function () {
 
   describe("get order", function () {
     it("should return a order object", async () => {
+      await delay(1000); // to avoid rate limit
       let order, err;
 
       try {
@@ -75,6 +77,7 @@ describe("order", function () {
 
   describe("create order with invalid parameters", function () {
     it("should return a (400) Bad Request", async () => {
+      await delay(1000); // to avoid rate limit
       let order, err;
 
       try {
@@ -115,6 +118,7 @@ describe("order", function () {
 
   describe("create text inscription order", function () {
     it("should return text inscription order", async () => {
+      await delay(1000); // to avoid rate limit
       let order, err;
 
       try {
@@ -136,6 +140,7 @@ describe("order", function () {
   describe("Referrals", function () {
     let sampleReferralId = v4();
     it("should save referral code", async () => {
+      await delay(1000); // to avoid rate limit
       let response, err;
 
       try {
@@ -152,6 +157,7 @@ describe("order", function () {
     });
 
     it("should get referral from code", async () => {
+      await delay(1000); // to avoid rate limit
       let response, err;
 
       try {
@@ -170,6 +176,7 @@ describe("order", function () {
 
   describe("Inventory", function () {
     it("check rare sats inventory", async () => {
+      await delay(1000); // to avoid rate limit
       let response, err;
 
       try {
