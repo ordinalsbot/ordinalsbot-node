@@ -1,0 +1,27 @@
+## [0.1.0]
+
+#### APIs exposed
+
+- `Inscription`
+
+  - constructor
+  - getPrice
+  - createOrder
+  - getOrder
+  - createCollection
+  - createCollectionOrder
+  - createTextOrder
+  - getInventory
+  - setReferralCode
+  - getReferralStatus
+
+- `Marketplace`
+  - constructor
+  - createMarketPlace
+  - createListing
+  - saveListing
+  - getListing
+  - createOffer
+  - submitOffer
+  - confirmPaddingOutputs
+  - setupPaddingOutputs

@@ -18,7 +18,7 @@ export interface InscriptionTransaction {
   updatedAt?: string;
 }
 
-export interface OrdinalsBotFile {
+export interface InscriptionFile {
   /** Size of the file to be inscribed in bytes */
   size: number;
 
@@ -36,43 +36,43 @@ export interface OrdinalsBotFile {
 
   /** Inscription transaction details */
   tx?: InscriptionTransaction;
-};
+}
 
-export interface OrdinalsBotOrderRequest {
-  files: OrdinalsBotFile[],
+export interface InscriptionOrderRequest {
+  files: InscriptionFile[];
   fee: number;
 
   /** Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
     (default=false) 
   */
-  lowPostage?: boolean,
-  receiveAddress?: string,
+  lowPostage?: boolean;
+  receiveAddress?: string;
 
   /** Inscribe on a rare, exotic, early sat. 
    Options: vintage | block78 | pizza | uncommon | random (default=random) 
     full list can be queried from inventory endpoint
   */
-  rareSats?: string,
+  rareSats?: string;
 
   /** referral code to earn up to %15 of the order service fee. */
-  referral?: string,
+  referral?: string;
 
   /** Amount of satoshis to charge extra for this order that will be added to "referral" account.
     Needs to be used together with "referral" 
   */
-  additionalFee?: number,
+  additionalFee?: number;
 
   /* Order timeout in minutes. 
     Generated payment invoice will be valid for this duration only. Payments that are sent after this will not be processed.
     default=4320 (3 days)
   */
-  timeout?: number,
+  timeout?: number;
 
   /** URL to receive a POST request when each file in the order is inscribed */
-  webhookUrl?: string,
+  webhookUrl?: string;
 }
 
-export interface OrdinalsBotCharge {
+export interface InscriptionCharge {
   id: string;
   description: string;
   amount: number;
@@ -84,30 +84,30 @@ export interface OrdinalsBotCharge {
   created_at: number;
   order_id: string;
   address: string;
-  metadata?: OrdinalsBotChargeMetadata;
+  metadata?: InscriptionChargeMetadata;
   expires_at?: string;
   auto_settle?: boolean;
-  chain_invoice?: OrdinalsBotOnchainInvoice;
-  transactions?: OrdinalsBotChargeTransaction[];
+  chain_invoice?: InscriptionOnchainInvoice;
+  transactions?: InscriptionChargeTransaction[];
 }
 
-export interface OrdinalsBotOrder extends OrdinalsBotOrderRequest {
+export interface InscriptionOrder extends InscriptionOrderRequest {
   status: string;
-  // ... input parameters from OrdinalsBotOrderRequest
-  charge: OrdinalsBotCharge;
+  // ... input parameters from InscriptionOrderRequest
+  charge: InscriptionCharge;
   chainFee: number; // in satoshis
   serviceFee: number; // in satoshis
   orderType: string;
   createdAt: number; // timestamp in ms,
 }
 
-export interface OrdinalsBotOnchainInvoice {
+export interface InscriptionOnchainInvoice {
   address: string;
   settled_at: number;
   tx: string;
 }
 
-export interface OrdinalsBotChargeTransaction {
+export interface InscriptionChargeTransaction {
   address: string;
   created_at: number;
   settled_at: number;
@@ -116,12 +116,12 @@ export interface OrdinalsBotChargeTransaction {
   amount: number;
 }
 
-export interface OrdinalsBotChargeMetadata {
+export interface InscriptionChargeMetadata {
   email: string;
   invoice_id: string;
 }
 
-export interface OrdinalsBotPriceRequest {
+export interface InscriptionPriceRequest {
   /** Total size of all files to be inscribed in bytes */
   size: number;
 
@@ -138,18 +138,18 @@ export interface OrdinalsBotPriceRequest {
   rareSats: string;
 }
 
-export interface OrdinalsBotPriceResponse {
-  "status": string,
-  "chainFee": number, // chain fee that will be paid to miners
-  "baseFee": number, // base service fee taken by ordinalsbot.com
-  "serviceFee": number, // total service fee taken by ordinalsbot.com
-  "totalFee": number // total amount to be paid by the user
+export interface InscriptionPriceResponse {
+  status: string;
+  chainFee: number; // chain fee that will be paid to miners
+  baseFee: number; // base service fee taken by inscription.com
+  serviceFee: number; // total service fee taken by inscription.com
+  totalFee: number; // total amount to be paid by the user
 }
 
-export interface OrdinalsBotCollectionCreateRequest {
+export interface InscriptionCollectionCreateRequest {
   /** URL safe unique collection slug. This will be used as part of mint URL. */
   id: string;
-  files: OrdinalsBotFile[],
+  files: InscriptionFile[];
 
   // Inscription price per file (for collection creator) set to 0 for free mints
   price: number;
@@ -159,10 +159,10 @@ export interface OrdinalsBotCollectionCreateRequest {
   // Miner fee that will be paid while inscribing the ordinals in sats/byte. (default=2 sats/byte)
   fee?: number;
 
-  // Inscription service fee per file taken by ordinalsbot.com, min: 27000 (sats)
+  // Inscription service fee per file taken by inscription.com, min: 27000 (sats)
   serviceFee?: number;
   // Bitcoin address to receive payouts from inscriptions
-  "creator-address": string,
+  "creator-address": string;
 
   // collection metadata
   name: string;
@@ -178,13 +178,14 @@ export interface OrdinalsBotCollectionCreateRequest {
   cover?: string;
 }
 
-export interface OrdinalsBotCollectionCreateResponse extends OrdinalsBotCollectionCreateRequest {
+export interface InscriptionCollectionCreateResponse
+  extends InscriptionCollectionCreateRequest {
   status: string;
-  // ... input parameters from OrdinalsBotCollectionCreateRequest
+  // ... input parameters from InscriptionCollectionCreateRequest
   createdAt: number;
 }
 
-export interface OrdinalsBotCollection {
+export interface InscriptionCollection {
   /** unique ID of the collection being requested */
   id: string;
 
@@ -192,36 +193,36 @@ export interface OrdinalsBotCollection {
   count: number;
 }
 
-export interface OrdinalsBotCollectionOrderRequest {
-  collection: OrdinalsBotCollection,
+export interface InscriptionCollectionOrderRequest {
+  collection: InscriptionCollection;
 
   // cloudflare turnstile token
-  token?: string,
+  token?: string;
 
-  receiveAddress?: string,
+  receiveAddress?: string;
 
   /** Inscribe on a rare, exotic, early sat. 
    Options: vintage | block78 | pizza | uncommon | random (default=random) 
     full list can be queried from inventory endpoint
   */
-  rareSats?: string,
+  rareSats?: string;
 }
 
-export interface OrdinalsBotTextOrderRequest {
-  texts: string[],
+export interface InscriptionTextOrderRequest {
+  texts: string[];
   fee: number;
 
   /** Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
     (default=false) 
   */
-  lowPostage?: boolean,
-  receiveAddress?: string,
+  lowPostage?: boolean;
+  receiveAddress?: string;
 
   /** referral code to earn up to %15 of the order service fee. */
-  referral?: string,
+  referral?: string;
 }
 
-type OrdinalsBotInventoryData = {
+type InscriptionInventoryData = {
   // amount of sats available in this inventory
   amount: number;
   // base fee for each inscription for this type of special sat
@@ -235,22 +236,22 @@ type OrdinalsBotInventoryData = {
 
   // minimum size of a single inscription for this type of special sat
   minSize: number;
+};
+
+type InscriptionInventoryItem = {
+  [specialSatType: string]: InscriptionInventoryData;
+};
+
+export interface InscriptionInventoryResponse {
+  [specialSatType: string]: InscriptionInventoryItem;
 }
 
-type OrdinalsBotInventoryItem = {
-  [specialSatType: string]: OrdinalsBotInventoryData;
-}
-
-export interface OrdinalsBotInventoryResponse {
-  [specialSatType: string]: OrdinalsBotInventoryItem;
-}
-
-export interface OrdinalsBotReferralRequest {
+export interface InscriptionReferralRequest {
   referral: string;
   address: string;
 }
 
-export interface OrdinalsBotPayout {
+export interface InscriptionPayout {
   id: string;
   count: number;
   custom_id: string;
@@ -266,14 +267,14 @@ export interface OrdinalsBotPayout {
   checkout_id: string;
 }
 
-export interface OrdinalsBotReferralStatusResponse {
+export interface InscriptionReferralStatusResponse {
   address: string;
   orderCound: number;
   paidCount: number;
-  payments?: OrdinalsBotPayout[];
-  orders?: {[orderId: string]: true}[];
+  payments?: InscriptionPayout[];
+  orders?: { [orderId: string]: true }[];
 }
 
-export interface OrdinalsBotReferralSetResponse {
+export interface InscriptionReferralSetResponse {
   status: string;
 }
