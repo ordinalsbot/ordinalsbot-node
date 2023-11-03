@@ -91,6 +91,7 @@ describe("order", function () {
 
   describe("create collection", function () {
     it("should return a collection object", async () => {
+      await delay(1000); // to avoid rate limit
       let collection, err;
 
       try {
