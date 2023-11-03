@@ -1,9 +1,9 @@
-import * as inscription from "../src";
+import {Inscription} from "../src";
 
 /**
  * Setup your API Key and environment
  */
-inscription.setCredentials("MY_API_KEY", "dev");
+const inscription = new Inscription("", "dev");
 
 /**
  *
