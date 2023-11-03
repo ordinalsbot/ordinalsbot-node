@@ -1,27 +1,24 @@
 import axios, { AxiosInstance } from "axios";
 import { InscriptionError } from "./InscriptionError";
 import {
-  MarketplaceCheckPaddingOutputRequest,
-  MarketplaceCheckPaddingOutputResponse,
-  MarketplaceCreateBuyOfferRequest,
-  MarketplaceCreateBuyOfferResponse,
-  MarketplaceCreatePaddingOutputsRequest,
-  MarketplaceCreatePaddingOutputsResponse,
+  MarketplaceConfirmPaddingOutputsRequest,
+  MarketplaceConfirmPaddingOutputsResponse,
+  MarketplaceCreateListingRequest,
+  MarketplaceCreateListingResponse,
+  MarketplaceCreateOfferRequest,
+  MarketplaceCreateOfferResponse,
+  MarketplaceSetupPaddingOutputsRequest,
+  MarketplaceSetupPaddingOutputsResponse,
   MarketplaceCreateRequest,
   MarketplaceCreateResponse,
   MarketplaceGetListingResponse,
-  MarketplaceListOridnalForSaleRequest,
-  MarketplaceListOridnalForSaleResponse,
-  MarketplaceSubmitBuyOfferRequest,
-  MarketplaceSubmitBuyOfferResponse,
+  MarketplaceSubmitOfferRequest,
+  MarketplaceSubmitOfferResponse,
+  MarketplaceGetListingRequest,
+  MarketplaceSaveListingRequest,
+  MarketplaceSaveListingResponse,
 } from "./types/markeplace_types";
 import { InscriptionEnv } from "./types";
-
-interface CustomHeaders {
-  "Connection": string;
-  "Content-Type": string;
-  "x-api-key"?: string; // Optional header
-}
 
 export class MarketPlaceClient {
   public env: InscriptionEnv;
@@ -33,24 +30,18 @@ export class MarketPlaceClient {
     this.env = environment;
 
     const createInstance = (): AxiosInstance => {
-
-      const headers: Record<string, string> = {
-        Connection: "Keep-Alive",
-        "Content-Type": "application/json",
-      };
-      
-      // Add the API key header only if this.api_key has a value
-      if (this.api_key) {
-        headers["x-api-key"] = this.api_key;
-      }
-      
       const client = axios.create({
-        baseURL: this.env === "live"
-          ? `https://api.ordinalsbot.com/marketplace/`
-          : `https://testnet-api.ordinalsbot.com/marketplace/`,
-        headers: headers
+        baseURL:
+          environment === "live"
+            ? `https://api.ordinalsbot.com/marketplace/`
+            : `https://testnet-api.ordinalsbot.com/marketplace/`,
+        headers: {
+          "x-api-key": this.api_key,
+          Connection: "Keep-Alive",
+          "Content-Type": "application/json",
+        },
       });
-      
+
       client.interceptors.response.use(
         ({ data }) => ("data" in data ? data.data : data),
         (err) => {
@@ -82,47 +73,57 @@ export class MarketPlaceClient {
     });
   }
 
-  async listSaleForOrdinal(
-    listSaleForOrdinalRequest: MarketplaceListOridnalForSaleRequest
-  ): Promise<MarketplaceListOridnalForSaleResponse> {
+  async createListing(
+    createListingRequest: MarketplaceCreateListingRequest
+  ): Promise<MarketplaceCreateListingResponse> {
     return this.instanceV1.post(`/create-listing`, {
-      params: listSaleForOrdinalRequest,
+      params: createListingRequest,
     });
   }
 
-  async createBuyOffer(
-    createBuyOfferRequest: MarketplaceCreateBuyOfferRequest
-  ): Promise<MarketplaceCreateBuyOfferResponse> {
+  async createOffer(
+    createOfferRequest: MarketplaceCreateOfferRequest
+  ): Promise<MarketplaceCreateOfferResponse> {
     return this.instanceV1.post(`/create-offer`, {
-      params: createBuyOfferRequest,
+      params: createOfferRequest,
     });
   }
 
-  async submitBuyOffer(
-    submitBuyOfferRequest: MarketplaceSubmitBuyOfferRequest
-  ): Promise<MarketplaceSubmitBuyOfferResponse> {
+  async submitOffer(
+    submitOfferRequest: MarketplaceSubmitOfferRequest
+  ): Promise<MarketplaceSubmitOfferResponse> {
     return this.instanceV1.post(`/submit-offer`, {
-      params: submitBuyOfferRequest,
+      params: submitOfferRequest,
     });
   }
 
-  async checkPaddingOutput(
-    checkPaddingOutputRequest: MarketplaceCheckPaddingOutputRequest
-  ): Promise<MarketplaceCheckPaddingOutputResponse> {
+  async confirmPaddingOutputs(
+    confirmPaddingOutputsRequest: MarketplaceConfirmPaddingOutputsRequest
+  ): Promise<MarketplaceConfirmPaddingOutputsResponse> {
     return this.instanceV1.post(`/confirm-padding-outputs`, {
-      params: checkPaddingOutputRequest,
+      params: confirmPaddingOutputsRequest,
     });
   }
 
-  async createPaddingOutput(
-    createPaddingOutputRequest: MarketplaceCreatePaddingOutputsRequest
-  ): Promise<MarketplaceCreatePaddingOutputsResponse> {
+  async setupPaddingOutputs(
+    setupPaddingOutputsRequest: MarketplaceSetupPaddingOutputsRequest
+  ): Promise<MarketplaceSetupPaddingOutputsResponse> {
     return this.instanceV1.post(`/setup-padding-outputs`, {
-      params: createPaddingOutputRequest,
+      params: setupPaddingOutputsRequest,
     });
   }
 
-  async getListing(): Promise<MarketplaceGetListingResponse> {
-    return this.instanceV1.get(`/get-listing`);
+  async getListing(
+    getListingRequest: MarketplaceGetListingRequest
+  ): Promise<MarketplaceGetListingResponse> {
+    return this.instanceV1.get(`/get-listing`, { params: getListingRequest });
+  }
+
+  async saveListing(
+    saveListingRequest: MarketplaceSaveListingRequest
+  ): Promise<MarketplaceSaveListingResponse> {
+    return this.instanceV1.patch(`/save-listing`, {
+      params: saveListingRequest,
+    });
   }
 }

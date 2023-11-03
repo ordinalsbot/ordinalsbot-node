@@ -1,24 +1,27 @@
 import { MarketPlaceClient } from "./marketplace_client";
 import { InscriptionEnv } from "./types";
 import {
-  MarketplaceCheckPaddingOutputRequest,
-  MarketplaceCheckPaddingOutputResponse,
-  MarketplaceCreateBuyOfferRequest,
-  MarketplaceCreateBuyOfferResponse,
-  MarketplaceCreatePaddingOutputsRequest,
-  MarketplaceCreatePaddingOutputsResponse,
+  MarketplaceConfirmPaddingOutputsRequest,
+  MarketplaceConfirmPaddingOutputsResponse,
+  MarketplaceCreateListingRequest,
+  MarketplaceCreateListingResponse,
+  MarketplaceCreateOfferRequest,
+  MarketplaceCreateOfferResponse,
+  MarketplaceSetupPaddingOutputsRequest,
+  MarketplaceSetupPaddingOutputsResponse,
   MarketplaceCreateRequest,
   MarketplaceCreateResponse,
   MarketplaceGetListingResponse,
-  MarketplaceListOridnalForSaleRequest,
-  MarketplaceListOridnalForSaleResponse,
-  MarketplaceSubmitBuyOfferRequest,
-  MarketplaceSubmitBuyOfferResponse,
+  MarketplaceSubmitOfferRequest,
+  MarketplaceSubmitOfferResponse,
+  MarketplaceGetListingRequest,
+  MarketplaceSaveListingRequest,
+  MarketplaceSaveListingResponse,
 } from "./types/markeplace_types";
 
 export class MarketPlace {
   private marketplaceInstance!: MarketPlaceClient;
-  constructor(key: string = "", environment: InscriptionEnv = "dev") {
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
     if (this.marketplaceInstance !== undefined) {
       console.error("marketplace constructore was called multiple times");
       return;
@@ -32,43 +35,49 @@ export class MarketPlace {
     return this.marketplaceInstance.createMarketPlace(createMarketplaceRequest);
   }
 
-  listSaleForOrdinal(
-    listSaleForOrdinalRequest: MarketplaceListOridnalForSaleRequest
-  ): Promise<MarketplaceListOridnalForSaleResponse> {
-    return this.marketplaceInstance.listSaleForOrdinal(
-      listSaleForOrdinalRequest
+  createListing(
+    createListingRequest: MarketplaceCreateListingRequest
+  ): Promise<MarketplaceCreateListingResponse> {
+    return this.marketplaceInstance.createListing(createListingRequest);
+  }
+
+  createOffer(
+    createOfferRequest: MarketplaceCreateOfferRequest
+  ): Promise<MarketplaceCreateOfferResponse> {
+    return this.marketplaceInstance.createOffer(createOfferRequest);
+  }
+
+  submitOffer(
+    submitOfferRequest: MarketplaceSubmitOfferRequest
+  ): Promise<MarketplaceSubmitOfferResponse> {
+    return this.marketplaceInstance.submitOffer(submitOfferRequest);
+  }
+
+  confirmPaddingOutputs(
+    confirmPaddingOutputsRequest: MarketplaceConfirmPaddingOutputsRequest
+  ): Promise<MarketplaceConfirmPaddingOutputsResponse> {
+    return this.marketplaceInstance.confirmPaddingOutputs(
+      confirmPaddingOutputsRequest
     );
   }
 
-  createBuyOffer(
-    createBuyOfferRequest: MarketplaceCreateBuyOfferRequest
-  ): Promise<MarketplaceCreateBuyOfferResponse> {
-    return this.marketplaceInstance.createBuyOffer(createBuyOfferRequest);
-  }
-
-  submitBuyOffer(
-    submitBuyOfferRequest: MarketplaceSubmitBuyOfferRequest
-  ): Promise<MarketplaceSubmitBuyOfferResponse> {
-    return this.marketplaceInstance.submitBuyOffer(submitBuyOfferRequest);
-  }
-
-  checkPaddingOutput(
-    checkPaddingOutputRequest: MarketplaceCheckPaddingOutputRequest
-  ): Promise<MarketplaceCheckPaddingOutputResponse> {
-    return this.marketplaceInstance.checkPaddingOutput(
-      checkPaddingOutputRequest
+  setupPaddingOutputs(
+    setupPaddingOutputsRequest: MarketplaceSetupPaddingOutputsRequest
+  ): Promise<MarketplaceSetupPaddingOutputsResponse> {
+    return this.marketplaceInstance.setupPaddingOutputs(
+      setupPaddingOutputsRequest
     );
   }
 
-  createPaddingOutput(
-    createPaddingOutputRequest: MarketplaceCreatePaddingOutputsRequest
-  ): Promise<MarketplaceCreatePaddingOutputsResponse> {
-    return this.marketplaceInstance.createPaddingOutput(
-      createPaddingOutputRequest
-    );
+  getListing(
+    getListingRequest: MarketplaceGetListingRequest
+  ): Promise<MarketplaceGetListingResponse> {
+    return this.marketplaceInstance.getListing(getListingRequest);
   }
 
-  getListing(): Promise<MarketplaceGetListingResponse> {
-    return this.marketplaceInstance.getListing();
+  saveListing(
+    saveListingRequest: MarketplaceSaveListingRequest
+  ): Promise<MarketplaceSaveListingResponse> {
+    return this.marketplaceInstance.saveListing(saveListingRequest);
   }
 }

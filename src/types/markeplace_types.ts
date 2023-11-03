@@ -34,7 +34,7 @@ export interface SellerOrdinal {
   price: number | string;
 }
 
-export interface MarketplaceListOridnalForSaleRequest {
+export interface MarketplaceCreateListingRequest {
   /** An array with a single ordinal object */
   sellerOrdinals: Array<SellerOrdinal>;
 
@@ -45,7 +45,7 @@ export interface MarketplaceListOridnalForSaleRequest {
   sellerOrdinalPublicKey?: string;
 }
 
-export interface MarketplaceListOridnalForSaleResponse {
+export interface MarketplaceCreateListingResponse {
   /** base64 transaction to be signed */
   psbt: string;
 }
@@ -57,7 +57,7 @@ export enum ReeRateTier {
   minimumFee,
 }
 
-export interface MarketplaceCreateBuyOfferRequest {
+export interface MarketplaceCreateOfferRequest {
   /** Id of the ordinal to buy. */
   ordinalId: string;
 
@@ -74,12 +74,12 @@ export interface MarketplaceCreateBuyOfferRequest {
   feeRateTier?: ReeRateTier;
 }
 
-export interface MarketplaceCreateBuyOfferResponse {
+export interface MarketplaceCreateOfferResponse {
   psbt: string;
   buyerInputIndices: Array<number>;
 }
 
-export interface MarketplaceSubmitBuyOfferRequest {
+export interface MarketplaceSubmitOfferRequest {
   /** Id of the ordinal to buy. */
   ordinalId: string;
 
@@ -87,22 +87,22 @@ export interface MarketplaceSubmitBuyOfferRequest {
   signedBuyerPSBTBase64: string;
 }
 
-export interface MarketplaceSubmitBuyOfferResponse {
+export interface MarketplaceSubmitOfferResponse {
   /** transaction id for the purchase transaction */
   txId: string;
 }
 
-export interface MarketplaceCheckPaddingOutputRequest {
+export interface MarketplaceConfirmPaddingOutputsRequest {
   /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
   address: string;
 }
 
-export interface MarketplaceCheckPaddingOutputResponse {
+export interface MarketplaceConfirmPaddingOutputsResponse {
   /** boolean, if padding outputs exist */
   paddingOutputsExist: boolean;
 }
 
-export interface MarketplaceCreatePaddingOutputsRequest {
+export interface MarketplaceSetupPaddingOutputsRequest {
   /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
   address: string;
 
@@ -116,11 +116,33 @@ export interface MarketplaceCreatePaddingOutputsRequest {
   feeRateTier?: ReeRateTier;
 }
 
-export interface MarketplaceCreatePaddingOutputsResponse {
+export interface MarketplaceSetupPaddingOutputsResponse {
   /** base64 transaction to be signed */
   psbt: string;
 }
 
+export enum LISTING_STATUS {
+  sold = "Sold",
+  active = "Active",
+  inactive = "Inactive",
+  pending_buyer_confirmation = "Pending Buyer Confirmation",
+  pending_seller_confirmation = "pending Seller Confirmation",
+}
+
+export interface MarketplaceGetListingRequest {
+  query: { status: LISTING_STATUS };
+}
+
 export interface MarketplaceGetListingResponse {
   ordinals: Array<SellerOrdinal>;
+}
+
+export interface MarketplaceSaveListingRequest {
+  ordinalId: String;
+  updateListingData: { signedListingPSBT: string };
+}
+
+export interface MarketplaceSaveListingResponse {
+  /** base64 transaction to be signed */
+  psbt: string;
 }
