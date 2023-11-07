@@ -1,202 +1,178 @@
 const { assert, expect } = require("chai");
+const sinon = require("sinon");
 const { Inscription } = require("../dist");
-const { v4 } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 
-// empty credentials should work except for collection-order
-const inscription = new Inscription("", "dev");
+describe("Inscription SDK Tests", function () {
+  let sandbox;
+  let inscription;
+  let axiosStub;
+  const sampleOrderId1 = uuidv4();
+  const sampleOrderId2 = uuidv4();
+  const sampleTestNetAddress = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
 
-const sampleOrderId1 = "1be4ea8a-587d-43c2-85bb-d6fe6f15fcb8";
-const sampleOrderId2 = "1adb8300-c89d-4ab1-8323-7797a483747c";
-const sampleTestNetAddress = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
-
-// Utility function for waiting a specific amount of time
-function delay(duration) {
-  return new Promise((resolve) => setTimeout(resolve, duration));
-}
-
-describe("order", function () {
-  describe("get price", function () {
-    it("should return a price of order", async () => {
-      let price, err;
-
-      try {
-        price = await inscription.getPrice({ size: 150, fee: 2 });
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-        assert.deepEqual(price.postage, 10000);
-      }
-    });
+  beforeEach(function () {
+    sandbox = sinon.createSandbox();
+    inscription = new Inscription("", "dev");
+    axiosStub = {
+      get: sandbox.stub(inscription.instance.axiosInstance, 'get'),
+      post: sandbox.stub(inscription.instance.axiosInstance, 'post')
+    };
   });
 
-  describe("create order", function () {
-    it("should return a order object", async () => {
-      let order, err;
-
-      try {
-        order = await inscription.createOrder({
-          files: [
-            {
-              size: 10,
-              type: "plain/text",
-              name: "test-my-text-inscription-file.txt",
-              dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
-            },
-          ],
-          lowPostage: true,
-          receiveAddress: "",
-          fee: 10,
-          timeout: 1440,
-        });
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-        assert.deepEqual(order.status, "ok");
-      }
-    });
+  afterEach(function () {
+    sandbox.restore();
   });
 
-  describe("get order", function () {
-    it("should return a order object", async () => {
-      let order, err;
+  it("should return a price for an order", async () => {
+    const expectedParams = { size: 150, fee: 2 };
+    axiosStub.get.resolves({ data: { postage: 10000 } });
 
-      try {
-        order = await inscription.getOrder(sampleOrderId1);
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-        assert.deepEqual(order.id, sampleOrderId1);
-      }
-    });
+    const priceResponse = await inscription.getPrice(expectedParams);
+
+    sinon.assert.calledWithMatch(axiosStub.get, '/price', { params: expectedParams });
+    assert.deepEqual(priceResponse.data, { postage: 10000 });
   });
 
-  describe("create order with invalid parameters", function () {
-    it("should return a (400) Bad Request", async () => {
-      let order, err;
+  it("should return an order object with status 'ok' and verify payload", async () => {
+    const orderPayload = {
+      files: [
+        {
+          size: 10,
+          type: "plain/text",
+          name: "test-my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
 
-      try {
-        order = await inscription.createOrder({
-          description: "hello world",
-        });
-      } catch (error) {
-        err = error;
-      } finally {
-        assert.deepEqual(err.status, 400);
-      }
-    });
+    const orderResponse = await inscription.createOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/order', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
   });
 
-  describe("create collection", function () {
-    it("should return a collection object", async () => {
-      let collection, err;
+  it("should return an order object when getting an order", async () => {
+    axiosStub.get.resolves({ data: { id: sampleOrderId1 } });
 
-      try {
-        collection = await inscription.createCollection({
-          id: v4(),
-          name: "collection name",
-          description: "test description",
-          creator: "creator",
-          price: 100,
-          totalCount: "50",
-          files: [{ name: "test.txt", url: "https://example.com", size: 50 }],
-        });
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-        assert.deepEqual(collection.status, 200);
-      }
-    });
+    const order = await inscription.getOrder(sampleOrderId1);
+
+    sinon.assert.calledWithExactly(axiosStub.get, `/order`, { params: { id: sampleOrderId1 } });
+    assert.deepEqual(order.data, { id: sampleOrderId1 });
   });
 
-  describe("create text inscription order", function () {
-    it("should return text inscription order", async () => {
-      let order, err;
-
-      try {
-        order = await inscription.createTextOrder({
-          texts: ["text inscription 1", "text inscription 2"],
-          fee: 10,
-          receiveAddress: sampleTestNetAddress,
-          lowPostage: false,
-        });
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-        assert.notEqual(order.id, null);
+  it("should throw a (400) Bad Request when creating an order with invalid parameters", async () => {
+    axiosStub.post.rejects({
+      response: {
+        status: 400,
+        data: 'Bad Request'
       }
     });
+
+    let error;
+
+    try {
+      await inscription.createOrder({ description: "hello world" });
+    } catch (e) {
+      error = e;
+    }
+
+    assert.isDefined(error);
+    assert.strictEqual(error.response.status, 400);
+    assert.strictEqual(error.response.data, 'Bad Request');
+    sinon.assert.calledOnce(axiosStub.post);
   });
 
-  describe("Referrals", function () {
-    let sampleReferralId = v4();
-    it("should save referral code", async () => {
-      let response, err;
+describe("create collection", function () {
+  it("should return a collection object", async () => {
+    axiosStub.post.resolves({ status: 200, data: { id: uuidv4(), name: "collection name" } });
 
-      try {
-        response = await inscription.setReferralCode({
-          referral: sampleReferralId,
-          address: sampleTestNetAddress,
-        });
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-        assert.equal(response.status, "ok");
-      }
+    const collection = await inscription.createCollection({
+      id: uuidv4(),
+      name: "collection name",
+      description: "test description",
+      creator: "creator",
+      price: 100,
+      totalCount: "50",
+      files: [{ name: "test.txt", url: "https://example.com", size: 50 }],
     });
 
-    it("should get referral from code", async () => {
-      let response, err;
+    assert.strictEqual(collection.status, 200);
+    assert.isNotNull(collection.data.id);
+    assert.strictEqual(collection.data.name, "collection name");
+  });
+});
 
-      try {
-        response = await inscription.getReferralStatus({
-          referral: sampleReferralId,
-          address: sampleTestNetAddress,
-        });
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-        assert.equal(response.address, sampleTestNetAddress);
+describe("create text inscription order", function () {
+  it("should return text inscription order", async () => {
+    axiosStub.post.resolves({ data: { id: uuidv4() } });
+
+    const order = await inscription.createTextOrder({
+      texts: ["text inscription 1", "text inscription 2"],
+      fee: 10,
+      receiveAddress: sampleTestNetAddress,
+      lowPostage: false,
+    });
+
+    assert.isNotNull(order.data.id);
+  });
+});
+
+  it("should save and get referral code", async () => {
+    const sampleReferralId = uuidv4();
+    axiosStub.post.withArgs('/referrals').resolves({ data: { status: "ok" } });
+    axiosStub.get.withArgs('/referrals').resolves({ data: { address: sampleTestNetAddress } });
+
+    const setResponse = await inscription.setReferralCode({
+      referral: sampleReferralId,
+      address: sampleTestNetAddress,
+    });
+
+    const getResponse = await inscription.getReferralStatus({
+      referral: sampleReferralId,
+      address: sampleTestNetAddress,
+    });
+
+    sinon.assert.calledWith(axiosStub.post, '/referrals', {
+      referral: sampleReferralId,
+      address: sampleTestNetAddress,
+    });
+    sinon.assert.calledWith(axiosStub.get, '/referrals', {
+      params: {
+        referral: sampleReferralId,
+        address: sampleTestNetAddress,
       }
     });
+    assert.deepEqual(setResponse.data.status, "ok");
+    assert.equal(getResponse.data.address, sampleTestNetAddress);
   });
 
   describe("Inventory", function () {
     it("check rare sats inventory", async () => {
-      let response, err;
-
-      try {
-        response = await inscription.getInventory();
-      } catch (error) {
-        err = error;
-      } finally {
-        expect(err).to.be.an("undefined");
-      }
+      axiosStub.get.resolves({ data: { inventory: [] } });
+  
+      const response = await inscription.getInventory();
+  
+      assert.isArray(response.data.inventory);
     });
   });
-});
-
-describe("client", function () {
   it("should allow multiple clients with different credentials", async () => {
-    let order1, order2, err;
     const client1 = new Inscription("test1", "dev");
     const client2 = new Inscription("test2", "dev");
+    const axiosGetStub1 = sandbox.stub(client1.instance.axiosInstance, 'get').resolves({ data: { id: sampleOrderId1 } });
+    const axiosGetStub2 = sandbox.stub(client2.instance.axiosInstance, 'get').resolves({ data: { id: sampleOrderId2 } });
 
-    try {
-      order1 = await client1.getOrder(sampleOrderId1);
-      order2 = await client2.getOrder(sampleOrderId2);
-    } catch (error) {
-      err = error;
-    } finally {
-      expect(err).to.be.an("undefined");
-      assert.deepEqual(order1.id, sampleOrderId1);
-      assert.deepEqual(order2.id, sampleOrderId2);
-    }
+    const order1 = await client1.getOrder(sampleOrderId1);
+    const order2 = await client2.getOrder(sampleOrderId2);
+
+    assert.deepEqual(order1.data.id, sampleOrderId1);
+    assert.deepEqual(order2.data.id, sampleOrderId2);
+    sinon.assert.calledWithExactly(axiosGetStub1, `/order`, { params: { id: sampleOrderId1 } });
+    sinon.assert.calledWithExactly(axiosGetStub2, `/order`, { params: { id: sampleOrderId2 } });
   });
 });
