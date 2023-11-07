@@ -71,6 +71,12 @@ export class InscriptionClient {
     this.instanceV1 = createInstance();
   }
 
+  // exposing the axios instance in case the user wants to use it directly
+  // This is also useful for testing
+  get axiosInstance() {
+    return this.instanceV1;
+  }
+
   async getPrice(
     priceRequest: InscriptionPriceRequest
   ): Promise<InscriptionPriceResponse> {
