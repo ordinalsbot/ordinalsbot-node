@@ -1,9 +1,12 @@
 const { assert, expect } = require("chai");
-const ordinalsbot = require("../dist");
+const sinon = require("sinon");
+const { MarketPlace } = require("../dist");
 
-const marketPlace = new ordinalsbot.MarketPlace("");
 const authenticationErrorStatus = 401;
 const authenticationErrorMessage = "Request failed with status code 401";
+
+const sandbox = sinon.createSandbox();
+let marketPlace;
 
 const sellerOrdinal = { id: "test_id", price: 1000 };
 const mockData = {
@@ -15,144 +18,160 @@ const mockData = {
 };
 
 describe("marketplace", function () {
-  describe("create marketplace", async function () {
-    it("should return a markplace", async () => {
-      let marketplaceObj, err;
+  before(() => {
+    marketPlace = new MarketPlace("");
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe("create marketplace", function () {
+    it("should return a marketplace", async () => {
+      const createMarketplaceStub = sandbox.stub(marketPlace, 'createMarketplace').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        marketplaceObj = await marketPlace.createMarketplace({
-          name: "Marketplace",
-        });
+        await marketPlace.createMarketplace({ name: "Marketplace" });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(marketplaceObj, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(createMarketplaceStub);
     });
   });
 
-  describe("List ordinal for sale", async function () {
+  describe("List ordinal for sale", function () {
     it("should return a base64 transaction to be signed", async () => {
-      let ordinal, err;
+      const createListingStub = sandbox.stub(marketPlace, 'createListing').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        ordinal = await marketPlace.createListing({
-          sellerOrdinals: [sellerOrdinal],
-        });
+        await marketPlace.createListing({ sellerOrdinals: [sellerOrdinal] });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(ordinal, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(createListingStub);
     });
   });
 
-  describe("Create Buy Offer", async function () {
+  describe("Create Buy Offer", function () {
     it("should return create buy offer response", async () => {
-      let buyOffer, err;
+      const createOfferStub = sandbox.stub(marketPlace, 'createOffer').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        buyOffer = await marketPlace.createOffer({
+        await marketPlace.createOffer({
           ordinalId: mockData.ordinalId,
           buyerPaymentAddress: mockData.buyerPaymentAddress,
-          buyerOrdinalAddress: mockData.buyerOrdinalAddress,
+          buyerOrdinalAddress: mockData.buyerOrdinalAddress
         });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(buyOffer, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(createOfferStub);
     });
   });
 
-  describe("Submit Buy Offer", async function () {
+  describe("Submit Buy Offer", function () {
     it("should return txid", async () => {
-      let submitOffer, err;
+      const submitOfferStub = sandbox.stub(marketPlace, 'submitOffer').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        submitOffer = await marketPlace.submitOffer({
+        await marketPlace.submitOffer({
           ordinalId: mockData.ordinalId,
-          signedBuyerPSBTBase64: mockData.signedPsbt,
+          signedBuyerPSBTBase64: mockData.signedPsbt
         });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(submitOffer, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(submitOfferStub);
     });
   });
 
-  describe("Confirm padding output", async function () {
+  describe("Confirm padding output", function () {
     it("should check if padding output exists or not", async () => {
-      let paddingExists, err;
+      const confirmPaddingOutputsStub = sandbox.stub(marketPlace, 'confirmPaddingOutputs').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        paddingExists = await marketPlace.confirmPaddingOutputs({
-          address: mockData.buyerPaymentAddress,
-        });
+        await marketPlace.confirmPaddingOutputs({ address: mockData.buyerPaymentAddress });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(paddingExists, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(confirmPaddingOutputsStub);
     });
   });
 
-  describe("Setup padding output", async function () {
+  describe("Setup padding output", function () {
     it("should return base64 transaction to be signed", async () => {
-      let paddingOutput, err;
+      const setupPaddingOutputsStub = sandbox.stub(marketPlace, 'setupPaddingOutputs').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        paddingOutput = await marketPlace.setupPaddingOutputs({
+        await marketPlace.setupPaddingOutputs({
           address: mockData.buyerPaymentAddress,
-          publicKey: mockData.publicKey,
+          publicKey: mockData.publicKey
         });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(paddingOutput, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(setupPaddingOutputsStub);
     });
   });
 
-  describe("Get ordinal listing", async function () {
+  describe("Get ordinal listing", function () {
     it("should return array of ordinals", async () => {
-      let ordinals, err;
+      const getListingStub = sandbox.stub(marketPlace, 'getListing').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        ordinals = await marketPlace.getListing({
-          status: "active",
-        });
+        await marketPlace.getListing({ status: "active" });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(ordinals, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(getListingStub);
     });
   });
 
-  describe("Update ordinal listing", async function () {
+  describe("Update ordinal listing", function () {
     it("should return signed psbt", async () => {
-      let psbt, err;
+      const saveListingStub = sandbox.stub(marketPlace, 'saveListing').rejects({
+        status: authenticationErrorStatus,
+        message: authenticationErrorMessage
+      });
+      
       try {
-        psbt = await marketPlace.saveListing({
+        await marketPlace.saveListing({
           ordinalId: mockData.ordinalId,
-          updateListingData: { signedListingPSBT: mockData.signedPsbt },
+          updateListingData: { signedListingPSBT: mockData.signedPsbt }
         });
       } catch (error) {
-        err = error;
-      } finally {
-        expect(err.status).to.be.equal(authenticationErrorStatus);
-        expect(err.message).to.be.equal(authenticationErrorMessage);
-        assert.deepEqual(psbt, undefined);
+        expect(error.status).to.equal(authenticationErrorStatus);
+        expect(error.message).to.equal(authenticationErrorMessage);
       }
+      sinon.assert.calledOnce(saveListingStub);
     });
   });
 });
