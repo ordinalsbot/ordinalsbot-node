@@ -1,4 +1,4 @@
-export class OrdinalsBotError extends Error {
+export class InscriptionError extends Error {
   constructor(
     message: string | undefined,
     public name: string = "unknown",
