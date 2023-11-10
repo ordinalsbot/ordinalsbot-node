@@ -18,6 +18,9 @@ import {
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
 } from "./types/markeplace_types";
+import * as bitcoin from 'bitcoinjs-lib';
+import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
+import { BitcoinNetworkType, getAddress, signTransaction } from 'sats-connect';
 
 export class MarketPlace {
   private marketplaceInstance!: MarketPlaceClient;
@@ -35,12 +38,64 @@ export class MarketPlace {
     return this.marketplaceInstance.createMarketPlace(createMarketplaceRequest);
   }
 
-  createListing(
+  async createListing(
     createListingRequest: MarketplaceCreateListingRequest
   ): Promise<MarketplaceCreateListingResponse> {
-    return this.marketplaceInstance.createListing(createListingRequest);
+    try {
+      if (!createListingRequest.walletProvider) {
+        return await this.marketplaceInstance.createListing(createListingRequest);
+      } else {
+        const { psbt } = await this.marketplaceInstance.createListing(createListingRequest);
+        // Create the payload for signing the seller transaction
+        if (!createListingRequest.sellerOrdinalAddress) {
+          throw new Error('No seller address provided');
+        }
+        const sellerInput = {
+          address: createListingRequest.sellerOrdinalAddress,
+          signingIndexes: [0],
+          sigHash:
+            bitcoin.Transaction.SIGHASH_SINGLE |
+            bitcoin.Transaction.SIGHASH_ANYONECANPAY,
+        };
+        
+        const payload = {
+          network: { type: BitcoinNetworkType.Mainnet },
+          message: 'Sign Seller Transaction',
+          psbtBase64: psbt,
+          broadcast: false,
+          inputsToSign: [sellerInput],
+          };
+      
+        return new Promise((resolve, reject) => {
+          signTransaction({
+            payload,
+            onFinish: async (response) => {
+              try {
+                const listingId = createListingRequest.sellerOrdinals[0].id;
+                if (!listingId) {
+                  throw new Error('No listing ID provided');
+                }
+                const updateListingData = {
+                  signedListingPSBT: response.psbtBase64,
+                };
+                resolve(this.saveListing({ ordinalId: listingId, updateListingData }));
+              } catch (error) {
+                console.error('Error saving listing:', error);
+                reject(error);
+              }
+            },
+            onCancel: () => {
+              console.log('Transaction canceled');
+              reject(new Error('Transaction canceled'));
+            }
+          });
+        });
+      }
+    } catch (error) {
+      console.error('Error in createListing:', error);
+      throw error;
+    }
   }
-
   createOffer(
     createOfferRequest: MarketplaceCreateOfferRequest
   ): Promise<MarketplaceCreateOfferResponse> {

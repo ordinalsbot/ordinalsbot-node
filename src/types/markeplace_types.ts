@@ -43,6 +43,12 @@ export interface MarketplaceCreateListingRequest {
 
   /** The public key for the wallet address that owns the ordinal being listed for sale */
   sellerOrdinalPublicKey?: string;
+
+  /** The Oridnal Address that owns the ordinal being listed for sale */
+  sellerOrdinalAddress?: string;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
 }
 
 export interface MarketplaceCreateListingResponse {
@@ -72,6 +78,9 @@ export interface MarketplaceCreateOfferRequest {
 
   /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
   feeRateTier?: ReeRateTier;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
 }
 
 export interface MarketplaceCreateOfferResponse {
@@ -126,7 +135,7 @@ export enum LISTING_STATUS {
   active = "Active",
   inactive = "Inactive",
   pending_buyer_confirmation = "Pending Buyer Confirmation",
-  pending_seller_confirmation = "pending Seller Confirmation",
+  pending_seller_confirmation = "Pending Seller Confirmation",
 }
 
 export interface MarketplaceGetListingRequest {
