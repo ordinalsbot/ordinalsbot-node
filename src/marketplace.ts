@@ -17,7 +17,7 @@ import {
   MarketplaceGetListingRequest,
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
-} from "./types/markeplace_types";
+} from "./types/marketplace_types";
 import * as bitcoin from 'bitcoinjs-lib';
 import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
 import { BitcoinNetworkType, getAddress, signTransaction } from 'sats-connect';
@@ -59,7 +59,7 @@ export class MarketPlace {
         };
         
         const payload = {
-          network: { type: BitcoinNetworkType.Mainnet },
+          network: { type: BitcoinNetworkType.Testnet },
           message: 'Sign Seller Transaction',
           psbtBase64: psbt,
           broadcast: false,
@@ -71,6 +71,8 @@ export class MarketPlace {
             payload,
             onFinish: async (response) => {
               try {
+                console.log('Transaction signed');
+                console.log('Response:', response);
                 const listingId = createListingRequest.sellerOrdinals[0].id;
                 if (!listingId) {
                   throw new Error('No listing ID provided');

@@ -17,7 +17,7 @@ import {
   MarketplaceGetListingRequest,
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
-} from "./types/markeplace_types";
+} from "./types/marketplace_types";
 import { InscriptionEnv } from "./types";
 
 export class MarketPlaceClient {
@@ -75,7 +75,7 @@ export class MarketPlaceClient {
     createMarketplaceRequest: MarketplaceCreateRequest
   ): Promise<MarketplaceCreateResponse> {
     return this.instanceV1.post(`/create-marketplace`, {
-      params: createMarketplaceRequest,
+      ...createMarketplaceRequest,
     });
   }
 
@@ -83,7 +83,7 @@ export class MarketPlaceClient {
     createListingRequest: MarketplaceCreateListingRequest
   ): Promise<MarketplaceCreateListingResponse> {
     return this.instanceV1.post(`/create-listing`, {
-      params: createListingRequest,
+      ...createListingRequest,
     });
   }
 
@@ -91,7 +91,7 @@ export class MarketPlaceClient {
     createOfferRequest: MarketplaceCreateOfferRequest
   ): Promise<MarketplaceCreateOfferResponse> {
     return this.instanceV1.post(`/create-offer`, {
-      params: createOfferRequest,
+      ...createOfferRequest,
     });
   }
 
@@ -99,7 +99,7 @@ export class MarketPlaceClient {
     submitOfferRequest: MarketplaceSubmitOfferRequest
   ): Promise<MarketplaceSubmitOfferResponse> {
     return this.instanceV1.post(`/submit-offer`, {
-      params: submitOfferRequest,
+      ...submitOfferRequest,
     });
   }
 
@@ -107,7 +107,7 @@ export class MarketPlaceClient {
     confirmPaddingOutputsRequest: MarketplaceConfirmPaddingOutputsRequest
   ): Promise<MarketplaceConfirmPaddingOutputsResponse> {
     return this.instanceV1.post(`/confirm-padding-outputs`, {
-      params: confirmPaddingOutputsRequest,
+      ...confirmPaddingOutputsRequest,
     });
   }
 
@@ -115,21 +115,21 @@ export class MarketPlaceClient {
     setupPaddingOutputsRequest: MarketplaceSetupPaddingOutputsRequest
   ): Promise<MarketplaceSetupPaddingOutputsResponse> {
     return this.instanceV1.post(`/setup-padding-outputs`, {
-      params: setupPaddingOutputsRequest,
+      ...setupPaddingOutputsRequest,
     });
   }
 
   async getListing(
     getListingRequest: MarketplaceGetListingRequest
   ): Promise<MarketplaceGetListingResponse> {
-    return this.instanceV1.get(`/get-listing`, { params: getListingRequest });
+    return this.instanceV1.post(`/get-listing`, { ...getListingRequest });
   }
 
   async saveListing(
     saveListingRequest: MarketplaceSaveListingRequest
   ): Promise<MarketplaceSaveListingResponse> {
     return this.instanceV1.patch(`/save-listing`, {
-      params: saveListingRequest,
+      ...saveListingRequest,
     });
   }
 }
