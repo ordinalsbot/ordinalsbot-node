@@ -174,4 +174,35 @@ describe("marketplace", function () {
       sinon.assert.calledOnce(saveListingStub);
     });
   });
+
+  describe("List ordinal for sale with walletProvider", function () {
+    it.only("should handle the listing process with a walletProvider", async () => {
+      const createListingStub = sandbox.stub(marketPlace, 'createListing').resolves({
+        psbt: "test_psbt"
+      });
+  
+      // Constructing a mock request based on MarketplaceCreateListingRequest type
+      const mockListingRequest = {
+        sellerOrdinals: [{
+          id: "0c9ac6fb5d4516aade728882e230b0d78337732ea71915c7fbc0cdabe5d29f3ci0",
+          price: "1234"
+        }],
+        sellerPaymentAddress: "2NAurbuXjBK5dztb416bh98ibDS7MKxV75C",
+        sellerOrdinalPublicKey: "594a4aaf5da5b144d0fa6b47987d966029d892fbc4aebb23214853e8b053702e",
+        sellerOrdinalAddress: "tb1p79l2gnn7u8uqxfepd7ddeeajzrmuv9nkl20wpf77t2u473a2h89s483yk3",
+        walletProvider: "xverse"
+      };
+  
+      try {
+        const response = await marketPlace.createListing(mockListingRequest);
+        console.log({response, data: response.data});
+        expect(response).to.have.property('psbt').that.equals("test_psbt");
+        sinon.assert.calledWith(createListingStub, sinon.match(mockListingRequest));
+      } catch (error) {
+        console.log(error);
+        assert.fail("Should not have thrown an error");
+      }
+    });
+  });
+  
 });
