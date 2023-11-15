@@ -91,7 +91,6 @@ export class MarketPlace {
             },
             onCancel: () => {
               console.log('Transaction canceled');
-              reject(new Error('Transaction canceled'));
             }
           });
         });
@@ -131,7 +130,6 @@ export class MarketPlace {
         },
         onCancel: () => {
           console.log('Transaction canceled');
-          reject(new Error('Transaction canceled'));
         }
       });
     });
@@ -151,12 +149,39 @@ export class MarketPlace {
     );
   }
 
-  setupPaddingOutputs(
+  async setupPaddingOutputs(
     setupPaddingOutputsRequest: MarketplaceSetupPaddingOutputsRequest
   ): Promise<MarketplaceSetupPaddingOutputsResponse> {
-    return this.marketplaceInstance.setupPaddingOutputs(
-      setupPaddingOutputsRequest
-    );
+    if (!setupPaddingOutputsRequest.walletProvider) {
+      return this.marketplaceInstance.setupPaddingOutputs(
+        setupPaddingOutputsRequest
+      );
+    }
+    const paddingOutputResponse: MarketplaceSetupPaddingOutputsResponse = await this.marketplaceInstance.setupPaddingOutputs(setupPaddingOutputsRequest);
+    const buyerInputs = {
+      address: setupPaddingOutputsRequest.address,
+      signingIndexes: paddingOutputResponse.buyerInputIndices
+    };
+
+    const payload = {
+      network: {
+        type: this.network,
+      },
+      message: 'Sign Padding Outputs Transaction',
+      psbtBase64: paddingOutputResponse.psbt,
+      broadcast: true,
+      inputsToSign: [buyerInputs],
+    };
+    
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response) => response,
+        onCancel: () => {
+          console.log('Transaction canceled');
+        }
+      });
+    });
   }
 
   getListing(

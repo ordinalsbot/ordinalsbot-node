@@ -84,7 +84,10 @@ export interface MarketplaceCreateOfferRequest {
 }
 
 export interface MarketplaceCreateOfferResponse {
+  /** base64 transaction to be signed */
   psbt: string;
+
+  /** Array of indices of the inputs that need to be signed by the buyer */
   buyerInputIndices: Array<number>;
 }
 
@@ -123,11 +126,17 @@ export interface MarketplaceSetupPaddingOutputsRequest {
 
   /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
   feeRateTier?: ReeRateTier;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
 }
 
 export interface MarketplaceSetupPaddingOutputsResponse {
   /** base64 transaction to be signed */
   psbt: string;
+
+  /** Array of indices of the inputs that need to be signed by the buyer */
+  buyerInputIndices: Array<number>;
 }
 
 export enum LISTING_STATUS {

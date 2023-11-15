@@ -128,7 +128,7 @@ export class MarketPlaceClient {
   async saveListing(
     saveListingRequest: MarketplaceSaveListingRequest
   ): Promise<MarketplaceSaveListingResponse> {
-    return this.instanceV1.patch(`/save-listing`, {
+    return this.instanceV1.patch(`/save-listing/${saveListingRequest.ordinalId}`, {
       ...saveListingRequest,
     });
   }
