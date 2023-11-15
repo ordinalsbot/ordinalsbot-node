@@ -18,17 +18,20 @@ import {
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
 } from "./types/marketplace_types";
+
 import * as bitcoin from 'bitcoinjs-lib';
 import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
 import { BitcoinNetworkType, getAddress, signTransaction } from 'sats-connect';
 
 export class MarketPlace {
+  private network: BitcoinNetworkType;
   private marketplaceInstance!: MarketPlaceClient;
   constructor(key: string = "", environment: InscriptionEnv = "live") {
     if (this.marketplaceInstance !== undefined) {
       console.error("marketplace constructore was called multiple times");
       return;
     }
+    this.network = environment === 'live' ? BitcoinNetworkType.Mainnet : BitcoinNetworkType.Testnet;
     this.marketplaceInstance = new MarketPlaceClient(key, environment);
   }
 
@@ -40,7 +43,7 @@ export class MarketPlace {
 
   async createListing(
     createListingRequest: MarketplaceCreateListingRequest
-  ): Promise<MarketplaceCreateListingResponse> {
+  ): Promise<MarketplaceCreateListingResponse | MarketplaceSaveListingResponse> {
     try {
       if (!createListingRequest.walletProvider) {
         return await this.marketplaceInstance.createListing(createListingRequest);
@@ -59,7 +62,7 @@ export class MarketPlace {
         };
         
         const payload = {
-          network: { type: BitcoinNetworkType.Testnet },
+          network: { type: this.network },
           message: 'Sign Seller Transaction',
           psbtBase64: psbt,
           broadcast: false,
@@ -98,10 +101,40 @@ export class MarketPlace {
       throw error;
     }
   }
-  createOffer(
+
+  async createOffer(
     createOfferRequest: MarketplaceCreateOfferRequest
-  ): Promise<MarketplaceCreateOfferResponse> {
-    return this.marketplaceInstance.createOffer(createOfferRequest);
+  ): Promise<MarketplaceCreateOfferResponse | string> {
+    if (!createOfferRequest.walletProvider) {
+      return this.marketplaceInstance.createOffer(createOfferRequest);
+    }
+    const offer: MarketplaceCreateOfferResponse = await this.marketplaceInstance.createOffer(createOfferRequest);
+    const sellerInput = {
+      address: createOfferRequest.buyerPaymentAddress,
+      signingIndexes: offer.buyerInputIndices,
+    };
+
+    const payload = {
+      network: {
+        type: this.network,
+      },
+      message: 'Sign Buyer Transaction',
+      psbtBase64: offer.psbt,
+      broadcast: false,
+      inputsToSign: [sellerInput],
+    };
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response) => {
+          return resolve(response.psbtBase64)
+        },
+        onCancel: () => {
+          console.log('Transaction canceled');
+          reject(new Error('Transaction canceled'));
+        }
+      });
+    });
   }
 
   submitOffer(
