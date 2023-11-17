@@ -17,6 +17,8 @@ import {
   MarketplaceGetListingRequest,
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
+  MarketplaceTransferRequest,
+  MarketplaceTransferResponse,
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
@@ -194,5 +196,47 @@ export class MarketPlace {
     saveListingRequest: MarketplaceSaveListingRequest
   ): Promise<MarketplaceSaveListingResponse> {
     return this.marketplaceInstance.saveListing(saveListingRequest);
+  }
+
+  async transfer(
+    transferRequest: MarketplaceTransferRequest
+  ): Promise<MarketplaceTransferResponse> {
+    if (!transferRequest.walletProvider) {
+      return this.marketplaceInstance.transfer(
+        transferRequest
+      );
+    }
+    const transferResponse: MarketplaceTransferResponse = await this.marketplaceInstance.transfer(transferRequest);
+    const inputsToSign = [
+      {
+        address: transferRequest.senderOrdinalAddress,
+        signingIndexes: transferResponse.senderOrdinalInputs,
+        sigHash: bitcoin.Transaction.SIGHASH_ALL,
+      },
+      {
+        address: transferRequest.senderPaymentAddress,
+        signingIndexes: transferResponse.senderPaymentInputs,
+        sigHash: bitcoin.Transaction.SIGHASH_ALL,
+      },
+    ];
+
+    // Create the payload for signing the seller transaction
+    const payload = {
+      network: { type: this.network },
+      message: 'Sign Transfer Transaction',
+      psbtBase64: transferResponse.psbtBase64,
+      broadcast: true,
+      inputsToSign,
+    };
+
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response) => response,
+        onCancel: () => {
+          console.log('Transaction canceled');
+        }
+      });
+    });
   }
 }

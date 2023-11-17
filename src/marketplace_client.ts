@@ -17,6 +17,8 @@ import {
   MarketplaceGetListingRequest,
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
+  MarketplaceTransferRequest,
+  MarketplaceTransferResponse,
 } from "./types/marketplace_types";
 import { InscriptionEnv } from "./types";
 
@@ -130,6 +132,14 @@ export class MarketPlaceClient {
   ): Promise<MarketplaceSaveListingResponse> {
     return this.instanceV1.patch(`/save-listing/${saveListingRequest.ordinalId}`, {
       ...saveListingRequest,
+    });
+  }
+
+  async transfer(
+    transferRequest: MarketplaceTransferRequest
+  ): Promise<MarketplaceTransferResponse> {
+    return this.instanceV1.post(`/transfer-ordinal`, {
+      ...transferRequest,
     });
   }
 }

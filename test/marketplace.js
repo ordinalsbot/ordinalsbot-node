@@ -19,7 +19,7 @@ const mockData = {
 
 describe("marketplace", function () {
   before(() => {
-    marketPlace = new MarketPlace("");
+    marketPlace = new MarketPlace("3b834bce-92d2-45fb-81de-bfcc89ea9d57","dev");
   });
 
   afterEach(() => {
@@ -176,7 +176,7 @@ describe("marketplace", function () {
   });
 
   describe("List ordinal for sale with walletProvider", function () {
-    it.only("should handle the listing process with a walletProvider", async () => {
+    it("should handle the listing process with a walletProvider", async () => {
       const createListingStub = sandbox.stub(marketPlace, 'createListing').resolves({
         psbt: "test_psbt"
       });
@@ -200,6 +200,36 @@ describe("marketplace", function () {
         sinon.assert.calledWith(createListingStub, sinon.match(mockListingRequest));
       } catch (error) {
         console.log(error);
+        assert.fail("Should not have thrown an error");
+      }
+    });
+  });
+  describe("Transfer Ordinals", function () {
+    it("should handle the ordinal transfer process", async () => {
+      const transferStub = sandbox.stub(marketPlace, 'transfer').resolves({
+        psbtBase64: "test_psbt_base64",
+        senderOrdinalInputs: [0],
+        senderPaymentInputs: [1]
+      });
+  
+      // Constructing a mock request based on MarketplaceTransferRequest type
+      const mockTransferRequest = {
+        ordinals: ["ordinal1"],
+        senderPaymentAddress: "sender_payment_address",
+        senderPaymentPublicKey: "sender_payment_public_key",
+        senderOrdinalPublicKey: "sender_ordinal_public_key",
+        senderOrdinalAddress: "sender_ordinal_address",
+        receiverOrdinalAddress: "receiver_ordinal_address",
+        walletProvider: "xverse"
+      };
+  
+      try {
+        const response = await marketPlace.transfer(mockTransferRequest);
+        expect(response).to.have.property('psbtBase64').that.equals("test_psbt_base64");
+        expect(response).to.have.property('senderOrdinalInputs').that.is.an('array').that.includes(0);
+        expect(response).to.have.property('senderPaymentInputs').that.is.an('array').that.includes(1);
+        sinon.assert.calledWith(transferStub, sinon.match(mockTransferRequest));
+      } catch (error) {
         assert.fail("Should not have thrown an error");
       }
     });

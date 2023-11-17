@@ -164,3 +164,37 @@ export interface MarketplaceSaveListingResponse {
   /** base64 transaction to be signed */
   psbt: string;
 }
+
+export interface MarketplaceTransferRequest {
+  /** An array with a single ordinal object */
+  ordinals: Array<string>;
+
+  /** The sender's payment address */
+  senderPaymentAddress: string;
+  
+  /** The sender's payment public key */
+  senderPaymentPublicKey: string;
+
+  /** The sender's ordinal public key */
+  senderOrdinalPublicKey: string;
+
+  /** The sender's ordinal address */
+  senderOrdinalAddress: string;
+
+  /** The receiver's ordinal address */
+  receiverOrdinalAddress: string;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
+}
+
+export interface MarketplaceTransferResponse {
+  /** base64 transaction to be signed */
+  psbtBase64: string;
+
+  /** Array of Ordinal indices that need to be signed by the Sender  */
+  senderOrdinalInputs: Array<number>;
+
+  /** Array of Payment indices that need to be signed by the Sender  */
+  senderPaymentInputs: Array<number>;
+}
