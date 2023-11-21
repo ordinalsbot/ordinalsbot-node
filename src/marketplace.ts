@@ -19,6 +19,7 @@ import {
   MarketplaceSaveListingResponse,
   MarketplaceTransferRequest,
   MarketplaceTransferResponse,
+  WALLET_PROVIDER,
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
@@ -49,7 +50,7 @@ export class MarketPlace {
     try {
       if (!createListingRequest.walletProvider) {
         return await this.marketplaceInstance.createListing(createListingRequest);
-      } else {
+      } else if (createListingRequest.walletProvider === WALLET_PROVIDER.xverse) {
         const { psbt } = await this.marketplaceInstance.createListing(createListingRequest);
         // Create the payload for signing the seller transaction
         if (!createListingRequest.sellerOrdinalAddress) {
@@ -69,7 +70,7 @@ export class MarketPlace {
           psbtBase64: psbt,
           broadcast: false,
           inputsToSign: [sellerInput],
-          };
+        };
       
         return new Promise((resolve, reject) => {
           signTransaction({
@@ -96,46 +97,53 @@ export class MarketPlace {
             }
           });
         });
+      } else {
+        throw new Error("Wallet not supported");
       }
     } catch (error) {
       console.error('Error in createListing:', error);
       throw error;
     }
   }
+  
 
   async createOffer(
     createOfferRequest: MarketplaceCreateOfferRequest
   ): Promise<MarketplaceCreateOfferResponse | string> {
     if (!createOfferRequest.walletProvider) {
       return this.marketplaceInstance.createOffer(createOfferRequest);
-    }
-    const offer: MarketplaceCreateOfferResponse = await this.marketplaceInstance.createOffer(createOfferRequest);
-    const sellerInput = {
-      address: createOfferRequest.buyerPaymentAddress,
-      signingIndexes: offer.buyerInputIndices,
-    };
-
-    const payload = {
-      network: {
-        type: this.network,
-      },
-      message: 'Sign Buyer Transaction',
-      psbtBase64: offer.psbt,
-      broadcast: false,
-      inputsToSign: [sellerInput],
-    };
-    return new Promise((resolve, reject) => {
-      signTransaction({
-        payload,
-        onFinish: async (response) => {
-          return resolve(response.psbtBase64)
+    } else if (createOfferRequest.walletProvider === WALLET_PROVIDER.xverse) {
+      const offer: MarketplaceCreateOfferResponse = await this.marketplaceInstance.createOffer(createOfferRequest);
+      const sellerInput = {
+        address: createOfferRequest.buyerPaymentAddress,
+        signingIndexes: offer.buyerInputIndices,
+      };
+  
+      const payload = {
+        network: {
+          type: this.network,
         },
-        onCancel: () => {
-          console.log('Transaction canceled');
-        }
+        message: 'Sign Buyer Transaction',
+        psbtBase64: offer.psbt,
+        broadcast: false,
+        inputsToSign: [sellerInput],
+      };
+      return new Promise((resolve, reject) => {
+        signTransaction({
+          payload,
+          onFinish: async (response) => {
+            return resolve(response.psbtBase64)
+          },
+          onCancel: () => {
+            console.log('Transaction canceled');
+          }
+        });
       });
-    });
+    } else {
+      throw new Error("Wallet not supported");
+    }
   }
+  
 
   submitOffer(
     submitOfferRequest: MarketplaceSubmitOfferRequest
@@ -155,37 +163,38 @@ export class MarketPlace {
     setupPaddingOutputsRequest: MarketplaceSetupPaddingOutputsRequest
   ): Promise<MarketplaceSetupPaddingOutputsResponse> {
     if (!setupPaddingOutputsRequest.walletProvider) {
-      return this.marketplaceInstance.setupPaddingOutputs(
-        setupPaddingOutputsRequest
-      );
-    }
-    const paddingOutputResponse: MarketplaceSetupPaddingOutputsResponse = await this.marketplaceInstance.setupPaddingOutputs(setupPaddingOutputsRequest);
-    const buyerInputs = {
-      address: setupPaddingOutputsRequest.address,
-      signingIndexes: paddingOutputResponse.buyerInputIndices
-    };
-
-    const payload = {
-      network: {
-        type: this.network,
-      },
-      message: 'Sign Padding Outputs Transaction',
-      psbtBase64: paddingOutputResponse.psbt,
-      broadcast: true,
-      inputsToSign: [buyerInputs],
-    };
-    
-    return new Promise((resolve, reject) => {
-      signTransaction({
-        payload,
-        onFinish: async (response) => response,
-        onCancel: () => {
-          console.log('Transaction canceled');
-        }
+      return this.marketplaceInstance.setupPaddingOutputs(setupPaddingOutputsRequest);
+    } else if (setupPaddingOutputsRequest.walletProvider === WALLET_PROVIDER.xverse) {
+      const paddingOutputResponse: MarketplaceSetupPaddingOutputsResponse = await this.marketplaceInstance.setupPaddingOutputs(setupPaddingOutputsRequest);
+      const buyerInputs = {
+        address: setupPaddingOutputsRequest.address,
+        signingIndexes: paddingOutputResponse.buyerInputIndices
+      };
+  
+      const payload = {
+        network: {
+          type: this.network,
+        },
+        message: 'Sign Padding Outputs Transaction',
+        psbtBase64: paddingOutputResponse.psbt,
+        broadcast: true,
+        inputsToSign: [buyerInputs],
+      };
+      
+      return new Promise((resolve, reject) => {
+        signTransaction({
+          payload,
+          onFinish: async (response) => response,
+          onCancel: () => {
+            console.log('Transaction canceled');
+          }
+        });
       });
-    });
+    } else {
+      throw new Error("Wallet not supported");
+    }
   }
-
+  
   getListing(
     getListingRequest: MarketplaceGetListingRequest
   ): Promise<MarketplaceGetListingResponse> {

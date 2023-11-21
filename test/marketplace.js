@@ -1,7 +1,7 @@
 const { assert, expect } = require("chai");
 const sinon = require("sinon");
 const { MarketPlace } = require("../dist");
-
+const { WALLET_PROVIDER } = require("../dist/types/marketplace_types");
 const authenticationErrorStatus = 401;
 const authenticationErrorMessage = "Request failed with status code 401";
 
@@ -190,7 +190,7 @@ describe("marketplace", function () {
         sellerPaymentAddress: "2NAurbuXjBK5dztb416bh98ibDS7MKxV75C",
         sellerOrdinalPublicKey: "594a4aaf5da5b144d0fa6b47987d966029d892fbc4aebb23214853e8b053702e",
         sellerOrdinalAddress: "tb1p79l2gnn7u8uqxfepd7ddeeajzrmuv9nkl20wpf77t2u473a2h89s483yk3",
-        walletProvider: "xverse"
+        walletProvider: WALLET_PROVIDER.xverse
       };
   
       try {
@@ -220,7 +220,7 @@ describe("marketplace", function () {
         senderOrdinalPublicKey: "sender_ordinal_public_key",
         senderOrdinalAddress: "sender_ordinal_address",
         receiverOrdinalAddress: "receiver_ordinal_address",
-        walletProvider: "xverse"
+        walletProvider: WALLET_PROVIDER.xverse
       };
   
       try {

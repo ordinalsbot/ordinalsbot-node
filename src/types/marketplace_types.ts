@@ -1,3 +1,15 @@
+export enum LISTING_STATUS {
+  sold = "Sold",
+  active = "Active",
+  inactive = "Inactive",
+  pending_buyer_confirmation = "Pending Buyer Confirmation",
+  pending_seller_confirmation = "Pending Seller Confirmation",
+}
+
+export enum WALLET_PROVIDER {
+  xverse = "Xverse",
+}
+
 export interface MarketplaceCreateRequest {
   /** Name for the marketplace */
   name: string;
@@ -137,14 +149,6 @@ export interface MarketplaceSetupPaddingOutputsResponse {
 
   /** Array of indices of the inputs that need to be signed by the buyer */
   buyerInputIndices: Array<number>;
-}
-
-export enum LISTING_STATUS {
-  sold = "Sold",
-  active = "Active",
-  inactive = "Inactive",
-  pending_buyer_confirmation = "Pending Buyer Confirmation",
-  pending_seller_confirmation = "Pending Seller Confirmation",
 }
 
 export interface MarketplaceGetListingRequest {
