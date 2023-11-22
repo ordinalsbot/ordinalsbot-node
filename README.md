@@ -101,3 +101,32 @@ marketplace
     console.log("Exception: ", error);
   });
 ```
+
+
+### Using Wallets on the client side
+
+For client-side applications, the methods `marketplace.createListing()`, `marketplace.createOffer()`, and `marketplace.setupPaddingOutputs()` support the `walletProvider` parameter. This optional string parameter allows for specifying the wallet name, with current support for the Xverse wallet and plans to include additional wallets soon. When the `walletProvider` parameter is specified it triggers the invocation of the specified wallet, prompting the user to sign the transaction. This integration significantly streamlines the process by reducing the need for multiple API calls and simplifies the structuring of data required for wallet invocation and transaction signing. Upon successful signing, the method also calls savelisting api with the correct data and returns the saved listing as the response.
+
+```js
+
+import { marketplace, WALLET_PROVIDER } from "ordinalsbot";
+
+const listingRequest = {
+  sellerOrdinals: [{
+    id: "0c9ac6fb5d4516aade728882e230b0d78337732ea71915c7fbc0cdabe5d29f3ci0",
+    price: "1234"
+  }],
+  sellerPaymentAddress: "2NAurbuXjBK5dztb416bh98ibDS7MKxV75C",
+  sellerOrdinalPublicKey: "594a4aaf5da5b144d0fa6b47987d966029d892fbc4aebb23214853e8b053702e",
+  sellerOrdinalAddress: "tb1p79l2gnn7u8uqxfepd7ddeeajzrmuv9nkl20wpf77t2u473a2h89s483yk3",
+  walletProvider: WALLET_PROVIDER.xverse
+};
+
+//call the marketplace listing method
+const response = await marketPlace.createListing(listingRequest);
+
+// this will invoke wallet and prompt the user to sign the transaction
+// Once signed the listing data will be saved and the saved listing will be
+// returned as the response
+
+```js

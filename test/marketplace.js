@@ -1,7 +1,7 @@
 const { assert, expect } = require("chai");
 const sinon = require("sinon");
 const { MarketPlace } = require("../dist");
-
+const { WALLET_PROVIDER } = require("../dist/types/marketplace_types");
 const authenticationErrorStatus = 401;
 const authenticationErrorMessage = "Request failed with status code 401";
 
@@ -19,7 +19,7 @@ const mockData = {
 
 describe("marketplace", function () {
   before(() => {
-    marketPlace = new MarketPlace("");
+    marketPlace = new MarketPlace("3b834bce-92d2-45fb-81de-bfcc89ea9d57","dev");
   });
 
   afterEach(() => {
@@ -174,4 +174,65 @@ describe("marketplace", function () {
       sinon.assert.calledOnce(saveListingStub);
     });
   });
+
+  describe("List ordinal for sale with walletProvider", function () {
+    it("should handle the listing process with a walletProvider", async () => {
+      const createListingStub = sandbox.stub(marketPlace, 'createListing').resolves({
+        psbt: "test_psbt"
+      });
+  
+      // Constructing a mock request based on MarketplaceCreateListingRequest type
+      const mockListingRequest = {
+        sellerOrdinals: [{
+          id: "0c9ac6fb5d4516aade728882e230b0d78337732ea71915c7fbc0cdabe5d29f3ci0",
+          price: "1234"
+        }],
+        sellerPaymentAddress: "2NAurbuXjBK5dztb416bh98ibDS7MKxV75C",
+        sellerOrdinalPublicKey: "594a4aaf5da5b144d0fa6b47987d966029d892fbc4aebb23214853e8b053702e",
+        sellerOrdinalAddress: "tb1p79l2gnn7u8uqxfepd7ddeeajzrmuv9nkl20wpf77t2u473a2h89s483yk3",
+        walletProvider: WALLET_PROVIDER.xverse
+      };
+  
+      try {
+        const response = await marketPlace.createListing(mockListingRequest);
+        console.log({response, data: response.data});
+        expect(response).to.have.property('psbt').that.equals("test_psbt");
+        sinon.assert.calledWith(createListingStub, sinon.match(mockListingRequest));
+      } catch (error) {
+        console.log(error);
+        assert.fail("Should not have thrown an error");
+      }
+    });
+  });
+  describe("Transfer Ordinals", function () {
+    it("should handle the ordinal transfer process", async () => {
+      const transferStub = sandbox.stub(marketPlace, 'transfer').resolves({
+        psbtBase64: "test_psbt_base64",
+        senderOrdinalInputs: [0],
+        senderPaymentInputs: [1]
+      });
+  
+      // Constructing a mock request based on MarketplaceTransferRequest type
+      const mockTransferRequest = {
+        ordinals: ["ordinal1"],
+        senderPaymentAddress: "sender_payment_address",
+        senderPaymentPublicKey: "sender_payment_public_key",
+        senderOrdinalPublicKey: "sender_ordinal_public_key",
+        senderOrdinalAddress: "sender_ordinal_address",
+        receiverOrdinalAddress: "receiver_ordinal_address",
+        walletProvider: WALLET_PROVIDER.xverse
+      };
+  
+      try {
+        const response = await marketPlace.transfer(mockTransferRequest);
+        expect(response).to.have.property('psbtBase64').that.equals("test_psbt_base64");
+        expect(response).to.have.property('senderOrdinalInputs').that.is.an('array').that.includes(0);
+        expect(response).to.have.property('senderPaymentInputs').that.is.an('array').that.includes(1);
+        sinon.assert.calledWith(transferStub, sinon.match(mockTransferRequest));
+      } catch (error) {
+        assert.fail("Should not have thrown an error");
+      }
+    });
+  });
+  
 });

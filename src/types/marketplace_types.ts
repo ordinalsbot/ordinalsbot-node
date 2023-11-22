@@ -1,3 +1,15 @@
+export enum LISTING_STATUS {
+  sold = "Sold",
+  active = "Active",
+  inactive = "Inactive",
+  pending_buyer_confirmation = "Pending Buyer Confirmation",
+  pending_seller_confirmation = "Pending Seller Confirmation",
+}
+
+export enum WALLET_PROVIDER {
+  xverse = "Xverse",
+}
+
 export interface MarketplaceCreateRequest {
   /** Name for the marketplace */
   name: string;
@@ -43,6 +55,12 @@ export interface MarketplaceCreateListingRequest {
 
   /** The public key for the wallet address that owns the ordinal being listed for sale */
   sellerOrdinalPublicKey?: string;
+
+  /** The Oridnal Address that owns the ordinal being listed for sale */
+  sellerOrdinalAddress?: string;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
 }
 
 export interface MarketplaceCreateListingResponse {
@@ -72,10 +90,16 @@ export interface MarketplaceCreateOfferRequest {
 
   /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
   feeRateTier?: ReeRateTier;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
 }
 
 export interface MarketplaceCreateOfferResponse {
+  /** base64 transaction to be signed */
   psbt: string;
+
+  /** Array of indices of the inputs that need to be signed by the buyer */
   buyerInputIndices: Array<number>;
 }
 
@@ -114,19 +138,17 @@ export interface MarketplaceSetupPaddingOutputsRequest {
 
   /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
   feeRateTier?: ReeRateTier;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
 }
 
 export interface MarketplaceSetupPaddingOutputsResponse {
   /** base64 transaction to be signed */
   psbt: string;
-}
 
-export enum LISTING_STATUS {
-  sold = "Sold",
-  active = "Active",
-  inactive = "Inactive",
-  pending_buyer_confirmation = "Pending Buyer Confirmation",
-  pending_seller_confirmation = "pending Seller Confirmation",
+  /** Array of indices of the inputs that need to be signed by the buyer */
+  buyerInputIndices: Array<number>;
 }
 
 export interface MarketplaceGetListingRequest {
@@ -145,4 +167,38 @@ export interface MarketplaceSaveListingRequest {
 export interface MarketplaceSaveListingResponse {
   /** base64 transaction to be signed */
   psbt: string;
+}
+
+export interface MarketplaceTransferRequest {
+  /** An array with a single ordinal object */
+  ordinals: Array<string>;
+
+  /** The sender's payment address */
+  senderPaymentAddress: string;
+  
+  /** The sender's payment public key */
+  senderPaymentPublicKey: string;
+
+  /** The sender's ordinal public key */
+  senderOrdinalPublicKey: string;
+
+  /** The sender's ordinal address */
+  senderOrdinalAddress: string;
+
+  /** The receiver's ordinal address */
+  receiverOrdinalAddress: string;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
+}
+
+export interface MarketplaceTransferResponse {
+  /** base64 transaction to be signed */
+  psbtBase64: string;
+
+  /** Array of Ordinal indices that need to be signed by the Sender  */
+  senderOrdinalInputs: Array<number>;
+
+  /** Array of Payment indices that need to be signed by the Sender  */
+  senderPaymentInputs: Array<number>;
 }
