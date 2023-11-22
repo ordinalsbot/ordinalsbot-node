@@ -105,7 +105,9 @@ marketplace
 
 ### Using Wallets on the client side
 
-For client-side applications, the methods `marketplace.createListing()`, `marketplace.createOffer()`, and `marketplace.setupPaddingOutputs()` support the `walletProvider` parameter. This optional string parameter allows for specifying the wallet name, with current support for the Xverse wallet and plans to include additional wallets soon. When the `walletProvider` parameter is specified it triggers the invocation of the specified wallet, prompting the user to sign the transaction. This integration significantly streamlines the process by reducing the need for multiple API calls and simplifies the structuring of data required for wallet invocation and transaction signing. Upon successful signing, the method also calls savelisting api with the correct data and returns the saved listing as the response.
+For client-side applications, the methods `marketplace.createListing()`, `marketplace.createOffer()`, and `marketplace.setupPaddingOutputs()` support the `walletProvider` parameter. This optional string parameter allows for specifying the wallet name, with current support for the Xverse wallet and plans to include additional wallets soon. When the `walletProvider` parameter is specified it triggers the invocation of the specified wallet, prompting the user to sign the transaction. This integration significantly streamlines the process by reducing the need for multiple API calls and simplifies the structuring of data required for wallet invocation and transaction signing. 
+
+The following example demonstrates how to create a listing for sale. When you invoke `marketplace.createListing()` and specify `"xverse"` as the `walletProvider`, it initiates an API call to generate a listing transaction. The method processes the response, formatting the data according to the requirements of the Xverse wallet. Subsequently, the Xverse wallet is activated to prompt the user to sign the transaction. Once the user successfully signs, this method additionally triggers the `save-listing` API, using the appropriately formatted data. Finally, it returns the confirmed listing information as the response.
 
 ```js
 
@@ -129,4 +131,4 @@ const response = await marketPlace.createListing(listingRequest);
 // Once signed the listing data will be saved and the saved listing will be
 // returned as the response
 
-```js
+```
