@@ -1,3 +1,12 @@
+## [0.1.1]
+
+#### APIs Updated
+
+- `Marketplace`
+  - createListing - Added walletProvider parameter
+  - createOffer  - Added walletProvider parameter
+  - setupPaddingOutputs  - Added walletProvider parameter
+
 ## [0.1.0]
 
 #### APIs exposed
