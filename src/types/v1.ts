@@ -37,6 +37,14 @@ export interface InscriptionFile {
 
   /** Inscription transaction details */
   tx?: InscriptionTransaction;
+
+  // only 1 of metadataDataURL or metadataUrl should be present. not both!
+  /* metadata json to be stored on chain */
+  metadataDataURL?: string;
+  metadataUrl?: string;
+
+  metadataSize?: number;
+
 }
 
 export interface InscriptionOrderRequest {
