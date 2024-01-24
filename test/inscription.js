@@ -57,6 +57,55 @@ describe("Inscription SDK Tests", function () {
     assert.deepEqual(orderResponse.data, { status: "ok" });
   });
 
+  it("should create an order with brotli compression", async () => {
+    const orderPayload = {
+      files: [
+        {
+          size: 10,
+          type: "plain/text",
+          name: "test-my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+      compress: true,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/order', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
+
+  it("should create an order with metadata json", async () => {
+    const orderPayload = {
+      files: [
+        {
+          type: "plain/text",
+          name: "test-my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+          size: 10,
+          metadataDataURL: "data:text/plain;base64,ewogICAgaW5zY3JpYmVkX2J5OiAiT3JkaW5hbHNCb3QiCn0=",
+          metadataSize: 35
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/order', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
+
   it("should return an order object when getting an order", async () => {
     axiosStub.get.resolves({ data: { id: sampleOrderId1 } });
 

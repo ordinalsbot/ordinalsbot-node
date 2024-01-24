@@ -28,6 +28,7 @@ export interface InscriptionFile {
   /** File name e.g. "my-text-inscription-file.txt" */
   name: string;
 
+  // only 1 of dataURL or url should be present. not both!
   /** Base64 encoded file contents */
   dataURL?: string;
 
@@ -36,6 +37,14 @@ export interface InscriptionFile {
 
   /** Inscription transaction details */
   tx?: InscriptionTransaction;
+
+  // only 1 of metadataDataURL or metadataUrl should be present. not both!
+  /* metadata json to be stored on chain */
+  metadataDataURL?: string;
+  metadataUrl?: string;
+
+  metadataSize?: number;
+
 }
 
 export interface InscriptionOrderRequest {
@@ -70,6 +79,11 @@ export interface InscriptionOrderRequest {
 
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string;
+
+  /** Use brotli compression to reduce file sizes on chain
+   * default=false
+   */
+  compress?: boolean;
 }
 
 export interface InscriptionCharge {
