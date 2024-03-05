@@ -169,6 +169,29 @@ export interface MarketplaceSaveListingResponse {
   psbt: string;
 }
 
+/**
+ * Request object for confirming a listing in the marketplace.
+ */
+export interface MarketplaceConfirmListingRequest {
+  /**
+   * An array of ordinals for the listings to be confirmed.
+   */
+  sellerOrdinals: Array<string>;
+  /**
+   * The PSBT (Partially Signed Bitcoin Transaction) for the confirmed listing.
+   */
+  signedListingPSBT: string;
+}
+/**
+ * Response object for confirming a listing in the marketplace.
+ */
+export interface MarketplaceConfirmListingResponse {
+  /**
+   * A message indicating the result of the confirmation operation.
+   */
+  message: string;
+}
+
 export interface MarketplaceTransferRequest {
   /** An array with a single ordinal object */
   ordinals: Array<string>;

@@ -19,6 +19,8 @@ import {
   MarketplaceSaveListingResponse,
   MarketplaceTransferRequest,
   MarketplaceTransferResponse,
+  MarketplaceConfirmListingRequest,
+  MarketplaceConfirmListingResponse,
 } from "./types/marketplace_types";
 import { InscriptionEnv } from "./types";
 
@@ -133,6 +135,19 @@ export class MarketPlaceClient {
     return this.instanceV1.patch(`/save-listing/${saveListingRequest.ordinalId}`, {
       ...saveListingRequest,
     });
+  }
+
+  /**
+   * Confirms a listing in the marketplace.
+   * @param {MarketplaceConfirmListingRequest} confirmListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceSaveListingResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  async confirmListing(
+    confirmListingRequest: MarketplaceConfirmListingRequest
+  ): Promise<MarketplaceConfirmListingResponse> {
+    return this.instanceV1.post(`/confirm-listing`, {
+      ...confirmListingRequest,
+    })
   }
 
   async transfer(

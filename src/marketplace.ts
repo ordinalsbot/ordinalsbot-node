@@ -20,6 +20,8 @@ import {
   MarketplaceTransferRequest,
   MarketplaceTransferResponse,
   WALLET_PROVIDER,
+  MarketplaceConfirmListingRequest,
+  MarketplaceConfirmListingResponse,
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
@@ -46,7 +48,7 @@ export class MarketPlace {
 
   async createListing(
     createListingRequest: MarketplaceCreateListingRequest
-  ): Promise<MarketplaceCreateListingResponse | MarketplaceSaveListingResponse> {
+  ): Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse> {
     try {
       if (!createListingRequest.walletProvider) {
         return await this.marketplaceInstance.createListing(createListingRequest);
@@ -77,18 +79,17 @@ export class MarketPlace {
             payload,
             onFinish: async (response) => {
               try {
-                console.log('Transaction signed');
-                console.log('Response:', response);
-                const listingId = createListingRequest.sellerOrdinals[0].id;
-                if (!listingId) {
-                  throw new Error('No listing ID provided');
-                }
-                const updateListingData = {
+                // ordinal ids to confirm the listing
+                const sellerOrdinalIds = createListingRequest.sellerOrdinals.map((item, index) => item.id)
+                
+                const confirmListingPayload: MarketplaceConfirmListingRequest = {
+                  sellerOrdinals: sellerOrdinalIds as string[],
                   signedListingPSBT: response.psbtBase64,
-                };
-                resolve(this.saveListing({ ordinalId: listingId, updateListingData }));
+                }
+                
+                resolve(this.confirmListing(confirmListingPayload));
               } catch (error) {
-                console.error('Error saving listing:', error);
+                console.error('Error confirm listing:', error);
                 reject(error);
               }
             },
@@ -205,6 +206,17 @@ export class MarketPlace {
     saveListingRequest: MarketplaceSaveListingRequest
   ): Promise<MarketplaceSaveListingResponse> {
     return this.marketplaceInstance.saveListing(saveListingRequest);
+  }
+
+  /**
+   * Confirms a listing in the marketplace.
+   * @param {MarketplaceConfirmListingRequest} confirmListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmListingResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  confirmListing(
+    confirmListingRequest: MarketplaceConfirmListingRequest
+  ): Promise<MarketplaceConfirmListingResponse> {
+    return this.marketplaceInstance.confirmListing(confirmListingRequest)
   }
 
   async transfer(
