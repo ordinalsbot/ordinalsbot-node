@@ -192,9 +192,23 @@ export interface MarketplaceConfirmListingResponse {
   message: string;
 }
 
+/**
+ * transfer object.
+ */
+export interface TransferOrdinal {
+  /** Ordinal id for the ordinal to be transfer. */
+  ordinalId?: string;
+
+  /** The receiver ordinal address to whom the ordinal will be send. */
+  receiverOrdinalAddress: number | string;
+}
+
+/**
+ * Request object for transfer ordinals.
+ */
 export interface MarketplaceTransferRequest {
   /** An array with a single ordinal object */
-  ordinals: Array<string>;
+  transfer: Array<string>;
 
   /** The sender's payment address */
   senderPaymentAddress: string;
@@ -215,6 +229,9 @@ export interface MarketplaceTransferRequest {
   walletProvider?: string;
 }
 
+/**
+ * Response object for transfer ordinals response.
+ */
 export interface MarketplaceTransferResponse {
   /** base64 transaction to be signed */
   psbtBase64: string;
