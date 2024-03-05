@@ -46,6 +46,11 @@ export class MarketPlace {
     return this.marketplaceInstance.createMarketPlace(createMarketplaceRequest);
   }
 
+  /**
+ * Create a new listing on the marketplace.
+ * @param {MarketplaceCreateListingRequest} createListingRequest The request object containing information about the listing.
+ * @returns {Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse>} A promise that resolves to either a create listing response or a confirm listing response.
+ */
   async createListing(
     createListingRequest: MarketplaceCreateListingRequest
   ): Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse> {
