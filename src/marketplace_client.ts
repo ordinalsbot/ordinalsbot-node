@@ -21,6 +21,10 @@ import {
   MarketplaceTransferResponse,
   MarketplaceConfirmListingRequest,
   MarketplaceConfirmListingResponse,
+  MarketplaceReListingRequest,
+  MarketplaceReListingResponse,
+  MarketplaceConfirmReListRequest,
+  MarketplaceConfirmReListResponse,
 } from "./types/marketplace_types";
 import { InscriptionEnv } from "./types";
 
@@ -147,6 +151,32 @@ export class MarketPlaceClient {
   ): Promise<MarketplaceConfirmListingResponse> {
     return this.instanceV1.post(`/confirm-listing`, {
       ...confirmListingRequest,
+    })
+  }
+
+  /**
+   * Relisting an existing listing ordinal in the marketplace.
+   * @param {MarketplaceReListingRequest} reListingRequest - The request object for reListing.
+   * @returns {Promise<MarketplaceReListingResponse>} A promise that resolves with the response from relisting.
+   */
+  async reListing(
+    reListingRequest: MarketplaceReListingRequest
+  ): Promise<MarketplaceReListingResponse> {
+    return this.instanceV1.post(`/relist`, {
+      ...reListingRequest,
+    });
+  }
+
+  /**
+   * Confirms relisting in the marketplace.
+   * @param {MarketplaceConfirmReListRequest} confirmReListRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmReListResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  async confirmReListing(
+    confirmReListRequest: MarketplaceConfirmReListRequest
+  ): Promise<MarketplaceConfirmReListResponse> {
+    return this.instanceV1.post(`/confirm-relist`, {
+      ...confirmReListRequest,
     })
   }
 

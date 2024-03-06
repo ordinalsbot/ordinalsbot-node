@@ -242,3 +242,58 @@ export interface MarketplaceTransferResponse {
   /** Array of Payment indices that need to be signed by the Sender  */
   senderPaymentInputs: Array<number>;
 }
+
+/**
+ * Request object for relist ordinal.
+ */
+export interface MarketplaceReListingRequest {
+  /** existing listing ordinal id for relist */
+  ordinalId: string;
+
+  /** updated price for ordinal */
+  price:number
+
+  /** The address to receive the sale proceeds when the ordinal is sold. This will be part of the sale transaction that the buyer will sign */
+  sellerPaymentAddress?: string;
+
+  /** The public key for the wallet address that owns the ordinal being listed for sale */
+  sellerOrdinalPublicKey?: string;
+
+  /** The Oridnal Address that owns the ordinal being listed for sale */
+  sellerOrdinalAddress?: string;
+
+  /** Wallet Provider name */
+  walletProvider?: string;
+}
+
+/**
+ * Response object for relist ordinal.
+ */
+export interface MarketplaceReListingResponse {
+  /** base64 transaction to be signed */
+  psbt: string;
+}
+
+/**
+ * Request object for confirming a relisting in the marketplace.
+ */
+export interface MarketplaceConfirmReListRequest {
+  /**
+   * The ordinal id for relist
+   */
+  ordinalId: string;
+
+  /**
+   * The PSBT (Partially Signed Bitcoin Transaction) for the confirmed relist.
+   */
+  signedListingPSBT: string;
+}
+/**
+ * Response object for confirming a listing in the marketplace.
+ */
+export interface MarketplaceConfirmReListResponse {
+  /**
+   * A message indicating the result of the confirmation operation.
+   */
+  message: string;
+}

@@ -22,6 +22,10 @@ import {
   WALLET_PROVIDER,
   MarketplaceConfirmListingRequest,
   MarketplaceConfirmListingResponse,
+  MarketplaceReListingRequest,
+  MarketplaceReListingResponse,
+  MarketplaceConfirmReListResponse,
+  MarketplaceConfirmReListRequest,
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
@@ -114,6 +118,67 @@ export class MarketPlace {
     }
   }
   
+  /**
+   * Updated price for a exisiting listing on the marketplace.
+   * @param {MarketplaceReListingRequest} reListingRequest The request object containing information about the listing.
+   * @returns {Promise<MarketplaceReListingResponse | MarketplaceConfirmReListResponse>} A promise that resolves to either a create listing response or a confirm listing response.
+   */
+  async reListing(
+    reListingRequest: MarketplaceReListingRequest
+  ): Promise<MarketplaceReListingResponse | MarketplaceConfirmReListResponse> {
+    try {
+      if (!reListingRequest.walletProvider) {
+        return await this.marketplaceInstance.reListing(reListingRequest);
+      } else if (reListingRequest.walletProvider === WALLET_PROVIDER.xverse) {
+        const { psbt } = await this.marketplaceInstance.reListing(reListingRequest);
+        // Create the payload for signing the seller transaction
+        if (!reListingRequest.sellerOrdinalAddress) {
+          throw new Error('No seller address provided');
+        }
+        const sellerInput = {
+          address: reListingRequest.sellerOrdinalAddress,
+          signingIndexes: [0],
+          sigHash:
+            bitcoin.Transaction.SIGHASH_SINGLE |
+            bitcoin.Transaction.SIGHASH_ANYONECANPAY,
+        };
+        
+        const payload = {
+          network: { type: this.network },
+          message: 'Sign Seller Transaction',
+          psbtBase64: psbt,
+          broadcast: false,
+          inputsToSign: [sellerInput],
+        };
+      
+        return new Promise((resolve, reject) => {
+          signTransaction({
+            payload,
+            onFinish: async (response) => {
+              try {
+                const confirmReListingPayload = {
+                  ordinalId: reListingRequest.ordinalId,
+                  signedListingPSBT: response.psbtBase64,
+                }
+                resolve(this.confirmReListing(confirmReListingPayload));
+              } catch (error) {
+                console.error('Error confirm relisting:', error);
+                reject(error);
+              }
+            },
+            onCancel: () => {
+              console.log('Transaction canceled');
+            }
+          });
+        });
+      } else {
+        throw new Error("Wallet not supported");
+      }
+    } catch (error) {
+      console.error('Error in reListing:', error);
+      throw error;
+    }
+  }
 
   async createOffer(
     createOfferRequest: MarketplaceCreateOfferRequest
@@ -224,6 +289,17 @@ export class MarketPlace {
     confirmListingRequest: MarketplaceConfirmListingRequest
   ): Promise<MarketplaceConfirmListingResponse> {
     return this.marketplaceInstance.confirmListing(confirmListingRequest)
+  }
+
+  /**
+   * Confirms relisting in the marketplace.
+   * @param {MarketplaceConfirmReListRequest} confirmReListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmReListResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  confirmReListing(
+    confirmReListingRequest: MarketplaceConfirmReListRequest
+  ): Promise<MarketplaceConfirmReListResponse> {
+    return this.marketplaceInstance.confirmReListing(confirmReListingRequest)
   }
 
   async transfer(
