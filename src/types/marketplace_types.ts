@@ -297,3 +297,38 @@ export interface MarketplaceConfirmReListResponse {
    */
   message: string;
 }
+
+
+/**
+ * Request object for deList ordinal.
+ */
+export interface MarketplaceDeListRequest {
+  /** ordinal Id to deList */
+  ordinalId: string;
+
+  /** The seller's payment address */
+  senderPaymentAddress: string;
+  
+  /** The seller's payment public key */
+  senderPaymentPublicKey: string;
+
+  /** The seller's ordinal address */
+  senderOrdinalAddress: string;
+  
+  /** Wallet Provider name */
+  walletProvider?: string;
+}
+
+/**
+ * Response object for deList ordinal.
+ */
+export interface MarketplaceDeListResponse {
+  /** base64 transaction to be signed */
+  psbtBase64: string;
+
+  /** Array of Ordinal indices that need to be signed by the Seller */
+  senderOrdinalInputs: Array<number>;
+
+  /** Array of Payment indices that need to be signed by the Seller */
+  senderPaymentInputs: Array<number>;
+}

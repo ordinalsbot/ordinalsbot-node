@@ -26,6 +26,8 @@ import {
   MarketplaceReListingResponse,
   MarketplaceConfirmReListResponse,
   MarketplaceConfirmReListRequest,
+  MarketplaceDeListRequest,
+  MarketplaceDeListResponse,
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
@@ -319,6 +321,53 @@ export class MarketPlace {
       },
       {
         address: transferRequest.senderPaymentAddress,
+        signingIndexes: transferResponse.senderPaymentInputs,
+        sigHash: bitcoin.Transaction.SIGHASH_ALL,
+      },
+    ];
+
+    // Create the payload for signing the seller transaction
+    const payload = {
+      network: { type: this.network },
+      message: 'Sign Transfer Transaction',
+      psbtBase64: transferResponse.psbtBase64,
+      broadcast: true,
+      inputsToSign,
+    };
+
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response) => response,
+        onCancel: () => {
+          console.log('Transaction canceled');
+        }
+      });
+    });
+  }
+
+  /**
+   * DeLists the listed ordinal from marketplace
+   * @param {MarketplaceDeListRequest} deListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceDeListResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  async deList(
+    deListingRequest: MarketplaceDeListRequest
+  ): Promise<MarketplaceDeListResponse> {
+    if (!deListingRequest.walletProvider) {
+      return this.marketplaceInstance.deList(
+        deListingRequest
+      );
+    }
+    const transferResponse: MarketplaceDeListResponse = await this.marketplaceInstance.deList(deListingRequest);
+    const inputsToSign = [
+      {
+        address: deListingRequest.senderOrdinalAddress,
+        signingIndexes: transferResponse.senderOrdinalInputs,
+        sigHash: bitcoin.Transaction.SIGHASH_ALL,
+      },
+      {
+        address: deListingRequest.senderPaymentAddress,
         signingIndexes: transferResponse.senderPaymentInputs,
         sigHash: bitcoin.Transaction.SIGHASH_ALL,
       },
