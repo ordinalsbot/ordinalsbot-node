@@ -47,10 +47,10 @@ export class MarketPlace {
   }
 
   /**
- * Create a new listing on the marketplace.
- * @param {MarketplaceCreateListingRequest} createListingRequest The request object containing information about the listing.
- * @returns {Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse>} A promise that resolves to either a create listing response or a confirm listing response.
- */
+   * Create a new listing on the marketplace.
+   * @param {MarketplaceCreateListingRequest} createListingRequest The request object containing information about the listing.
+   * @returns {Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse>} A promise that resolves to either a create listing response or a confirm listing response.
+   */
   async createListing(
     createListingRequest: MarketplaceCreateListingRequest
   ): Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse> {
@@ -63,9 +63,11 @@ export class MarketPlace {
         if (!createListingRequest.sellerOrdinalAddress) {
           throw new Error('No seller address provided');
         }
+        const inputIndices = createListingRequest.sellerOrdinals.map((item, index) => index);
+
         const sellerInput = {
           address: createListingRequest.sellerOrdinalAddress,
-          signingIndexes: [0],
+          signingIndexes: inputIndices,
           sigHash:
             bitcoin.Transaction.SIGHASH_SINGLE |
             bitcoin.Transaction.SIGHASH_ANYONECANPAY,
