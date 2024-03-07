@@ -16,7 +16,7 @@
 
 - `Inscription`
 
-  - Added metadat support for insrciption orders.
+  - Added metadata support for insrciption orders.
   - Added brotli compression support for inscription orders.
 
 ## [0.1.1]
