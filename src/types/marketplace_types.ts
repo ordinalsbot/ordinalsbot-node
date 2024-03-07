@@ -241,9 +241,9 @@ export interface MarketplaceTransferAPIResponse {
 }
 
 /**
- * Response object for transfer ordinals.
+ * Response object for sign transaction.
  */
-export interface MarketplaceTransferResponse {
+export interface SignTransactionResponse {
   /** base64 transaction to be signed */
   psbtBase64: string;
 
@@ -339,15 +339,4 @@ export interface MarketplaceDeListAPIResponse {
 
   /** Array of Payment indices that need to be signed by the Seller */
   senderPaymentInputs: Array<number>;
-}
-
-/**
- * Response object for transfer ordinals.
- */
-export interface MarketplaceDeListResponse {
-  /** base64 transaction to be signed */
-  psbtBase64: string;
-  
-  /** transaction id of the transfer */
-  txId: string;
 }

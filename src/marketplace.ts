@@ -27,14 +27,11 @@ import {
   MarketplaceConfirmReListResponse,
   MarketplaceConfirmReListRequest,
   MarketplaceDeListRequest,
-  MarketplaceDeListAPIResponse,
-  MarketplaceTransferResponse,
-  MarketplaceDeListResponse,
+  MarketplaceDeListAPIResponse
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
-import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
-import { BitcoinNetworkType, getAddress, signTransaction } from 'sats-connect';
+import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sats-connect';
 
 export class MarketPlace {
   private network: BitcoinNetworkType;
@@ -308,7 +305,7 @@ export class MarketPlace {
 
   async transfer(
     transferRequest: MarketplaceTransferRequest
-  ): Promise<MarketplaceTransferResponse | MarketplaceTransferAPIResponse> {
+  ): Promise<SignTransactionResponse | MarketplaceTransferAPIResponse> {
     if (!transferRequest.walletProvider) {
       return this.marketplaceInstance.transfer(
         transferRequest
@@ -357,7 +354,7 @@ export class MarketPlace {
    */
   async deList(
     deListingRequest: MarketplaceDeListRequest
-  ): Promise<MarketplaceDeListAPIResponse | MarketplaceDeListResponse> {
+  ): Promise<MarketplaceDeListAPIResponse | SignTransactionResponse> {
     if (!deListingRequest.walletProvider) {
       return this.marketplaceInstance.deList(
         deListingRequest
