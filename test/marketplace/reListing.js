@@ -4,8 +4,8 @@ const { MarketPlace } = require('../../dist')
 const { WALLET_PROVIDER } = require('../../dist/types/marketplace_types')
 
 const sandbox = sinon.createSandbox()
-describe('List ordinal for sale with walletProvider', function () {
-  it('should handle the listing process with a walletProvider', async () => {
+describe('ReList ordinal', function () {
+  it('should handle the relisting process', async () => {
     const marketPlace = new MarketPlace('someApiKey', 'dev')
     const createListingStub = sandbox.stub(marketPlace, 'reListing').resolves({
       psbt: 'test_psbt',
