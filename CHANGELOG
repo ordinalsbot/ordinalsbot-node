@@ -1,8 +1,30 @@
+## [0.1.3]
+
+#### APIs Updated
+
+- `Marketplace`
+
+  - confirmListing - Added method to update the signedPSBT on a newly created listing.
+  - reListing - Added method to update the price of existing listing ordinal.
+  - confirmReListing - Added method to update the signedPSBT on a new relisting.
+  - deList - Added method to remove the existing listing.
+  - transfer - Updated the method to support transfer of multiple ordinals.
+
+## [0.1.2]
+
+#### APIs Updated
+
+- `Inscription`
+
+  - Added metadata support for insrciption orders.
+  - Added brotli compression support for inscription orders.
+
 ## [0.1.1]
 
 #### APIs Updated
 
 - `Marketplace`
+
   - createListing - Added walletProvider parameter
   - createOffer  - Added walletProvider parameter
   - setupPaddingOutputs  - Added walletProvider parameter
