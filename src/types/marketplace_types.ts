@@ -221,10 +221,7 @@ export interface MarketplaceTransferRequest {
 
   /** The sender's ordinal address */
   senderOrdinalAddress: string;
-
-  /** The receiver's ordinal address */
-  receiverOrdinalAddress: string;
-
+  
   /** Wallet Provider name */
   walletProvider?: string;
 }

@@ -33,7 +33,6 @@ describe('Marketplace Transfer Ordinals', function () {
       senderPaymentPublicKey: 'someSenderPaymentPublicKey',
       senderOrdinalPublicKey: 'someSenderOrdinalPublicKey',
       senderOrdinalAddress: 'someSenderOrdinalAddress',
-      receiverOrdinalAddress: 'someReceiverOrdinalAddress',
       walletProvider: WALLET_PROVIDER.xverse,
     }
 
