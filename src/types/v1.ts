@@ -190,17 +190,7 @@ export interface InscriptionCollectionCreateRequest {
   // images to be used on the mint page
   banner?: string;
   cover?: string;
-
-  // allowlist is optional
-  allowlist?: AllocationMap;
 }
-
-// allocation: -1 = unlimited, 0 = not allowed, any other number = allowed number of inscriptions
-export type AllocationMap = {
-  [address: string]: {
-    allocation: number;
-  };
-};
 
 export interface InscriptionCollectionCreateResponse
   extends InscriptionCollectionCreateRequest {

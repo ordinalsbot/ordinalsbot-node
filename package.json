@@ -1,10 +1,10 @@
 {
   "name": "ordinalsbot",
-  "version": "0.1.4",
+  "version": "0.1.2",
   "description": "Node.js library for OrdinalsBot API",
   "main": "dist/index.js",
   "scripts": {
-    "test": "pnpm build && nyc mocha 'test/**/*.js'",
+    "test": "pnpm build && nyc mocha",
     "build": "rm -rf dist/ && tsc",
     "prepack": "pnpm build"
   },

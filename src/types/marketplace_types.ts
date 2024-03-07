@@ -169,46 +169,9 @@ export interface MarketplaceSaveListingResponse {
   psbt: string;
 }
 
-/**
- * Request object for confirming a listing in the marketplace.
- */
-export interface MarketplaceConfirmListingRequest {
-  /**
-   * An array of ordinals for the listings to be confirmed.
-   */
-  sellerOrdinals: Array<string>;
-  /**
-   * The PSBT (Partially Signed Bitcoin Transaction) for the confirmed listing.
-   */
-  signedListingPSBT: string;
-}
-/**
- * Response object for confirming a listing in the marketplace.
- */
-export interface MarketplaceConfirmListingResponse {
-  /**
-   * A message indicating the result of the confirmation operation.
-   */
-  message: string;
-}
-
-/**
- * transfer object.
- */
-export interface TransferOrdinal {
-  /** Ordinal id for the ordinal to be transfer. */
-  ordinalId?: string;
-
-  /** The receiver ordinal address to whom the ordinal will be send. */
-  receiverOrdinalAddress: number | string;
-}
-
-/**
- * Request object for transfer ordinals.
- */
 export interface MarketplaceTransferRequest {
   /** An array with a single ordinal object */
-  transfer: Array<string>;
+  ordinals: Array<string>;
 
   /** The sender's payment address */
   senderPaymentAddress: string;
@@ -221,15 +184,15 @@ export interface MarketplaceTransferRequest {
 
   /** The sender's ordinal address */
   senderOrdinalAddress: string;
-  
+
+  /** The receiver's ordinal address */
+  receiverOrdinalAddress: string;
+
   /** Wallet Provider name */
   walletProvider?: string;
 }
 
-/**
- * Response object for transfer API.
- */
-export interface MarketplaceTransferAPIResponse {
+export interface MarketplaceTransferResponse {
   /** base64 transaction to be signed */
   psbtBase64: string;
 
@@ -237,106 +200,5 @@ export interface MarketplaceTransferAPIResponse {
   senderOrdinalInputs: Array<number>;
 
   /** Array of Payment indices that need to be signed by the Sender  */
-  senderPaymentInputs: Array<number>;
-}
-
-/**
- * Response object for sign transaction.
- */
-export interface SignTransactionResponse {
-  /** base64 transaction to be signed */
-  psbtBase64: string;
-
-  /** transaction id of the transfer */
-  txId: string;
-}
-
-/**
- * Request object for relist ordinal.
- */
-export interface MarketplaceReListingRequest {
-  /** existing listing ordinal id for relist */
-  ordinalId: string;
-
-  /** updated price for ordinal */
-  price:number
-
-  /** The address to receive the sale proceeds when the ordinal is sold. This will be part of the sale transaction that the buyer will sign */
-  sellerPaymentAddress?: string;
-
-  /** The public key for the wallet address that owns the ordinal being listed for sale */
-  sellerOrdinalPublicKey?: string;
-
-  /** The Oridnal Address that owns the ordinal being listed for sale */
-  sellerOrdinalAddress?: string;
-
-  /** Wallet Provider name */
-  walletProvider?: string;
-}
-
-/**
- * Response object for relist ordinal.
- */
-export interface MarketplaceReListingResponse {
-  /** base64 transaction to be signed */
-  psbt: string;
-}
-
-/**
- * Request object for confirming a relisting in the marketplace.
- */
-export interface MarketplaceConfirmReListRequest {
-  /**
-   * The ordinal id for relist
-   */
-  ordinalId: string;
-
-  /**
-   * The PSBT (Partially Signed Bitcoin Transaction) for the confirmed relist.
-   */
-  signedListingPSBT: string;
-}
-/**
- * Response object for confirming a listing in the marketplace.
- */
-export interface MarketplaceConfirmReListResponse {
-  /**
-   * A message indicating the result of the confirmation operation.
-   */
-  message: string;
-}
-
-
-/**
- * Request object for deList ordinal.
- */
-export interface MarketplaceDeListRequest {
-  /** ordinal Id to deList */
-  ordinalId: string;
-
-  /** The seller's payment address */
-  senderPaymentAddress: string;
-  
-  /** The seller's payment public key */
-  senderPaymentPublicKey: string;
-
-  /** The seller's ordinal address */
-  senderOrdinalAddress: string;
-  
-  /** Wallet Provider name */
-  walletProvider?: string;
-}
-
-/**
- * Response object for deList ordinal.
- */
-export interface MarketplaceDeListAPIResponse {
-  /** base64 transaction to be signed */
-  psbtBase64: string;
-
-  /** Array of Ordinal indices that need to be signed by the Seller */
-  senderOrdinalInputs: Array<number>;
-
-  /** Array of Payment indices that need to be signed by the Seller */
   senderPaymentInputs: Array<number>;
 }
