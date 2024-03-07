@@ -18,13 +18,20 @@ import {
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
   MarketplaceTransferRequest,
-  MarketplaceTransferResponse,
+  MarketplaceTransferAPIResponse,
   WALLET_PROVIDER,
+  MarketplaceConfirmListingRequest,
+  MarketplaceConfirmListingResponse,
+  MarketplaceReListingRequest,
+  MarketplaceReListingResponse,
+  MarketplaceConfirmReListResponse,
+  MarketplaceConfirmReListRequest,
+  MarketplaceDeListRequest,
+  MarketplaceDeListAPIResponse
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
-import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
-import { BitcoinNetworkType, getAddress, signTransaction } from 'sats-connect';
+import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sats-connect';
 
 export class MarketPlace {
   private network: BitcoinNetworkType;
@@ -44,9 +51,14 @@ export class MarketPlace {
     return this.marketplaceInstance.createMarketPlace(createMarketplaceRequest);
   }
 
+  /**
+   * Create a new listing on the marketplace.
+   * @param {MarketplaceCreateListingRequest} createListingRequest The request object containing information about the listing.
+   * @returns {Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse>} A promise that resolves to either a create listing response or a confirm listing response.
+   */
   async createListing(
     createListingRequest: MarketplaceCreateListingRequest
-  ): Promise<MarketplaceCreateListingResponse | MarketplaceSaveListingResponse> {
+  ): Promise<MarketplaceCreateListingResponse | MarketplaceConfirmListingResponse> {
     try {
       if (!createListingRequest.walletProvider) {
         return await this.marketplaceInstance.createListing(createListingRequest);
@@ -56,8 +68,76 @@ export class MarketPlace {
         if (!createListingRequest.sellerOrdinalAddress) {
           throw new Error('No seller address provided');
         }
+        const inputIndices = createListingRequest.sellerOrdinals.map((item, index) => index);
+
         const sellerInput = {
           address: createListingRequest.sellerOrdinalAddress,
+          signingIndexes: inputIndices,
+          sigHash:
+            bitcoin.Transaction.SIGHASH_SINGLE |
+            bitcoin.Transaction.SIGHASH_ANYONECANPAY,
+        };
+        
+        const payload = {
+          network: { type: this.network },
+          message: 'Sign Seller Transaction',
+          psbtBase64: psbt,
+          broadcast: false,
+          inputsToSign: [sellerInput],
+        };
+      
+        return new Promise((resolve, reject) => {
+          signTransaction({
+            payload,
+            onFinish: async (response) => {
+              try {
+                // ordinal ids to confirm the listing
+                const sellerOrdinalIds = createListingRequest.sellerOrdinals.map((item, index) => item.id)
+                
+                const confirmListingPayload: MarketplaceConfirmListingRequest = {
+                  sellerOrdinals: sellerOrdinalIds as string[],
+                  signedListingPSBT: response.psbtBase64,
+                }
+                
+                resolve(this.confirmListing(confirmListingPayload));
+              } catch (error) {
+                console.error('Error confirm listing:', error);
+                reject(error);
+              }
+            },
+            onCancel: () => {
+              console.log('Transaction canceled');
+            }
+          });
+        });
+      } else {
+        throw new Error("Wallet not supported");
+      }
+    } catch (error) {
+      console.error('Error in createListing:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Updated price for a exisiting listing on the marketplace.
+   * @param {MarketplaceReListingRequest} reListingRequest The request object containing information about the listing.
+   * @returns {Promise<MarketplaceReListingResponse | MarketplaceConfirmReListResponse>} A promise that resolves to either a create listing response or a confirm listing response.
+   */
+  async reListing(
+    reListingRequest: MarketplaceReListingRequest
+  ): Promise<MarketplaceReListingResponse | MarketplaceConfirmReListResponse> {
+    try {
+      if (!reListingRequest.walletProvider) {
+        return await this.marketplaceInstance.reListing(reListingRequest);
+      } else if (reListingRequest.walletProvider === WALLET_PROVIDER.xverse) {
+        const { psbt } = await this.marketplaceInstance.reListing(reListingRequest);
+        // Create the payload for signing the seller transaction
+        if (!reListingRequest.sellerOrdinalAddress) {
+          throw new Error('No seller address provided');
+        }
+        const sellerInput = {
+          address: reListingRequest.sellerOrdinalAddress,
           signingIndexes: [0],
           sigHash:
             bitcoin.Transaction.SIGHASH_SINGLE |
@@ -77,18 +157,13 @@ export class MarketPlace {
             payload,
             onFinish: async (response) => {
               try {
-                console.log('Transaction signed');
-                console.log('Response:', response);
-                const listingId = createListingRequest.sellerOrdinals[0].id;
-                if (!listingId) {
-                  throw new Error('No listing ID provided');
-                }
-                const updateListingData = {
+                const confirmReListingPayload = {
+                  ordinalId: reListingRequest.ordinalId,
                   signedListingPSBT: response.psbtBase64,
-                };
-                resolve(this.saveListing({ ordinalId: listingId, updateListingData }));
+                }
+                resolve(this.confirmReListing(confirmReListingPayload));
               } catch (error) {
-                console.error('Error saving listing:', error);
+                console.error('Error confirm relisting:', error);
                 reject(error);
               }
             },
@@ -101,11 +176,10 @@ export class MarketPlace {
         throw new Error("Wallet not supported");
       }
     } catch (error) {
-      console.error('Error in createListing:', error);
+      console.error('Error in reListing:', error);
       throw error;
     }
   }
-  
 
   async createOffer(
     createOfferRequest: MarketplaceCreateOfferRequest
@@ -207,15 +281,37 @@ export class MarketPlace {
     return this.marketplaceInstance.saveListing(saveListingRequest);
   }
 
+  /**
+   * Confirms a listing in the marketplace.
+   * @param {MarketplaceConfirmListingRequest} confirmListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmListingResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  confirmListing(
+    confirmListingRequest: MarketplaceConfirmListingRequest
+  ): Promise<MarketplaceConfirmListingResponse> {
+    return this.marketplaceInstance.confirmListing(confirmListingRequest)
+  }
+
+  /**
+   * Confirms relisting in the marketplace.
+   * @param {MarketplaceConfirmReListRequest} confirmReListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmReListResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  confirmReListing(
+    confirmReListingRequest: MarketplaceConfirmReListRequest
+  ): Promise<MarketplaceConfirmReListResponse> {
+    return this.marketplaceInstance.confirmReListing(confirmReListingRequest)
+  }
+
   async transfer(
     transferRequest: MarketplaceTransferRequest
-  ): Promise<MarketplaceTransferResponse> {
+  ): Promise<SignTransactionResponse | MarketplaceTransferAPIResponse> {
     if (!transferRequest.walletProvider) {
       return this.marketplaceInstance.transfer(
         transferRequest
       );
     }
-    const transferResponse: MarketplaceTransferResponse = await this.marketplaceInstance.transfer(transferRequest);
+    const transferResponse: MarketplaceTransferAPIResponse = await this.marketplaceInstance.transfer(transferRequest);
     const inputsToSign = [
       {
         address: transferRequest.senderOrdinalAddress,
@@ -241,7 +337,58 @@ export class MarketPlace {
     return new Promise((resolve, reject) => {
       signTransaction({
         payload,
-        onFinish: async (response) => response,
+        onFinish: async (response: any) => {
+          return resolve(response)
+        },
+        onCancel: () => {
+          console.log('Transaction canceled');
+        }
+      });
+    });
+  }
+
+  /**
+   * DeLists the listed ordinal from marketplace
+   * @param {MarketplaceDeListRequest} deListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceDeListAPIResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  async deList(
+    deListingRequest: MarketplaceDeListRequest
+  ): Promise<MarketplaceDeListAPIResponse | SignTransactionResponse> {
+    if (!deListingRequest.walletProvider) {
+      return this.marketplaceInstance.deList(
+        deListingRequest
+      );
+    }
+    const transferResponse: MarketplaceDeListAPIResponse = await this.marketplaceInstance.deList(deListingRequest);
+    const inputsToSign = [
+      {
+        address: deListingRequest.senderOrdinalAddress,
+        signingIndexes: transferResponse.senderOrdinalInputs,
+        sigHash: bitcoin.Transaction.SIGHASH_ALL,
+      },
+      {
+        address: deListingRequest.senderPaymentAddress,
+        signingIndexes: transferResponse.senderPaymentInputs,
+        sigHash: bitcoin.Transaction.SIGHASH_ALL,
+      },
+    ];
+
+    // Create the payload for signing the seller transaction
+    const payload = {
+      network: { type: this.network },
+      message: 'Sign Transfer Transaction',
+      psbtBase64: transferResponse.psbtBase64,
+      broadcast: true,
+      inputsToSign,
+    };
+
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response: any) => {
+          return resolve(response)
+        },
         onCancel: () => {
           console.log('Transaction canceled');
         }
