@@ -18,7 +18,7 @@ import {
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
   MarketplaceTransferRequest,
-  MarketplaceTransferResponse,
+  MarketplaceTransferAPIResponse,
   WALLET_PROVIDER,
   MarketplaceConfirmListingRequest,
   MarketplaceConfirmListingResponse,
@@ -27,6 +27,8 @@ import {
   MarketplaceConfirmReListResponse,
   MarketplaceConfirmReListRequest,
   MarketplaceDeListRequest,
+  MarketplaceDeListAPIResponse,
+  MarketplaceTransferResponse,
   MarketplaceDeListResponse,
 } from "./types/marketplace_types";
 
@@ -306,13 +308,13 @@ export class MarketPlace {
 
   async transfer(
     transferRequest: MarketplaceTransferRequest
-  ): Promise<MarketplaceTransferResponse> {
+  ): Promise<MarketplaceTransferResponse | MarketplaceTransferAPIResponse> {
     if (!transferRequest.walletProvider) {
       return this.marketplaceInstance.transfer(
         transferRequest
       );
     }
-    const transferResponse: MarketplaceTransferResponse = await this.marketplaceInstance.transfer(transferRequest);
+    const transferResponse: MarketplaceTransferAPIResponse = await this.marketplaceInstance.transfer(transferRequest);
     const inputsToSign = [
       {
         address: transferRequest.senderOrdinalAddress,
@@ -338,7 +340,9 @@ export class MarketPlace {
     return new Promise((resolve, reject) => {
       signTransaction({
         payload,
-        onFinish: async (response) => response,
+        onFinish: async (response: any) => {
+          return resolve(response)
+        },
         onCancel: () => {
           console.log('Transaction canceled');
         }
@@ -349,17 +353,17 @@ export class MarketPlace {
   /**
    * DeLists the listed ordinal from marketplace
    * @param {MarketplaceDeListRequest} deListingRequest - The request object for confirming the listing.
-   * @returns {Promise<MarketplaceDeListResponse>} A promise that resolves with the response from confirming the listing.
+   * @returns {Promise<MarketplaceDeListAPIResponse>} A promise that resolves with the response from confirming the listing.
    */
   async deList(
     deListingRequest: MarketplaceDeListRequest
-  ): Promise<MarketplaceDeListResponse> {
+  ): Promise<MarketplaceDeListAPIResponse | MarketplaceDeListResponse> {
     if (!deListingRequest.walletProvider) {
       return this.marketplaceInstance.deList(
         deListingRequest
       );
     }
-    const transferResponse: MarketplaceDeListResponse = await this.marketplaceInstance.deList(deListingRequest);
+    const transferResponse: MarketplaceDeListAPIResponse = await this.marketplaceInstance.deList(deListingRequest);
     const inputsToSign = [
       {
         address: deListingRequest.senderOrdinalAddress,
@@ -385,7 +389,9 @@ export class MarketPlace {
     return new Promise((resolve, reject) => {
       signTransaction({
         payload,
-        onFinish: async (response) => response,
+        onFinish: async (response: any) => {
+          return resolve(response)
+        },
         onCancel: () => {
           console.log('Transaction canceled');
         }

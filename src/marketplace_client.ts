@@ -18,7 +18,7 @@ import {
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
   MarketplaceTransferRequest,
-  MarketplaceTransferResponse,
+  MarketplaceTransferAPIResponse,
   MarketplaceConfirmListingRequest,
   MarketplaceConfirmListingResponse,
   MarketplaceReListingRequest,
@@ -26,7 +26,7 @@ import {
   MarketplaceConfirmReListRequest,
   MarketplaceConfirmReListResponse,
   MarketplaceDeListRequest,
-  MarketplaceDeListResponse,
+  MarketplaceDeListAPIResponse,
 } from "./types/marketplace_types";
 import { InscriptionEnv } from "./types";
 
@@ -185,11 +185,11 @@ export class MarketPlaceClient {
   /**
    * deListing the ordinal from marketplace and transfer back to the seller ordinal address.
    * @param {MarketplaceDeListRequest} deListRequest - The request object for deListing.
-   * @returns {Promise<MarketplaceDeListResponse>} A promise that resolves with the response from deListing.
+   * @returns {Promise<MarketplaceDeListAPIResponse>} A promise that resolves with the response from deListing.
    */
   async deList(
     deListRequest: MarketplaceDeListRequest
-  ): Promise<MarketplaceDeListResponse> {
+  ): Promise<MarketplaceDeListAPIResponse> {
     return this.instanceV1.post(`/delist`, {
       ...deListRequest,
     });
@@ -198,11 +198,11 @@ export class MarketPlaceClient {
   /**
    * transfer the ordinal to another ordinal address.
    * @param {MarketplaceTransferRequest} transferRequest - The request object for transfer.
-   * @returns {Promise<MarketplaceTransferResponse>} A promise that resolves with the response from transfer.
+   * @returns {Promise<MarketplaceTransferAPIResponse>} A promise that resolves with the response from transfer.
    */
   async transfer(
     transferRequest: MarketplaceTransferRequest
-  ): Promise<MarketplaceTransferResponse> {
+  ): Promise<MarketplaceTransferAPIResponse> {
     return this.instanceV1.post(`/transfer-ordinal`, {
       ...transferRequest,
     });

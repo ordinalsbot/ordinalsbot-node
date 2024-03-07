@@ -227,9 +227,9 @@ export interface MarketplaceTransferRequest {
 }
 
 /**
- * Response object for transfer ordinals response.
+ * Response object for transfer API.
  */
-export interface MarketplaceTransferResponse {
+export interface MarketplaceTransferAPIResponse {
   /** base64 transaction to be signed */
   psbtBase64: string;
 
@@ -238,6 +238,17 @@ export interface MarketplaceTransferResponse {
 
   /** Array of Payment indices that need to be signed by the Sender  */
   senderPaymentInputs: Array<number>;
+}
+
+/**
+ * Response object for transfer ordinals.
+ */
+export interface MarketplaceTransferResponse {
+  /** base64 transaction to be signed */
+  psbtBase64: string;
+
+  /** transaction id of the transfer */
+  txId: string;
 }
 
 /**
@@ -319,7 +330,7 @@ export interface MarketplaceDeListRequest {
 /**
  * Response object for deList ordinal.
  */
-export interface MarketplaceDeListResponse {
+export interface MarketplaceDeListAPIResponse {
   /** base64 transaction to be signed */
   psbtBase64: string;
 
@@ -328,4 +339,15 @@ export interface MarketplaceDeListResponse {
 
   /** Array of Payment indices that need to be signed by the Seller */
   senderPaymentInputs: Array<number>;
+}
+
+/**
+ * Response object for transfer ordinals.
+ */
+export interface MarketplaceDeListResponse {
+  /** base64 transaction to be signed */
+  psbtBase64: string;
+  
+  /** transaction id of the transfer */
+  txId: string;
 }
