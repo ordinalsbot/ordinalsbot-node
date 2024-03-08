@@ -1,10 +1,18 @@
-import { BitcoinNetworkType } from 'sats-connect'
-import { LaunchpadClient } from './client'
+import * as bitcoin from 'bitcoinjs-lib'
 import { InscriptionEnv } from '../types'
+import { LaunchpadClient } from './client'
+import { BitcoinNetworkType, signTransaction } from 'sats-connect'
 import {
+  CreateLaunchpadRequest,
+  CreateLaunchpadResponse,
   LaunchpadMarketplaceCreateRequest,
   LaunchpadMarketplaceCreateResponse,
+  getLaunchpadStatusRequest,
+  getLaunchpadStatusResponse,
+  saveLaunchpadRequest,
+  saveLaunchpadResponse,
 } from '../types/launchpad_types'
+import { WALLET_PROVIDER } from '../types/marketplace_types'
 
 /**
  * A class for interacting with the Launchpad API to create marketplaces.
@@ -49,5 +57,153 @@ export class Launchpad {
     return this.launchpadClientInstance.createMarketPlace(
       createMarketplaceRequest
     )
+  }
+
+  /**
+   * Creates a new launchpad using the Launchpad API.
+   * @param {CreateLaunchpadRequest} createLaunchpadRequest The request body for creating a new marketplace.
+   * @returns {Promise<CreateLaunchpadResponse>} A promise that resolves to the response from the API.
+   */
+  async createLaunchpad(
+    createLaunchpadRequest: CreateLaunchpadRequest
+  ): Promise<CreateLaunchpadResponse | saveLaunchpadResponse> {
+    try {
+      if (!createLaunchpadRequest.walletProvider) {
+        return await this.launchpadClientInstance.createLaunchpad(
+          createLaunchpadRequest
+        )
+      } else if (
+        createLaunchpadRequest.walletProvider === WALLET_PROVIDER.xverse
+      ) {
+        // Create the payload for signing the seller transaction
+        if (!createLaunchpadRequest.sellerOrdinalAddress) {
+          throw new Error('No seller address provided')
+        }
+
+        // Creates a new launchpad
+        const { launchpadId, status } =
+          await this.launchpadClientInstance.createLaunchpad(
+            createLaunchpadRequest
+          )
+
+        let inputIndices: any = []
+        let index = 0
+
+        //input indices for the all the ordinals in the phase
+        createLaunchpadRequest.phases.forEach((phase) => {
+          phase.ordinals.forEach((ordinal) => {
+            inputIndices.push(index)
+            index++
+          })
+        })
+
+        // seller input for sign the tractions
+        const sellerInput = {
+          address: createLaunchpadRequest.sellerOrdinalAddress,
+          signingIndexes: inputIndices,
+          sigHash:
+            bitcoin.Transaction.SIGHASH_SINGLE |
+            bitcoin.Transaction.SIGHASH_ANYONECANPAY,
+        }
+
+        const getLaunchpadStatusRequest = { launchpadId, status }
+        // waiting for launchpad psbt
+        const { psbt }: getLaunchpadStatusResponse =
+          await this.getLaunchpadPSBT(getLaunchpadStatusRequest)
+
+        // transaction request payload
+        const payload = {
+          network: { type: this.network },
+          message: 'Sign Seller Transaction',
+          psbtBase64: psbt,
+          broadcast: false,
+          inputsToSign: [sellerInput],
+        }
+
+        return new Promise((resolve, reject) => {
+          signTransaction({
+            payload,
+            onFinish: async (response) => {
+              try {
+                console.log('Transaction signed')
+                console.log('Response:', response)
+
+                // contruct the request payload for save the launchpad after signing the transaction
+                const saveLaunchpadRequestPayload: saveLaunchpadRequest = {
+                  launchpadId: launchpadId,
+                  updateLaunchData: {
+                    signedListingPSBT: response.psbtBase64,
+                  },
+                }
+
+                resolve(this.saveLaunchpad(saveLaunchpadRequestPayload))
+              } catch (error) {
+                console.error('Error saving launchpad:', error)
+                reject(error)
+              }
+            },
+            onCancel: () => {
+              console.log('Transaction canceled')
+            },
+          })
+        })
+      } else {
+        throw new Error('Wallet not supported')
+      }
+    } catch (error) {
+      console.error('Error in create Launchpad:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Fetch status of the launchpad using the Launchpad API.
+   * @param {getLaunchpadStatusRequest} getLaunchpadStatusRequest The request body for get launchpad status.
+   * @returns {Promise<getLaunchpadStatusResponse>} A promise that resolves to the response from the API.
+   */
+  async getLaunchpadPSBT(
+    getLaunchpadStatusRequest: getLaunchpadStatusRequest
+  ): Promise<getLaunchpadStatusResponse> {
+    let psbt = ''
+    let status: any
+    let intervalId: any
+
+    const pollPSBTStatus = async () => {
+      return new Promise((resolve) => {
+        const checkAndResolve = async () => {
+          const response: getLaunchpadStatusResponse =
+            await this.launchpadClientInstance.getLaunchpadStatus(
+              getLaunchpadStatusRequest
+            )
+          if (response.status !== status && response.psbt) {
+            psbt = response.psbt
+            status = response.status
+            clearInterval(intervalId)
+            resolve(psbt)
+          }
+        }
+
+        intervalId = setInterval(checkAndResolve, 10000)
+        checkAndResolve()
+
+        setTimeout(() => {
+          clearInterval(intervalId)
+          resolve(psbt)
+        }, 5 * 60 * 1000)
+      })
+    }
+    await pollPSBTStatus()
+    return { psbt, status }
+  }
+
+  /**
+   * Updated the signed psbt by the seller on the launchpad
+   * @param {saveLaunchpadRequest} saveLaunchpadRequest - The request body to update the launchpad data.
+   * @returns {Promise<saveLaunchpadResponse>} A promise that resolves to the response from the API.
+   */
+  saveLaunchpad(
+    saveLaunchpadRequest: saveLaunchpadRequest
+  ): Promise<saveLaunchpadResponse> {
+    return this.launchpadClientInstance.saveLaunchpad(saveLaunchpadRequest)
   }
 }

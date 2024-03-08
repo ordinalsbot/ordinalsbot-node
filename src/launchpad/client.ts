@@ -2,8 +2,14 @@ import axios, { AxiosInstance } from 'axios'
 import { InscriptionEnv } from '../types'
 import { InscriptionError } from '../InscriptionError'
 import {
+  CreateLaunchpadRequest,
+  CreateLaunchpadResponse,
   LaunchpadMarketplaceCreateRequest,
   LaunchpadMarketplaceCreateResponse,
+  getLaunchpadStatusRequest,
+  getLaunchpadStatusResponse,
+  saveLaunchpadRequest,
+  saveLaunchpadResponse,
 } from '../types/launchpad_types'
 
 /**
@@ -48,8 +54,8 @@ export class LaunchpadClient {
       const client = axios.create({
         baseURL:
           this.env === 'live'
-            ? `https://api.ordinalsbot.com/marketplace/`
-            : `https://testnet-api.ordinalsbot.com/marketplace/`,
+            ? `https://api.ordinalsbot.com/launchpad/`
+            : `https://testnet-api.ordinalsbot.com/launchpad/`,
         headers: headers,
       })
 
@@ -86,6 +92,45 @@ export class LaunchpadClient {
   ): Promise<LaunchpadMarketplaceCreateResponse> {
     return this.instanceV1.post(`/create-marketplace`, {
       ...createMarketplaceRequest,
+    })
+  }
+
+  /**
+   * Creates a new launchpad.
+   * @param {CreateLaunchpadRequest} createLaunchpadRequest The request body for creating a new launchpad.
+   * @returns {Promise<CreateLaunchpadResponse>} A promise that resolves to the response from the API.
+   */
+  async createLaunchpad(
+    createLaunchpadRequest: CreateLaunchpadRequest
+  ): Promise<CreateLaunchpadResponse> {
+    return this.instanceV1.post(`/create-launch`, {
+      ...createLaunchpadRequest,
+    })
+  }
+
+  /**
+   * gets launchpad status to sign traction.
+   * @param {getLaunchpadStatusRequest} getLaunchpadStatusRequest The request body for get launchpad status.
+   * @returns {Promise<getLaunchpadStatusResponse>} A promise that resolves to the response from the API.
+   */
+  async getLaunchpadStatus(
+    getLaunchpadStatusRequest: getLaunchpadStatusRequest
+  ): Promise<getLaunchpadStatusResponse> {
+    return this.instanceV1.get(
+      `/get-launch-psbt/${getLaunchpadStatusRequest.launchpadId}`
+    )
+  }
+
+  /**
+   * Updated the signed psbt by the seller on the launchpad
+   * @param {saveLaunchpadRequest} saveLaunchpadRequest - The request body to update the launchpad data.
+   * @returns {Promise<saveLaunchpadResponse>} A promise that resolves to the response from the API.
+   */
+  async saveLaunchpad(
+    saveLaunchpadRequest: saveLaunchpadRequest
+  ): Promise<saveLaunchpadResponse> {
+    return this.instanceV1.post(`/save-launch`, {
+      ...saveLaunchpadRequest,
     })
   }
 }

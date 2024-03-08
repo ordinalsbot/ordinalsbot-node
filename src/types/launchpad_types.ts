@@ -37,3 +37,107 @@ export interface LaunchpadMarketplaceCreateResponse {
   /** the api key you provided */
   apiKey: string
 }
+
+/**
+ * The allowed buyer addresses in the launchpad phase
+ */
+export interface AllowList {
+  /** allow list where the buyer ordinal address as key */
+  [key: string]: {
+    /** the allowed claims per buyer ordinal address */
+    allocation: number
+    /** the total claimed inscriptions by the buyer */
+    inscriptionsClaimed?: number
+  }
+}
+
+/**
+ * launchpad phase object
+ */
+export interface LaunchpadPhase {
+  /** An array of string */
+  ordinals: string[]
+  /** An object for allow list allocation and claimed inscriptions */
+  allowList: AllowList
+  /** The isPublic key for the phase is public or protected*/
+  isPublic: Boolean
+  /** phase price for ordinal to buy */
+  price: number
+  /** start date of the phase */
+  startDate: string
+  /** An optional date field. Which is requried for the protected phase */
+  endDate?: string | null
+}
+
+/**
+ * Request object for create launchpad
+ */
+export interface CreateLaunchpadRequest {
+  /** An array with a phases object */
+  phases: Array<LaunchpadPhase>
+
+  /** The address to receive the sale proceeds when the ordinal is sold. This will be part of the sale transaction that the buyer will sign */
+  sellerPaymentAddress?: string
+
+  /** The public key for the wallet address that owns the ordinal being listed for sale */
+  sellerOrdinalPublicKey?: string
+
+  /** The Oridnal Address that owns the ordinal being listed for sale */
+  sellerOrdinalAddress?: string
+
+  /** Additional information for the Launchpad. e.g {title:'someTitle', description:'SomeText'} */
+  metaData: object
+  /** Wallet Provider name */
+  walletProvider?: string
+}
+
+/**
+ * Response object for the create launchpad request
+ */
+export interface CreateLaunchpadResponse {
+  /** Newly created launchpad id */
+  launchpadId: string
+  /** status of the newly created launchpad. */
+  status: string
+}
+
+/**
+ * Request object for get launchpad status
+ */
+export interface getLaunchpadStatusRequest {
+  /** Id of the launchpad to fetch the status */
+  launchpadId: string
+  /** status of the launchpad */
+  status: string
+}
+
+/**
+ * Response object for the get launchpad status request
+ */
+export interface getLaunchpadStatusResponse {
+  /** psbt of launchpad to sign transaction */
+  psbt: string
+  /** status of the launchpad. */
+  status: string
+}
+
+/**
+ * Request object for save launchpad
+ */
+export interface saveLaunchpadRequest {
+  /** Id of the launchpad to save the psbt */
+  launchpadId: string
+  /** data to be update on the launchpad */
+  updateLaunchData: {
+    /** signed psbt by the seller to updated */
+    signedListingPSBT: string
+  }
+}
+
+/**
+ * Response object for the get launchpad status request
+ */
+export interface saveLaunchpadResponse {
+  /** success message for update confirmation */
+  message: string
+}
