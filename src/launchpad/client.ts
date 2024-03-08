@@ -4,6 +4,8 @@ import { InscriptionError } from '../InscriptionError'
 import {
   CreateLaunchpadRequest,
   CreateLaunchpadResponse,
+  GetAllocationRequest,
+  GetAllocationResponse,
   GetListingRequest,
   GetListingResponse,
   LaunchpadMarketplaceCreateRequest,
@@ -146,6 +148,27 @@ export class LaunchpadClient {
   ): Promise<GetListingResponse> {
     return this.instanceV1.post(`/get-listings`, {
       ...getListingRequest,
+    })
+  }
+
+  /**
+   * Get buyer launhcpad allocation
+   * @param {GetAllocationRequest} getAllocationRequest - The request object for buyer launhcpad allocations.
+   * @returns {Promise<GetListingResponse>} A promise that resolves to the response from the API.
+   */
+  getAllocation(
+    getAllocationRequest: GetAllocationRequest
+  ): Promise<GetAllocationResponse> {
+    return new Promise(async (resolve) => {
+      try {
+        resolve(
+          await this.instanceV1.post(`/get-allocation`, {
+            ...getAllocationRequest,
+          })
+        )
+      } catch (error) {
+        resolve({ phases: [] })
+      }
     })
   }
 }

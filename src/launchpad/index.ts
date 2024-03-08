@@ -5,6 +5,8 @@ import { BitcoinNetworkType, signTransaction } from 'sats-connect'
 import {
   CreateLaunchpadRequest,
   CreateLaunchpadResponse,
+  GetAllocationRequest,
+  GetAllocationResponse,
   GetListingRequest,
   GetListingResponse,
   LaunchpadMarketplaceCreateRequest,
@@ -218,5 +220,16 @@ export class Launchpad {
     getListingRequest: GetListingRequest
   ): Promise<GetListingResponse> {
     return this.launchpadClientInstance.getLaunchpadListing(getListingRequest)
+  }
+
+  /**
+   * Get buyer launhcpad allocation
+   * @param {GetAllocationRequest} getAllocationRequest - The request object for buyer launhcpad allocations.
+   * @returns {Promise<GetListingResponse>} A promise that resolves to the response from the API.
+   */
+  getAllocation(
+    getAllocationRequest: GetAllocationRequest
+  ): Promise<GetAllocationResponse> {
+    return this.launchpadClientInstance.getAllocation(getAllocationRequest)
   }
 }

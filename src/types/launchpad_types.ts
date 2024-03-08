@@ -174,3 +174,36 @@ export interface GetListingResponse {
   /** total number of items in the result array */
   totalItems: number
 }
+
+
+/**
+ * Get buyer allocation request object
+ */
+export interface GetAllocationRequest {
+  /** launchpad id to get the buyer allocations by phase */
+  launchpadId: string
+  /** buyer ordinal address for the allocation */
+  buyerOrdinalAddress: string
+}
+
+/**
+ * Get buyer allocation response object
+ */
+export interface GetAllocationResponse {
+  /** Array of the launchpad phases */
+  phases: Array<AllocationPhasesResponse>
+}
+
+/**
+ * allocation phase response object
+ */
+export interface AllocationPhasesResponse {
+  /** id of the phase */
+  id: string
+  /** access type of the phase. i.e public or protected */
+  public: boolean
+  /** Allocation allowed to the buyer */
+  allocation?: number
+  /** total claimed inscriptions by the buyer */
+  inscriptionsClaimed?:number
+}
