@@ -1,7 +1,7 @@
 const { assert, expect } = require('chai')
 const sinon = require('sinon')
 const { MarketPlace } = require('../../dist')
-const { MarketPlaceClient } = require('../../dist/marketplace_client')
+const { MarketPlaceClient } = require('../../dist/marketplaceClient')
 
 const sandbox = sinon.createSandbox()
 describe('Marketplace Confirm ReListing', function () {
