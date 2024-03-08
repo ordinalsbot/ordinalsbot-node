@@ -31,6 +31,7 @@ let inscription = new Inscription("API_KEY", "dev");
 let marketplace = new MarketPlace("API_KEY", "dev");
 let satscanner = new Satscanner("API_KEY", "dev");
 let satextractor = new Satextractor("API_KEY", "dev");
+let mempool = new Mempool("API_KEY", "dev");
 ```
 
 ## Usage

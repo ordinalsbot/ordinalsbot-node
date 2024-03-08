@@ -147,7 +147,7 @@ import { Satextractor } from "../src";
 const satextractor = new Satextractor("", "dev");
 
 /**
- * use satscanner to get information about utxos owned by an address
+ * use satextractor to get a transaction that extracts special sats from an address's utxos
  */
 
 /**
@@ -182,6 +182,43 @@ satextractor
       "feePerByte": 30,
       "filterSatributes" : []
     })
+    console.log(response);
+  } catch (error) {
+    console.error(`${error.status} | ${error.message} | ${error.data}`);
+  }
+})();
+
+
+
+
+/** Mempool - API Key is required */
+import { Mempool } from "../src";
+const mempool = new Mempool("", "dev");
+
+/**
+ * use mempool to get information about the bitcoin blockchain
+ */
+
+/**
+ * Using promises
+ */
+
+mempool
+  .getAddressUtxo("2N4v1yyB5arLfQ3wHgAroRYmb49LVedkkYg")
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(`${error.status} | ${error.message} | ${error.data}`);
+  });
+
+/**
+ * Using async/await
+ */
+
+(async () => {
+  try {
+    const response = await mempool.getAddressUtxo("2N4v1yyB5arLfQ3wHgAroRYmb49LVedkkYg")
     console.log(response);
   } catch (error) {
     console.error(`${error.status} | ${error.message} | ${error.data}`);
