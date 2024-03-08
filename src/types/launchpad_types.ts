@@ -141,3 +141,36 @@ export interface saveLaunchpadResponse {
   /** success message for update confirmation */
   message: string
 }
+
+export enum LAUNCHPAD_STATUS {
+  sold = 'Sold',
+  pending = 'Pending',
+  active = 'Active',
+  inactive = 'Inactive',
+  archived = 'Archived',
+  pending_seller_confirmation = 'Pending Seller Confirmation',
+  pending_buyer_confirmation = 'Pending Buyer Confirmation',
+}
+
+/**
+ * Get launchpad listing request object
+ */
+export interface GetListingRequest {
+  query: { status: LAUNCHPAD_STATUS }
+}
+
+/**
+ * Get launchpad listing response object
+ */
+export interface GetListingResponse {
+  /** Array of the launchpad listing */
+  results: Array<CreateLaunchpadRequest>
+  /** total number records */
+  count: number
+  /**current page number */
+  currentPage: number
+  /** total pages */
+  totalPages: number
+  /** total number of items in the result array */
+  totalItems: number
+}

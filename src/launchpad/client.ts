@@ -4,6 +4,8 @@ import { InscriptionError } from '../InscriptionError'
 import {
   CreateLaunchpadRequest,
   CreateLaunchpadResponse,
+  GetListingRequest,
+  GetListingResponse,
   LaunchpadMarketplaceCreateRequest,
   LaunchpadMarketplaceCreateResponse,
   getLaunchpadStatusRequest,
@@ -131,6 +133,19 @@ export class LaunchpadClient {
   ): Promise<saveLaunchpadResponse> {
     return this.instanceV1.post(`/save-launch`, {
       ...saveLaunchpadRequest,
+    })
+  }
+
+  /**
+   * Get all the launchpad listing
+   * @param {GetListingRequest} getListingRequest - The request object for get all launchpad.
+   * @returns {Promise<GetListingResponse>} A promise that resolves to the response from the API.
+   */
+  getLaunchpadListing(
+    getListingRequest: GetListingRequest
+  ): Promise<GetListingResponse> {
+    return this.instanceV1.post(`/get-listings`, {
+      ...getListingRequest,
     })
   }
 }
