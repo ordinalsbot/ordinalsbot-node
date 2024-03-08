@@ -24,7 +24,7 @@ Install the package with:
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
 ```js
-import { MarketPlace, Inscription, Satscanner, Satextractor } from "ordinalsbot";
+import { MarketPlace, Inscription, Satscanner, Satextractor, Mempool } from "ordinalsbot";
 
 // if no parameter given, default environment is 'live'
 let inscription = new Inscription("API_KEY", "dev");
