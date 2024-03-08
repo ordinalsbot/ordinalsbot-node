@@ -24,11 +24,14 @@ Install the package with:
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
 ```js
-import { MarketPlace, Inscription } from "ordinalsbot";
+import { MarketPlace, Inscription, Satscanner, Satextractor } from "ordinalsbot";
 
 // if no parameter given, default environment is 'live'
 let inscription = new Inscription("API_KEY", "dev");
 let marketplace = new MarketPlace("API_KEY", "dev");
+let satscanner = new Satscanner("API_KEY", "dev");
+let satextractor = new Satextractor("API_KEY", "dev");
+let mempool = new Mempool("API_KEY", "dev");
 ```
 
 ## Usage
@@ -102,6 +105,11 @@ marketplace
   });
 ```
 
+### Run examples   
+You can check and run examples after setting your API Key   
+```
+npx ts-node examples/example.ts
+```
 
 ### Using Wallets on the client side
 
