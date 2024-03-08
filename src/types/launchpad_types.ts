@@ -175,7 +175,6 @@ export interface GetListingResponse {
   totalItems: number
 }
 
-
 /**
  * Get buyer allocation request object
  */
@@ -205,5 +204,73 @@ export interface AllocationPhasesResponse {
   /** Allocation allowed to the buyer */
   allocation?: number
   /** total claimed inscriptions by the buyer */
-  inscriptionsClaimed?:number
+  inscriptionsClaimed?: number
+}
+
+/**
+ * The fee rates for the launchpad
+ */
+export enum ReeRateTier {
+  fastestFee,
+  halfHourFee,
+  hourFee,
+  minimumFee,
+}
+
+/**
+ * Request object for ConfirmPaddingOutputsRequest
+ */
+export interface ConfirmPaddingOutputsRequest {
+  /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
+  address: string
+}
+
+/**
+ * Response object for ConfirmPaddingOutputsResponse.
+ */
+export interface ConfirmPaddingOutputsResponse {
+  /** boolean, if padding outputs exist */
+  paddingOutputsExist: boolean
+}
+
+/**
+ * Request object for SetupPaddingOutputsRequest
+ */
+export interface SetupPaddingOutputsRequest {
+  /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
+  address: string
+
+  /** Public Key for buyer's payment wallet address. */
+  publicKey: string
+
+  /** Number of dummy padding outputs to create. This defaults to 3 if not specified */
+  numOfOutPuts?: number
+
+  /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
+  feeRateTier?: ReeRateTier
+
+  /** Wallet Provider name */
+  walletProvider?: string
+}
+
+/**
+ * Response object for SetupPaddingOutputsResponse.
+ */
+export interface SetupPaddingOutputsResponse {
+  /** base64 transaction to be signed */
+  psbt: string
+
+  /** Array of indices of the inputs that need to be signed by the buyer */
+  buyerInputIndices: Array<number>
+}
+
+/**
+ * Response object for signTransaction.
+ */
+export interface SignTransactionResponse {
+  /** base64 transaction to be signed */
+  psbtBase64: string
+
+  /** transaction id of the transfer */
+  txId: string
 }

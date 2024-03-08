@@ -2,6 +2,8 @@ import axios, { AxiosInstance } from 'axios'
 import { InscriptionEnv } from '../types'
 import { InscriptionError } from '../InscriptionError'
 import {
+  ConfirmPaddingOutputsRequest,
+  ConfirmPaddingOutputsResponse,
   CreateLaunchpadRequest,
   CreateLaunchpadResponse,
   GetAllocationRequest,
@@ -10,6 +12,8 @@ import {
   GetListingResponse,
   LaunchpadMarketplaceCreateRequest,
   LaunchpadMarketplaceCreateResponse,
+  SetupPaddingOutputsRequest,
+  SetupPaddingOutputsResponse,
   getLaunchpadStatusRequest,
   getLaunchpadStatusResponse,
   saveLaunchpadRequest,
@@ -170,5 +174,31 @@ export class LaunchpadClient {
         resolve({ phases: [] })
       }
     })
+  }
+
+  /**
+   * Confirms Padding Outputs 
+   * @param {ConfirmPaddingOutputsRequest} confirmPaddingOutputsRequest - The request object for confirms padding outputs 
+   * @returns {Promise<ConfirmPaddingOutputsResponse>} A promise that resolves to the response from the API.
+   */
+  async confirmPaddingOutputs(
+    confirmPaddingOutputsRequest: ConfirmPaddingOutputsRequest
+  ): Promise<ConfirmPaddingOutputsResponse> {
+    return this.instanceV1.post(`/confirm-padding-outputs`, {
+      ...confirmPaddingOutputsRequest,
+    });
+  }
+
+  /**
+   * Setup the padding output
+   * @param {SetupPaddingOutputsRequest} setupPaddingOutputsRequest - The request object for buyer setup padding outputs.
+   * @returns {Promise<SetupPaddingOutputsResponse>} A promise that resolves to the response from the API.
+   */
+  async setupPaddingOutputs(
+    setupPaddingOutputsRequest: SetupPaddingOutputsRequest
+  ): Promise<SetupPaddingOutputsResponse> {
+    return this.instanceV1.post(`/setup-padding-outputs`, {
+      ...setupPaddingOutputsRequest,
+    });
   }
 }

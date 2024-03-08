@@ -1,8 +1,10 @@
 import * as bitcoin from 'bitcoinjs-lib'
 import { InscriptionEnv } from '../types'
 import { LaunchpadClient } from './client'
-import { BitcoinNetworkType, signTransaction } from 'sats-connect'
+import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sats-connect'
 import {
+  ConfirmPaddingOutputsRequest,
+  ConfirmPaddingOutputsResponse,
   CreateLaunchpadRequest,
   CreateLaunchpadResponse,
   GetAllocationRequest,
@@ -11,6 +13,8 @@ import {
   GetListingResponse,
   LaunchpadMarketplaceCreateRequest,
   LaunchpadMarketplaceCreateResponse,
+  SetupPaddingOutputsRequest,
+  SetupPaddingOutputsResponse,
   getLaunchpadStatusRequest,
   getLaunchpadStatusResponse,
   saveLaunchpadRequest,
@@ -231,5 +235,68 @@ export class Launchpad {
     getAllocationRequest: GetAllocationRequest
   ): Promise<GetAllocationResponse> {
     return this.launchpadClientInstance.getAllocation(getAllocationRequest)
+  }
+
+  /**
+   * Confirms Padding Outputs
+   * @param {ConfirmPaddingOutputsRequest} confirmPaddingOutputsRequest - The request object for confirms padding outputs
+   * @returns {Promise<ConfirmPaddingOutputsResponse>} A promise that resolves to the response from the API.
+   */
+  confirmPaddingOutputs(
+    confirmPaddingOutputsRequest: ConfirmPaddingOutputsRequest
+  ): Promise<ConfirmPaddingOutputsResponse> {
+    return this.launchpadClientInstance.confirmPaddingOutputs(
+      confirmPaddingOutputsRequest
+    )
+  }
+
+  /**
+   * Setup the padding output
+   * @param {SetupPaddingOutputsRequest} setupPaddingOutputsRequest - The request object for buyer setup padding outputs.
+   * @returns {Promise<SetupPaddingOutputsResponse>} A promise that resolves to the response from the API.
+   */
+  async setupPaddingOutputs(
+    setupPaddingOutputsRequest: SetupPaddingOutputsRequest
+  ): Promise<SetupPaddingOutputsResponse | SignTransactionResponse> {
+    if (!setupPaddingOutputsRequest.walletProvider) {
+      return this.launchpadClientInstance.setupPaddingOutputs(
+        setupPaddingOutputsRequest
+      )
+    } else if (
+      setupPaddingOutputsRequest.walletProvider === WALLET_PROVIDER.xverse
+    ) {
+      const paddingOutputResponse: SetupPaddingOutputsResponse =
+        await this.launchpadClientInstance.setupPaddingOutputs(
+          setupPaddingOutputsRequest
+        )
+      const buyerInputs = {
+        address: setupPaddingOutputsRequest.address,
+        signingIndexes: paddingOutputResponse.buyerInputIndices,
+      }
+
+      const payload = {
+        network: {
+          type: this.network,
+        },
+        message: 'Sign Padding Outputs Transaction',
+        psbtBase64: paddingOutputResponse.psbt,
+        broadcast: true,
+        inputsToSign: [buyerInputs],
+      }
+
+      return new Promise((resolve, reject) => {
+        signTransaction({
+          payload,
+          onFinish: async (response: any) => {
+            return resolve(response)
+          },
+          onCancel: () => {
+            console.log('Transaction canceled')
+          },
+        })
+      })
+    } else {
+      throw new Error('Wallet not supported')
+    }
   }
 }
