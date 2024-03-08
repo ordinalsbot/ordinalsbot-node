@@ -18,12 +18,18 @@ export interface InscriptionEntry {
 }
 
 export interface Range {
+  output: string;
   start: number;
   end: number;
+  size: number;
+  offset: number;
+  rarity: string;
 }
 
 export interface SpecialRange {
   start: number;
-  end: number;
-  type: string;
+  output: string;
+  size: number;
+  offset: number;
+  satributes: string[];
 }

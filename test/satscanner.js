@@ -1,7 +1,6 @@
 const { assert, expect } = require("chai");
 const sinon = require("sinon");
 const { Satscanner } = require("../dist");
-const { v4: uuidv4 } = require("uuid");
 
 describe("Satscanner SDK Tests", function () {
   let sandbox;

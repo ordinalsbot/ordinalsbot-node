@@ -139,3 +139,51 @@ satscanner
     console.error(`${error.status} | ${error.message} | ${error.data}`);
   }
 })();
+
+
+
+/** Satextractor - API Key is required */
+import { Satextractor } from "../src";
+const satextractor = new Satextractor("", "dev");
+
+/**
+ * use satscanner to get information about utxos owned by an address
+ */
+
+/**
+ * Using promises
+ */
+
+satextractor
+  .extract({
+    "scanAddress": "bc1pshuvzr7x8y3fj362dl2excxx0n69xq42tguxsfrhvmvkre7404gs9cz40h",
+    "addressToSendSpecialSats" : "bc1pgnwmg7wplc09cm9fctgmgalu7l4synjh7khwzre9qlcvg5xy0k5qz9mwe3",
+    "addressToSendCommonSats": "bc1qq2ealrqzjf6da2l6czkwvtulmkh8m07280kq3q",
+    "feePerByte": 30,
+    "filterSatributes" : []
+  })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(`${error.status} | ${error.message} | ${error.data}`);
+  });
+
+/**
+ * Using async/await
+ */
+
+(async () => {
+  try {
+    const response = await satextractor.extract({
+      "scanAddress": "bc1pshuvzr7x8y3fj362dl2excxx0n69xq42tguxsfrhvmvkre7404gs9cz40h",
+      "addressToSendSpecialSats" : "bc1pgnwmg7wplc09cm9fctgmgalu7l4synjh7khwzre9qlcvg5xy0k5qz9mwe3",
+      "addressToSendCommonSats": "bc1qq2ealrqzjf6da2l6czkwvtulmkh8m07280kq3q",
+      "feePerByte": 30,
+      "filterSatributes" : []
+    })
+    console.log(response);
+  } catch (error) {
+    console.error(`${error.status} | ${error.message} | ${error.data}`);
+  }
+})();
