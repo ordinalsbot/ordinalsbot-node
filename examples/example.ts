@@ -15,7 +15,7 @@ const inscription = new Inscription("", "dev");
  */
 
 inscription
-  .getOrder("6a245608-5e81-46f6-b533-5741e3a06c42")
+  .getOrder("8a285e04-2973-40c3-a50b-4302c83f1d85")
   .then((order) => {
     console.log(order);
   })
@@ -30,7 +30,7 @@ inscription
 (async () => {
   try {
     const data = await inscription.getOrder(
-      "6a245608-5e81-46f6-b533-5741e3a06c42"
+      "8a285e04-2973-40c3-a50b-4302c83f1d85"
     );
     console.log(data);
   } catch (error) {
@@ -103,3 +103,39 @@ inscription
     .catch((error) => {
         console.error(`${error.status} | ${error.message}`);
     });
+
+
+
+/** Satscanner - API Key is required */
+import { Satscanner } from "../src";
+const satscanner = new Satscanner("", "dev");
+
+/**
+ * use satscanner to get information about utxos owned by an address
+ */
+
+/**
+ * Using promises
+ */
+
+satscanner
+  .findSpecialRanges({ address: "bc1pjqmzr4ad437ltvfyn8pslcy8quls9ujfkrudpz6qxdh2j75qrncq44mp47" })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(`${error.status} | ${error.message} | ${error.data}`);
+  });
+
+/**
+ * Using async/await
+ */
+
+(async () => {
+  try {
+    const response = await satscanner.findSpecialRanges({ address: "bc1pjqmzr4ad437ltvfyn8pslcy8quls9ujfkrudpz6qxdh2j75qrncq44mp47" })
+    console.log(response);
+  } catch (error) {
+    console.error(`${error.status} | ${error.message} | ${error.data}`);
+  }
+})();
