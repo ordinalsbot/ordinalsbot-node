@@ -1,4 +1,4 @@
-import { MarketPlaceClient } from "./marketplace_client";
+import { MarketPlaceClient } from "./marketplaceClient";
 import { InscriptionEnv } from "./types";
 import {
   MarketplaceConfirmPaddingOutputsRequest,
