@@ -43,7 +43,7 @@ export class Launchpad {
    * @param {LaunchpadMarketplaceCreateRequest} createMarketplaceRequest The request body for creating a new marketplace.
    * @returns {Promise<LaunchpadMarketplaceCreateResponse>} A promise that resolves to the response from the API.
    */
-  createMarketplace(
+  createMarketPlace(
     createMarketplaceRequest: LaunchpadMarketplaceCreateRequest
   ): Promise<LaunchpadMarketplaceCreateResponse> {
     return this.launchpadClientInstance.createMarketPlace(
