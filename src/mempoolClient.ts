@@ -1,7 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 import { InscriptionError } from "./InscriptionError";
 import {
-  MempoolAddressUtxoResponse
+  MempoolAddressUtxoResponse,
+  RecommendedFees,
 } from "./types/mempool_types";
 import { InscriptionEnv } from "./types";
 
@@ -54,6 +55,10 @@ export class MempoolClient {
     };
 
     this.instanceV1 = createInstance();
+  }
+
+  async getFeeEstimation(): Promise<RecommendedFees> {
+    return this.instanceV1.get("api/v1/fees/recommended");
   }
 
   async getAddressUtxo(

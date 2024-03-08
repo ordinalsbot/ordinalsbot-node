@@ -9,3 +9,11 @@ export interface MempoolAddressUtxoResponse {
   };
   value: number;
 }
+
+export interface RecommendedFees {
+  fastestFee: number;
+  halfHourFee: number;
+  hourFee: number;
+  economyFee: number;
+  minimumFee: number;
+}

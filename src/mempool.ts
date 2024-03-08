@@ -2,6 +2,7 @@ import { MempoolClient } from "./mempoolClient";
 import { InscriptionEnv } from "./types";
 import { 
   MempoolAddressUtxoResponse,
+  RecommendedFees
 } from "./types/mempool_types";
 
 export class Mempool {
@@ -13,6 +14,10 @@ export class Mempool {
       return;
     }
     this.mempoolInstance = new MempoolClient(key, environment);
+  }
+
+  getFeeEstimation(): Promise<RecommendedFees> {
+    return this.mempoolInstance.getFeeEstimation();
   }
 
   getAddressUtxo(
