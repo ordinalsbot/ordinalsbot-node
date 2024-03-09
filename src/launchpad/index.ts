@@ -1,10 +1,16 @@
 import * as bitcoin from 'bitcoinjs-lib'
 import { InscriptionEnv } from '../types'
 import { LaunchpadClient } from './client'
-import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sats-connect'
+import {
+  BitcoinNetworkType,
+  SignTransactionResponse,
+  signTransaction,
+} from 'sats-connect'
 import {
   ConfirmPaddingOutputsRequest,
   ConfirmPaddingOutputsResponse,
+  CreateLaunchpadOfferRequest,
+  CreateLaunchpadOfferResponse,
   CreateLaunchpadRequest,
   CreateLaunchpadResponse,
   GetAllocationRequest,
@@ -15,6 +21,8 @@ import {
   LaunchpadMarketplaceCreateResponse,
   SetupPaddingOutputsRequest,
   SetupPaddingOutputsResponse,
+  SubmitLaunchpadOfferRequest,
+  SubmitLaunchpadOfferResponse,
   getLaunchpadStatusRequest,
   getLaunchpadStatusResponse,
   saveLaunchpadRequest,
@@ -298,5 +306,71 @@ export class Launchpad {
     } else {
       throw new Error('Wallet not supported')
     }
+  }
+
+  /**
+   * Creates the launchpad offer
+   * @param {CreateLaunchpadOfferRequest} createOfferRequest - The request object for create Launchpad Offer.
+   * @returns {Promise<CreateLaunchpadOfferResponse>} A promise that resolves to the response from the API.
+   */
+  async createLaunchpadOffer(
+    createOfferRequest: CreateLaunchpadOfferRequest
+  ): Promise<CreateLaunchpadOfferResponse | SubmitLaunchpadOfferRequest> {
+    if (!createOfferRequest.walletProvider) {
+      return this.launchpadClientInstance.createLaunchpadOffer(
+        createOfferRequest
+      )
+    } else if (createOfferRequest.walletProvider === WALLET_PROVIDER.xverse) {
+      const offer: CreateLaunchpadOfferResponse =
+        await this.launchpadClientInstance.createLaunchpadOffer(
+          createOfferRequest
+        )
+      const sellerInput = {
+        address: createOfferRequest.buyerPaymentAddress,
+        signingIndexes: offer.buyerInputIndices,
+      }
+
+      const payload = {
+        network: {
+          type: this.network,
+        },
+        message: 'Sign Buyer Transaction',
+        psbtBase64: offer.psbt,
+        broadcast: false,
+        inputsToSign: [sellerInput],
+      }
+      return new Promise((resolve, reject) => {
+        signTransaction({
+          payload,
+          onFinish: async (response) => {
+            /** this Response will be used for the next submit offer request */
+            const submitLaunchpadOfferRequest: SubmitLaunchpadOfferRequest = {
+              ordinalId: offer.ordinalId,
+              launchpadPhase: offer.launchpadPhase,
+              signedBuyerPSBTBase64: response.psbtBase64,
+            }
+            resolve(submitLaunchpadOfferRequest)
+          },
+          onCancel: () => {
+            console.log('Transaction canceled')
+          },
+        })
+      })
+    } else {
+      throw new Error('Wallet not supported')
+    }
+  }
+
+  /**
+   * submits the launchpad offer and gets the tansaction id
+   * @param {SubmitLaunchpadOfferRequest} submitLaunchpadOfferRequest - The request object for create Launchpad Offer.
+   * @returns {Promise<SubmitLaunchpadOfferResponse>} A promise that resolves to the response from the API.
+   */
+  async submitLaunchpadOffer(
+    submitLaunchpadOfferRequest: SubmitLaunchpadOfferRequest
+  ): Promise<SubmitLaunchpadOfferResponse> {
+    return this.launchpadClientInstance.submitLaunchpadOffer(
+      submitLaunchpadOfferRequest
+    )
   }
 }

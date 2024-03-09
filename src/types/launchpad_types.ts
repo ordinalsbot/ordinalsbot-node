@@ -274,3 +274,91 @@ export interface SignTransactionResponse {
   /** transaction id of the transfer */
   txId: string
 }
+
+/**
+ * Request object for the create launchpad offer
+ */
+export interface CreateLaunchpadOfferRequest {
+  /** launchpad id to buy the ordinal. */
+  launchpadId: string
+
+  /** Id of the launchpad phase for ordinal to buy. */
+  launchpadPhaseId?: string
+
+  /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
+  buyerPaymentAddress: string
+
+  /** Buyer's Ordinal wallet address. The purchased Ordinal will be transferred to this address.. */
+  buyerOrdinalAddress: string
+
+  /** Public Key for buyer's payment wallet address. */
+  buyerPaymentPublicKey: string
+
+  /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
+  feeRateTier?: ReeRateTier
+
+  /** Wallet Provider name */
+  walletProvider?: string
+}
+
+/**
+ * Launchpad phase for create launchpad offer
+ */
+export interface CreateLaunchpadOfferPhase {
+  /** Id of the launchpad phase*/
+  _id: string
+
+  /** access type of the phase. i.e public or protected */
+  isPublic: boolean
+
+  /** price per ordinal in the launchpad phases */
+  price: number
+
+  /** Start date of the launchpad phase */
+  startDate: string
+
+  /** end date of the launchpad phase */
+  endDate: string | null
+}
+
+/**
+ * Response object of the create launchpad offer
+ */
+export interface CreateLaunchpadOfferResponse {
+  /** launchpad phase object */
+  phase: CreateLaunchpadOfferPhase
+
+  /** launchpad ordinal id which avaiable for the buyer */
+  ordinalId: string
+
+  /** Launhcpad phase id whose ordinal is available to the buyer */
+  launchpadPhase: string
+
+  /** Array of indices of the inputs that need to be signed by the buyer */
+  buyerInputIndices: Array<number>
+
+  /** base64 transaction to be signed */
+  psbt: string
+}
+
+/**
+ * Launchpad submit offer request Object
+ */
+export interface SubmitLaunchpadOfferRequest {
+  /** Id of the ordinal to buy. */
+  ordinalId: string
+
+  /** launchpad phase id whose ordinal is buying user */
+  launchpadPhase: string
+
+  /** Signed psbt transaction in base64 encoding. This is the output of the creating an offer using /create-launch-offer and singing it using the buyer's payment wallet */
+  signedBuyerPSBTBase64: string
+}
+
+/**
+ *
+ */
+export interface SubmitLaunchpadOfferResponse {
+  /** transaction id for the purchase transaction */
+  txId: string
+}

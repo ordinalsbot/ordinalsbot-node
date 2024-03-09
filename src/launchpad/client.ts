@@ -4,6 +4,8 @@ import { InscriptionError } from '../InscriptionError'
 import {
   ConfirmPaddingOutputsRequest,
   ConfirmPaddingOutputsResponse,
+  CreateLaunchpadOfferRequest,
+  CreateLaunchpadOfferResponse,
   CreateLaunchpadRequest,
   CreateLaunchpadResponse,
   GetAllocationRequest,
@@ -14,6 +16,8 @@ import {
   LaunchpadMarketplaceCreateResponse,
   SetupPaddingOutputsRequest,
   SetupPaddingOutputsResponse,
+  SubmitLaunchpadOfferRequest,
+  SubmitLaunchpadOfferResponse,
   getLaunchpadStatusRequest,
   getLaunchpadStatusResponse,
   saveLaunchpadRequest,
@@ -199,6 +203,32 @@ export class LaunchpadClient {
   ): Promise<SetupPaddingOutputsResponse> {
     return this.instanceV1.post(`/setup-padding-outputs`, {
       ...setupPaddingOutputsRequest,
+    });
+  }
+
+  /**
+   * Creates the launchpad offer
+   * @param {CreateLaunchpadOfferRequest} createLaunchpadOfferRequest - The request object for create Launchpad Offer.
+   * @returns {Promise<CreateLaunchpadOfferResponse>} A promise that resolves to the response from the API.
+   */
+  async createLaunchpadOffer(
+    createLaunchpadOfferRequest: CreateLaunchpadOfferRequest
+  ): Promise<CreateLaunchpadOfferResponse> {
+    return this.instanceV1.post(`/create-launch-offer`, {
+      ...createLaunchpadOfferRequest,
+    });
+  }
+
+  /**
+   * submits the launchpad offer and gets the tansaction id
+   * @param {SubmitLaunchpadOfferRequest} submitLaunchpadOfferRequest - The request object for create Launchpad Offer.
+   * @returns {Promise<SubmitLaunchpadOfferResponse>} A promise that resolves to the response from the API.
+   */
+  async submitLaunchpadOffer(
+    submitLaunchpadOfferRequest: SubmitLaunchpadOfferRequest
+  ): Promise<SubmitLaunchpadOfferResponse> {
+    return this.instanceV1.post(`/submit-launch-offer`, {
+      ...submitLaunchpadOfferRequest,
     });
   }
 }
