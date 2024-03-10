@@ -204,4 +204,35 @@ describe("marketplace", function () {
       }
     });
   });
+  describe("Transfer Ordinals", function () {
+    it("should handle the ordinal transfer process", async () => {
+      const transferStub = sandbox.stub(marketPlace, 'transfer').resolves({
+        psbtBase64: "test_psbt_base64",
+        senderOrdinalInputs: [0],
+        senderPaymentInputs: [1]
+      });
+  
+      // Constructing a mock request based on MarketplaceTransferRequest type
+      const mockTransferRequest = {
+        ordinals: ["ordinal1"],
+        senderPaymentAddress: "sender_payment_address",
+        senderPaymentPublicKey: "sender_payment_public_key",
+        senderOrdinalPublicKey: "sender_ordinal_public_key",
+        senderOrdinalAddress: "sender_ordinal_address",
+        receiverOrdinalAddress: "receiver_ordinal_address",
+        walletProvider: WALLET_PROVIDER.xverse
+      };
+  
+      try {
+        const response = await marketPlace.transfer(mockTransferRequest);
+        expect(response).to.have.property('psbtBase64').that.equals("test_psbt_base64");
+        expect(response).to.have.property('senderOrdinalInputs').that.is.an('array').that.includes(0);
+        expect(response).to.have.property('senderPaymentInputs').that.is.an('array').that.includes(1);
+        sinon.assert.calledWith(transferStub, sinon.match(mockTransferRequest));
+      } catch (error) {
+        assert.fail("Should not have thrown an error");
+      }
+    });
+  });
+  
 });
