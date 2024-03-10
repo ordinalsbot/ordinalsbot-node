@@ -3,4 +3,3 @@ export { InscriptionError } from "./InscriptionError";
 export * from "./types";
 export { MarketPlace } from "./marketplace";
 export { Inscription } from "./inscription";
-export { Launchpad } from "./launchpad/index";

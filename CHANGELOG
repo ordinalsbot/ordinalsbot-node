@@ -1,3 +1,14 @@
+## [0.1.2]
+
+#### APIs Updated
+
+- `Marketplace`
+  - confirmListing - Added method to update the signedPSBT on newly created the listing ordinals.
+  - reListing - Added method to update the price of existing listing ordinal.
+  - confirmReListing - Added method to update the signedPSBT on the relisting ordinals.
+  - deList - Added method to remove the existing ordinal from listing.
+  - transfer - Updated the method to support tranfer multiple ordinals on the multiple addresses.
+
 ## [0.1.1]
 
 #### APIs Updated
