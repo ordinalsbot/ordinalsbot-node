@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { InscriptionError } from "./inscription/error";
+import { InscriptionError } from "./InscriptionError";
 import { InscriptionEnv } from "./types";
 import {
   InscriptionPriceRequest,

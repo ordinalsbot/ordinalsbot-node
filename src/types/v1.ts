@@ -48,58 +48,27 @@ export interface InscriptionFile {
 }
 
 export interface InscriptionOrderRequest {
-  
-  /*
-   * An array of objects that includes:
-   * 
-   * Mandatory
-   *    - name:string; => name of the file including extension.
-   *    - size:number; => size of the file in bytes
-   *    - url:string; => file URL hosted on OrdinalsBot buckets
-   * 
-   * Optional
-   *    - metadataUrl:string; => metadata json file URL hosted on OrdinalsBot buckets
-   *    - metadataSize:number; => size of the metadata file in bytes
-   *    - metaprotocol:string; => Metaprotocol field to be included in the inscription data
-   * 
-   * Note: you can send any dataURL text/json/image/video data in a parameter called dataURL instead of url for files
-   */
   files: InscriptionFile[];
+  fee: number;
 
-  /**
-   * Miner fee that will be paid while inscribing the ordinals in sats/byte.
-   * (default=2 sats/byte) 
-   */
-  fee?: number;
-
-  /** 
-   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-   * (default=false) 
-   */
-  lowPostage?: boolean;
-
-  /** 
-   * A single Bitcoin address to receive the inscriptions for the whole order 
-   * Or one receiver Address per file
+  /** Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
+    (default=false) 
   */
-  receiveAddress?: string | string[];
+  lowPostage?: boolean;
+  receiveAddress?: string;
 
-  /** 
-   * Inscribe on a rare, exotic, early sat. 
-   * Options: vintage | block78 | pizza | uncommon | random (default=random) 
-   * full list can be queried from inventory endpoint
-   */
+  /** Inscribe on a rare, exotic, early sat. 
+   Options: vintage | block78 | pizza | uncommon | random (default=random) 
+    full list can be queried from inventory endpoint
+  */
   rareSats?: string;
 
-  /** 
-   * Referral code to earn up to %15 of the order service fee.
-   */
+  /** referral code to earn up to %15 of the order service fee. */
   referral?: string;
 
-  /** 
-   * Amount of satoshis to charge extra for this order that will be added to "referral" account.
-   * Needs to be used together with "referral" parameter.
-   */
+  /** Amount of satoshis to charge extra for this order that will be added to "referral" account.
+    Needs to be used together with "referral" 
+  */
   additionalFee?: number;
 
   /* Order timeout in minutes. 
@@ -111,31 +80,10 @@ export interface InscriptionOrderRequest {
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string;
 
-  /** 
-   * Use brotli compression to reduce file sizes on chain
+  /** Use brotli compression to reduce file sizes on chain
    * default=false
    */
   compress?: boolean;
-
-  /**
-   * 
-   */
-  parent?: InscriptionOrderParentRequest
-
-  /**
-   * 
-   */
-  projectTag?: string
-
-  batchMode?:string
-}
-
-/**
- * Parent Reqeust object for the Inscription order
- */
-export interface InscriptionOrderParentRequest {
-  inscriptionId: string
-  returnAddress: string
 }
 
 export interface InscriptionCharge {
@@ -163,11 +111,7 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   charge: InscriptionCharge;
   chainFee: number; // in satoshis
   serviceFee: number; // in satoshis
-  baseFee: number;
-  rareSatsFee: number;
-  postage: number;
   orderType: string;
-  state: string;
   createdAt: number; // timestamp in ms,
 }
 
@@ -191,16 +135,13 @@ export interface InscriptionChargeMetadata {
   invoice_id: string;
 }
 
-/**
- * Represents a request for pricing information for inscribing files.
- */
 export interface InscriptionPriceRequest {
   /** Total size of all files to be inscribed in bytes */
   size: number;
 
   /** Miner fee that will be paid while inscribing the ordinal in sats/byte. (default=2 sats/byte) */
   fee: number;
-  
+
   /** Number of files to be inscribed (default=1) */
   count: number;
 
@@ -209,44 +150,14 @@ export interface InscriptionPriceRequest {
     full list can be queried from inventory endpoint
   */
   rareSats: string;
-
-  /** Esitmate fees for the files with minimum postage
-   * (padding) 546 sats instead of the standard 10,000 sats
-   * (default = false)
-  */
-  lowPostage?: boolean
-
-  /**
-   * Estimate fees for a direct inscription order
-   * `/inscribe` endpoint which will be cheaper
-   * (default = false)
-   */
-  direct?:boolean
-
-  /**
-   * Additional fee(in satoshis) to be added to order total and passed to your referral code.
-   */
-  additionalFee?: number;
-
-  /**
-   * The custom base fee from apikey
-   */
-  baseFee?:number;
-
 }
 
-/**
- * Represents a response for pricing information for inscribing files.
- */
 export interface InscriptionPriceResponse {
-  chainFee: number // chain fee that will be paid to miners
-  baseFee: number // base service fee taken by inscription.com
-  serviceFee: number // total service fee taken by inscription.com
-  rareSatsFee: number
-  additionalFee: number //the additinal fee per file
-  postage: number //postage fee according to provided lowPostage. i.e lowPostage is 546 and normalPostage is 10,000
-  amount: number // amount to be paid by the user
-  totalFee: number // total amount to be paid by the user
+  status: string;
+  chainFee: number; // chain fee that will be paid to miners
+  baseFee: number; // base service fee taken by inscription.com
+  serviceFee: number; // total service fee taken by inscription.com
+  totalFee: number; // total amount to be paid by the user
 }
 
 export interface InscriptionCollectionCreateRequest {

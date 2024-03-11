@@ -4,7 +4,7 @@
   "description": "Node.js library for OrdinalsBot API",
   "main": "dist/index.js",
   "scripts": {
-    "test": "pnpm build && nyc mocha",
+    "test": "pnpm build && nyc mocha 'test/**/*.js'",
     "build": "rm -rf dist/ && tsc",
     "prepack": "pnpm build"
   },

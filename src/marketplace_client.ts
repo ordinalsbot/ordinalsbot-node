@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { InscriptionError } from "./inscription/error";
+import { InscriptionError } from "./InscriptionError";
 import {
   MarketplaceConfirmPaddingOutputsRequest,
   MarketplaceConfirmPaddingOutputsResponse,
@@ -18,7 +18,15 @@ import {
   MarketplaceSaveListingRequest,
   MarketplaceSaveListingResponse,
   MarketplaceTransferRequest,
-  MarketplaceTransferResponse,
+  MarketplaceTransferAPIResponse,
+  MarketplaceConfirmListingRequest,
+  MarketplaceConfirmListingResponse,
+  MarketplaceReListingRequest,
+  MarketplaceReListingResponse,
+  MarketplaceConfirmReListRequest,
+  MarketplaceConfirmReListResponse,
+  MarketplaceDeListRequest,
+  MarketplaceDeListAPIResponse,
 } from "./types/marketplace_types";
 import { InscriptionEnv } from "./types";
 
@@ -135,9 +143,66 @@ export class MarketPlaceClient {
     });
   }
 
+  /**
+   * Confirms a listing in the marketplace.
+   * @param {MarketplaceConfirmListingRequest} confirmListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceSaveListingResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  async confirmListing(
+    confirmListingRequest: MarketplaceConfirmListingRequest
+  ): Promise<MarketplaceConfirmListingResponse> {
+    return this.instanceV1.post(`/confirm-listing`, {
+      ...confirmListingRequest,
+    })
+  }
+
+  /**
+   * Relisting an existing listing ordinal in the marketplace.
+   * @param {MarketplaceReListingRequest} reListingRequest - The request object for reListing.
+   * @returns {Promise<MarketplaceReListingResponse>} A promise that resolves with the response from relisting.
+   */
+  async reListing(
+    reListingRequest: MarketplaceReListingRequest
+  ): Promise<MarketplaceReListingResponse> {
+    return this.instanceV1.post(`/relist`, {
+      ...reListingRequest,
+    });
+  }
+
+  /**
+   * Confirms relisting in the marketplace.
+   * @param {MarketplaceConfirmReListRequest} confirmReListRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmReListResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  async confirmReListing(
+    confirmReListRequest: MarketplaceConfirmReListRequest
+  ): Promise<MarketplaceConfirmReListResponse> {
+    return this.instanceV1.post(`/confirm-relist`, {
+      ...confirmReListRequest,
+    })
+  }
+
+  /**
+   * deListing the ordinal from marketplace and transfer back to the seller ordinal address.
+   * @param {MarketplaceDeListRequest} deListRequest - The request object for deListing.
+   * @returns {Promise<MarketplaceDeListAPIResponse>} A promise that resolves with the response from deListing.
+   */
+  async deList(
+    deListRequest: MarketplaceDeListRequest
+  ): Promise<MarketplaceDeListAPIResponse> {
+    return this.instanceV1.post(`/delist`, {
+      ...deListRequest,
+    });
+  }
+
+  /**
+   * transfer the ordinal to another ordinal address.
+   * @param {MarketplaceTransferRequest} transferRequest - The request object for transfer.
+   * @returns {Promise<MarketplaceTransferAPIResponse>} A promise that resolves with the response from transfer.
+   */
   async transfer(
     transferRequest: MarketplaceTransferRequest
-  ): Promise<MarketplaceTransferResponse> {
+  ): Promise<MarketplaceTransferAPIResponse> {
     return this.instanceV1.post(`/transfer-ordinal`, {
       ...transferRequest,
     });

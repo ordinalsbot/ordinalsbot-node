@@ -24,12 +24,11 @@ Install the package with:
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
 ```js
-import * as ordinalsbot from 'ordinalsbot'
+import { MarketPlace, Inscription } from "ordinalsbot";
 
 // if no parameter given, default environment is 'live'
-let inscription = new ordinalsbot.Inscription("API_KEY", "dev");
-let marketplace = new ordinalsbot.MarketPlace("API_KEY", "dev");
-
+let inscription = new Inscription("API_KEY", "dev");
+let marketplace = new MarketPlace("API_KEY", "dev");
 ```
 
 ## Usage
