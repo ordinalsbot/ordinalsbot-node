@@ -135,13 +135,16 @@ export interface InscriptionChargeMetadata {
   invoice_id: string;
 }
 
+/**
+ * Represents a request for pricing information for inscribing files.
+ */
 export interface InscriptionPriceRequest {
   /** Total size of all files to be inscribed in bytes */
   size: number;
 
   /** Miner fee that will be paid while inscribing the ordinal in sats/byte. (default=2 sats/byte) */
   fee: number;
-
+  
   /** Number of files to be inscribed (default=1) */
   count: number;
 
@@ -150,14 +153,44 @@ export interface InscriptionPriceRequest {
     full list can be queried from inventory endpoint
   */
   rareSats: string;
+
+  /** Esitmate fees for the files with minimum postage
+   * (padding) 546 sats instead of the standard 10,000 sats
+   * (default = false)
+  */
+  lowPostage?: boolean
+
+  /**
+   * Estimate fees for a direct inscription order
+   * `/inscribe` endpoint which will be cheaper
+   * (default = false)
+   */
+  direct?:boolean
+
+  /**
+   * Additional fee(in satoshis) to be added to order total and passed to your referral code.
+   */
+  additionalFee?: number;
+
+  /**
+   * The custom base fee from apikey
+   */
+  baseFee?:number;
+
 }
 
+/**
+ * Represents a response for pricing information for inscribing files.
+ */
 export interface InscriptionPriceResponse {
-  status: string;
-  chainFee: number; // chain fee that will be paid to miners
-  baseFee: number; // base service fee taken by inscription.com
-  serviceFee: number; // total service fee taken by inscription.com
-  totalFee: number; // total amount to be paid by the user
+  chainFee: number // chain fee that will be paid to miners
+  baseFee: number // base service fee taken by inscription.com
+  serviceFee: number // total service fee taken by inscription.com
+  rareSatsFee: number
+  additionalFee: number //the additinal fee per file
+  postage: number //postage fee according to provided lowPostage. i.e lowPostage is 546 and normalPostage is 10,000
+  amount: number // amount to be paid by the user
+  totalFee: number // total amount to be paid by the user
 }
 
 export interface InscriptionCollectionCreateRequest {
