@@ -48,27 +48,58 @@ export interface InscriptionFile {
 }
 
 export interface InscriptionOrderRequest {
+  
+  /*
+   * An array of objects that includes:
+   * 
+   * Mandatory
+   *    - name:string; => name of the file including extension.
+   *    - size:number; => size of the file in bytes
+   *    - url:string; => file URL hosted on OrdinalsBot buckets
+   * 
+   * Optional
+   *    - metadataUrl:string; => metadata json file URL hosted on OrdinalsBot buckets
+   *    - metadataSize:number; => size of the metadata file in bytes
+   *    - metaprotocol:string; => Metaprotocol field to be included in the inscription data
+   * 
+   * Note: you can send any dataURL text/json/image/video data in a parameter called dataURL instead of url for files
+   */
   files: InscriptionFile[];
-  fee: number;
 
-  /** Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-    (default=false) 
-  */
+  /**
+   * Miner fee that will be paid while inscribing the ordinals in sats/byte.
+   * (default=2 sats/byte) 
+   */
+  fee?: number;
+
+  /** 
+   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
+   * (default=false) 
+   */
   lowPostage?: boolean;
-  receiveAddress?: string;
 
-  /** Inscribe on a rare, exotic, early sat. 
-   Options: vintage | block78 | pizza | uncommon | random (default=random) 
-    full list can be queried from inventory endpoint
+  /** 
+   * A single Bitcoin address to receive the inscriptions for the whole order 
+   * Or one receiver Address per file
   */
+  receiveAddress?: string | string[];
+
+  /** 
+   * Inscribe on a rare, exotic, early sat. 
+   * Options: vintage | block78 | pizza | uncommon | random (default=random) 
+   * full list can be queried from inventory endpoint
+   */
   rareSats?: string;
 
-  /** referral code to earn up to %15 of the order service fee. */
+  /** 
+   * Referral code to earn up to %15 of the order service fee.
+   */
   referral?: string;
 
-  /** Amount of satoshis to charge extra for this order that will be added to "referral" account.
-    Needs to be used together with "referral" 
-  */
+  /** 
+   * Amount of satoshis to charge extra for this order that will be added to "referral" account.
+   * Needs to be used together with "referral" parameter.
+   */
   additionalFee?: number;
 
   /* Order timeout in minutes. 
@@ -80,10 +111,31 @@ export interface InscriptionOrderRequest {
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string;
 
-  /** Use brotli compression to reduce file sizes on chain
+  /** 
+   * Use brotli compression to reduce file sizes on chain
    * default=false
    */
   compress?: boolean;
+
+  /**
+   * 
+   */
+  parent?: InscriptionOrderParentRequest
+
+  /**
+   * 
+   */
+  projectTag?: string
+
+  batchMode?:string
+}
+
+/**
+ * Parent Reqeust object for the Inscription order
+ */
+export interface InscriptionOrderParentRequest {
+  inscriptionId: string
+  returnAddress: string
 }
 
 export interface InscriptionCharge {
@@ -111,7 +163,11 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   charge: InscriptionCharge;
   chainFee: number; // in satoshis
   serviceFee: number; // in satoshis
+  baseFee: number;
+  rareSatsFee: number;
+  postage: number;
   orderType: string;
+  state: string;
   createdAt: number; // timestamp in ms,
 }
 
