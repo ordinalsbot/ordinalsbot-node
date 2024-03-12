@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { InscriptionError } from "./InscriptionError";
+import { InscriptionError } from "./inscription/error";
 import { InscriptionEnv } from "./types";
 import {
   InscriptionPriceRequest,
@@ -14,6 +14,8 @@ import {
   InscriptionReferralRequest,
   InscriptionReferralSetResponse,
   InscriptionReferralStatusResponse,
+  CreateSpecialSatsRequest,
+  CreateSpecialSatsResponse,
 } from "./types/v1";
 
 const qs = require("qs");
@@ -153,5 +155,18 @@ export class InscriptionClient {
     return this.instanceV1.get(`/referrals`, {
       params: referral,
     });
+  }
+
+  /**
+   * Creates a special Sats PSBT.
+   * @param {CreateSpecialSatsRequest} createSpecialSatsRequest - The request object containing the details for creating the PSBT.
+   * @returns {Promise<CreateSpecialSatsResponse>} A promise that resolves with the response containing the created PSBT.
+   */
+  async createSpecialSatsPSBT(
+    createSpecialSatsRequest: CreateSpecialSatsRequest
+  ): Promise<CreateSpecialSatsResponse> {
+    return this.instanceV1.post(`/create-special-sats-psbt`, {
+      ...createSpecialSatsRequest,
+    })
   }
 }
