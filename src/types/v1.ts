@@ -250,40 +250,67 @@ export interface InscriptionPriceResponse {
 }
 
 export interface InscriptionCollectionCreateRequest {
-  /** URL safe unique collection slug. This will be used as part of mint URL. */
-  id: string;
+  /**
+   * An array of objects that includes:
+   *  - name:string; => name of the file including extension.
+   *  - size:number; => size of the file in bytes.
+   *  - url:string; => publicly accessible image URL
+   */
   files: InscriptionFile[];
 
-  // Inscription price per file (for collection creator) set to 0 for free mints
-  price: number;
-  // Max supply of the collection.
-  totalCount: number;
+  /** URL safe unique collection slug. Will be used as mint URL. */
+  id?: string;
 
-  // Miner fee that will be paid while inscribing the ordinals in sats/byte. (default=2 sats/byte)
-  fee?: number;
+  /** Collection Display Name */
+  name?: string;
 
-  // Inscription service fee per file taken by inscription.com, min: 27000 (sats)
-  serviceFee?: number;
-  // Bitcoin address to receive payouts from inscriptions
-  "creator-address": string;
+  /** Collection description */
+  description?: string;
 
-  // collection metadata
-  name: string;
-  description: string;
+  /** Collection creator */
   creator: string;
-  // optional info to be displayed on the mint page
-  twitter?: string;
-  website?: string;
-  discord?: string;
+  
+  /** Inscription price per file (for collection creator) set to 0 for free mints */
+  price: number;
 
-  // images to be used on the mint page
+  /** Max supply of the collection */
+  totalCount?: number;
+
+  /** Collection twitter account */
+  twitter?: string;
+
+  /** Collection website */
+  website?: string;
+
+  /** Collection banner image URL */
   banner?: string;
+
+  /** Collection cover image URL */
   cover?: string;
+
+  
+  /** Miner fee that will be paid while inscribing the ordinals in sats/byte. (default=2 sats/byte) */
+  fee?: number;
+  
+  /** Inscription service fee per file taken by ordinalsbot.com, min: 27000 (sats)  */
+  serviceFee?: number;
+  
+  /** Bitcoin address to receive payouts from inscriptions */
+  "creator-address": string;
+  
+  allowList?: Object
+  discord?: string;
+  parent?: InscriptionOrderParentRequest
+  /** brc20 collection fields */
+  deployInscription?: string
+  saleSize?:number
 }
 
-export interface InscriptionCollectionCreateResponse
-  extends InscriptionCollectionCreateRequest {
+export interface InscriptionCollectionCreateResponse extends InscriptionCollectionCreateRequest {
+  averageSize: number;
+  inscribedCount: number
   status: string;
+  active: boolean;
   // ... input parameters from InscriptionCollectionCreateRequest
   createdAt: number;
 }
@@ -304,10 +331,11 @@ export interface InscriptionCollectionOrderRequest {
 
   receiveAddress?: string;
 
-  /** Inscribe on a rare, exotic, early sat. 
-   Options: vintage | block78 | pizza | uncommon | random (default=random) 
-    full list can be queried from inventory endpoint
-  */
+  /** 
+   * Inscribe on a rare, exotic, early sat. 
+   * Options: vintage | block78 | pizza | uncommon | random (default=random) 
+   * full list can be queried from inventory endpoint
+   */
   rareSats?: string;
 }
 
