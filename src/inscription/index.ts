@@ -68,7 +68,7 @@ export class Inscription {
    */
   createCollectionOrder(
     collectionOrder: v1.InscriptionCollectionOrderRequest
-  ): Promise<v1.InscriptionOrder> {
+  ): Promise<v1.InscriptionCollectionOrderResponse> {
     return this.instance.createCollectionOrder(collectionOrder)
   }
 

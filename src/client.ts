@@ -16,6 +16,7 @@ import {
   InscriptionReferralStatusResponse,
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
+  InscriptionCollectionOrderResponse,
 } from "./types/v1";
 
 const qs = require("qs");
@@ -129,7 +130,7 @@ export class InscriptionClient {
 
   async createCollectionOrder(
     collectionOrder: InscriptionCollectionOrderRequest
-  ): Promise<InscriptionOrder> {
+  ): Promise<InscriptionCollectionOrderResponse> {
     return this.instanceV1.post(`/collectionorder`, collectionOrder);
   }
 

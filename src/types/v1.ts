@@ -321,15 +321,30 @@ export interface InscriptionCollection {
 
   /** number of items requested from collection */
   count: number;
+
+  requestedIds?: number[]
 }
 
 export interface InscriptionCollectionOrderRequest {
-  collection: InscriptionCollection;
 
-  // cloudflare turnstile token
-  token?: string;
-
+  /** Mining fee to be paid for this collection inscription (sats/vB) */
+  fee?: number
+  
+  /** Bitcoin address to receive the inscriptions for the whole order */
   receiveAddress?: string;
+
+  /**
+   * Object including
+   * id: Collection slug to be inscribed
+   * count: number of inscriptions being ordered.
+   * requestedIds: id to be requested. one from both count or requestedIds is must
+   */
+  collection?: InscriptionCollection;
+
+  referral?:string
+
+  /** Cloudflare turnstile token. Required if no x-api-key header is present. */
+  token?: string;  
 
   /** 
    * Inscribe on a rare, exotic, early sat. 
@@ -337,6 +352,46 @@ export interface InscriptionCollectionOrderRequest {
    * full list can be queried from inventory endpoint
    */
   rareSats?: string;
+
+  /**
+   * Order timeout in minutes. 
+   * Generated payment invoice will be valid for this duration only. Payments that are sent after this will not be processed.
+   * (default=4320)
+   */
+  timeout?: number
+
+  /**
+   * Amount of satoshis to charge extra for this order that will be added to "referral" account.
+   * Needs to be used together with "referral" parameter.
+   */
+  additionalFee?: number
+}
+
+/**
+ * Create collectionorder response Object
+ */
+export interface InscriptionCollectionOrderResponse {
+  charge: InscriptionCharge;
+  collection: InscriptionCollection;
+  fee: number;
+  rareSatsFee: number;
+  serviceFee: number; // in satoshis
+  price: number;
+  fileCount: number;
+  orderType: string;
+  postage: number;
+  lowPostage: number;
+  chainFee: number; // in satoshis
+  amount: number; // in satoshis
+  id: string;
+  additionalFee: number
+  rareSats: string
+  receiveAddress: string
+  referral: string
+  zeroConf: string
+  status: string;
+  state: string;
+  createdAt: number; // timestamp in ms,
 }
 
 export interface InscriptionTextOrderRequest {
