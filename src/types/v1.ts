@@ -158,6 +158,7 @@ export interface InscriptionCharge {
 }
 
 export interface InscriptionOrder extends InscriptionOrderRequest {
+  id: string
   status: string;
   // ... input parameters from InscriptionOrderRequest
   charge: InscriptionCharge;
@@ -167,6 +168,7 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   rareSatsFee: number;
   postage: number;
   orderType: string;
+  zeroConf: string | null
   state: string;
   createdAt: number; // timestamp in ms,
 }
@@ -394,18 +396,16 @@ export interface InscriptionCollectionOrderResponse {
   createdAt: number; // timestamp in ms,
 }
 
-export interface InscriptionTextOrderRequest {
+/**
+ * Create textorder request object
+ */
+export interface InscriptionTextOrderRequest extends InscriptionOrderRequest{
+  // ... input parameters from InscriptionOrderRequest
+
+  /**
+   * An array of strings to be inscribed
+   */
   texts: string[];
-  fee: number;
-
-  /** Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-    (default=false) 
-  */
-  lowPostage?: boolean;
-  receiveAddress?: string;
-
-  /** referral code to earn up to %15 of the order service fee. */
-  referral?: string;
 }
 
 type InscriptionInventoryData = {
