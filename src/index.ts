@@ -1,4 +1,5 @@
 import { Inscription } from './inscription/index'
+import { Launchpad } from './launchpad/index'
 import { MarketPlace } from './marketplace'
 import { InscriptionEnv } from './types'
 
@@ -23,6 +24,11 @@ export class Ordinalsbot {
   Inscription!: Inscription
 
   /**
+   * The inscription instance.
+   */
+  Launchpad!: Launchpad
+
+  /**
    * Creates an instance of Ordinalsbot.
    * @param {string} key - The API key for authentication.
    * @param {InscriptionEnv} environment - The environment (e.g., "live" or "dev") for the inscription.
@@ -34,6 +40,10 @@ export class Ordinalsbot {
 
     if (this.Inscription === undefined) {
       this.Inscription = new Inscription(key, environment)
+    }
+
+    if (this.Launchpad === undefined) {
+      this.Launchpad = new Launchpad(key, environment)
     }
   }
 }
