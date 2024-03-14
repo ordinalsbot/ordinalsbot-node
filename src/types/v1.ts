@@ -412,7 +412,7 @@ export interface CreateSpecialSatsRequest {
   userAddress: string;
   
   /** user's payment public key*/
-  userPublicKey?: string;
+  userPublicKey: string;
 
   /**feeRate */
   feeRate: number
