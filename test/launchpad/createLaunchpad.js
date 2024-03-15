@@ -5,80 +5,84 @@ const { LaunchpadClient } = require('../../dist/launchpad/client')
 
 const sandbox = sinon.createSandbox()
 describe('Launchpad Create Marketplace', function () {
-  afterEach(() => {
-    sandbox.restore()
-  })
-
+  
   it('should return launchpadId and status without wallet provider', async () => {
     // construct request response LaunchpadMarketplaceCreateResponse
-    const inputRequest = getValidTestInput
-    const mockResponse = {
+    const inputRequest = getValidTestInput()
+
+    sinon.stub(LaunchpadClient.prototype, 'createLaunchpad').resolves({
       launchpadId: 'someLaunchpadId',
       status: 'pending',
-    }
-
-    sinon
-      .stub(LaunchpadClient.prototype, 'createLaunchpad')
-      .callsFake(() => mockResponse)
-
+    })
     const launchpad = new Launchpad('someApiKey', 'dev')
     const response = await launchpad.createLaunchpad(inputRequest)
 
-    expect(response).to.equal(mockResponse)
+    expect(response).to.be.a('object')
     expect(response.launchpadId).to.be.a('string')
     expect(response.status).to.be.a('string')
     expect(LaunchpadClient.prototype.createLaunchpad.calledOnce).to.be.true
+    sinon.restore()
   })
 
-  /*
   it('should return launchpadId and status wallet provider', async () => {
     // construct request response LaunchpadMarketplaceCreateResponse
-    const inputRequest = getValidTestInput
-    inputRequest['walletProvider'] = 'Xverse'
-    const mockResponse = {
+    const inputRequest = getValidTestInput()
+
+    inputRequest.walletProvider = 'Xverse'
+
+    sinon.stub(LaunchpadClient.prototype, 'createLaunchpad').resolves({
       launchpadId: 'someLaunchpadId',
       status: 'pending',
-    }
+    })
 
-    sinon
-      .stub(LaunchpadClient.prototype, 'createLaunchpad')
-      .callsFake(() => mockResponse)
+    sinon.stub(Launchpad.prototype, 'getLaunchpadPSBT').resolves({
+      psbt: 'encodedPSBTString',
+      status: 'Pending Buyer Confirmation',
+    })
 
-    const getLaunchpadPSBTMockResponse = {
-      psbt: 'someLaunchpadId',
-      status: 'pending',
-    }
+    sinon.stub(Launchpad.prototype, 'satsConnectWrapper').resolves({
+      success: true,
+      message: 'Transaction successfull',
+      psbtBase64: 'someString',
+      txId: 'someTransactionID',
+    })
 
-    sinon
-      .stub(Launchpad.prototype, 'getLaunchpadPSBT')
-      .callsFake(() => getLaunchpadPSBTMockResponse)
+    sinon.stub(Launchpad.prototype, 'saveLaunchpad').resolves({
+      message: 'Launchpad listing is updated successfully',
+    })
+
     const launchpad = new Launchpad('someApiKey', 'dev')
     const response = await launchpad.createLaunchpad(inputRequest)
 
-    expect(response).to.equal(mockResponse)
-    expect(response.launchpadId).to.be.a('string')
-    expect(response.status).to.be.a('string')
+    expect(response).to.be.a('object')
+    expect(response.message).to.be.a('string')
     expect(LaunchpadClient.prototype.createLaunchpad.calledOnce).to.be.true
+    expect(Launchpad.prototype.getLaunchpadPSBT.calledOnce).to.be.true
+    expect(Launchpad.prototype.satsConnectWrapper.calledOnce).to.be.true
+    expect(Launchpad.prototype.saveLaunchpad.calledOnce).to.be.true
+    sinon.restore()
   })
-  */
 })
 
-const getValidTestInput = () => {
+function getValidTestInput() {
   // construct request payload CreateLaunchpadRequest
   return {
     phases: [
       {
         ordinals: [
-          '8f46149faff54a7efe0c5c73a633077a8009b374ebcf6d80609807eab8d73218i0',
+          'someOrdinalId1', 'someOrdinalId2', 'someOrdinalId3', 'someOrdinalId4', 'someOrdinalId-n'
         ],
         allowList: {
-          bc1pdtkxdpunmu9rfj7tcglt4kcg2qya8w4y4cxhqcy9fscqnwdk8c7q6ec2w3: {
+          someBuyerOrderAddres1: {
             allocation: 5,
           },
-          bc1pfy7uyj9ae9sfz3h0rqcgqn0vnq4tgh50yxrat7lmd46kxwqmcqxsvvm02l: {
+          someBuyerOrderAddres2: {
             allocation: 5,
           },
-          bc1p84ec5hn4asw90slszeje3yrnmzgapj0s9ern85zgh4kc9frqcl3q422dc2: {
+          someBuyerOrderAddres3: {
+            allocation: 1,
+          },
+          someBuyerOrderAddresN: {
             allocation: 1,
           },
         },
@@ -89,7 +93,7 @@ const getValidTestInput = () => {
       },
       {
         ordinals: [
-          '4c18610607628425b5e97e28c6b0fc6e330ddc4de69fc995f2a9144365e0994fi0',
+          'someOrdinalId1',
         ],
         isPublic: 1,
         price: 8000,
