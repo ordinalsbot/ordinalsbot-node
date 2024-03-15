@@ -3,6 +3,7 @@ import { InscriptionEnv } from '../types'
 import { LaunchpadClient } from './client'
 import {
   BitcoinNetworkType,
+  SignTransactionPayload,
   SignTransactionResponse,
   signTransaction,
 } from 'sats-connect'
@@ -27,6 +28,7 @@ import {
   GetLaunchpadStatusResponse,
   SaveLaunchpadRequest,
   SaveLaunchpadResponse,
+  SatsConnectWrapperResponse,
 } from '../types/launchpad_types'
 import { WALLET_PROVIDER } from '../types/marketplace_types'
 
@@ -135,33 +137,26 @@ export class Launchpad {
           broadcast: false,
           inputsToSign: [sellerInput],
         }
-
-        return new Promise((resolve, reject) => {
-          signTransaction({
-            payload,
-            onFinish: async (response) => {
-              try {
-                console.log('Transaction signed')
-                console.log('Response:', response)
-
-                // contruct the request payload for save the launchpad after signing the transaction
-                const saveLaunchpadRequestPayload: SaveLaunchpadRequest = {
-                  launchpadId: launchpadId,
-                  updateLaunchData: {
-                    signedListingPSBT: response.psbtBase64,
-                  },
-                }
-
-                resolve(this.saveLaunchpad(saveLaunchpadRequestPayload))
-              } catch (error) {
-                console.error('Error saving launchpad:', error)
-                reject(error)
+        return new Promise(async (resolve, reject) => {
+          const response: SatsConnectWrapperResponse =
+            await this.satsConnectWrapper(payload)
+          if (response && response.success && response.psbtBase64) {
+            try {
+              // contruct the request payload for save the launchpad after signing the transaction
+              const saveLaunchpadRequestPayload: SaveLaunchpadRequest = {
+                launchpadId: launchpadId,
+                updateLaunchData: {
+                  signedListingPSBT: response.psbtBase64,
+                },
               }
-            },
-            onCancel: () => {
-              console.log('Transaction canceled')
-            },
-          })
+              resolve(this.saveLaunchpad(saveLaunchpadRequestPayload))
+            } catch (error) {
+              console.error('Error saving launchpad:', error)
+              reject(error)
+            }
+          } else {
+            console.log('Transaction canceled')
+          }
         })
       } else {
         throw new Error('Wallet not supported')
@@ -372,5 +367,30 @@ export class Launchpad {
     return this.launchpadClientInstance.submitLaunchpadOffer(
       submitLaunchpadOfferRequest
     )
+  }
+
+  /**
+   * Sats connect Wrapper method to sign transactions
+   * @param {SignTransactionPayload} payload The request payload for transaction.
+   * @returns {Promise<SatsConnectWrapperResponse>} A promise that resolves to the response of transaction.
+   */
+  async satsConnectWrapper(
+    payload: SignTransactionPayload
+  ): Promise<SatsConnectWrapperResponse> {
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response) => {
+          resolve({
+            success: true,
+            message: 'Transaction successfull',
+            ...response,
+          })
+        },
+        onCancel: () => {
+          resolve({ success: false, message: 'Transaction cancelled' })
+        },
+      })
+    })
   }
 }

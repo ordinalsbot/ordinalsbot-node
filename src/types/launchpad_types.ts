@@ -362,3 +362,13 @@ export interface SubmitLaunchpadOfferResponse {
   /** transaction id for the purchase transaction */
   txId: string
 }
+
+/**
+ * Sats connect wrapper response object
+ */
+export interface SatsConnectWrapperResponse {
+  success: boolean,
+  message: string,
+  psbtBase64?: string,
+  txId?: string,
+}
