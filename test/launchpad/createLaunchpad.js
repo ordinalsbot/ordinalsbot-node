@@ -4,7 +4,7 @@ const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 
 const sandbox = sinon.createSandbox()
-describe('Launchpad Create Marketplace', function () {
+describe('Create Launchpad', function () {
   
   it('should return launchpadId and status without wallet provider', async () => {
     // construct request response LaunchpadMarketplaceCreateResponse
