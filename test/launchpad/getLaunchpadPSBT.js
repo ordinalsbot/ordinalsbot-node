@@ -7,13 +7,12 @@ const sandbox = sinon.createSandbox()
 describe('Get Launchpad Status', function () {
   it('should return status with the psbt ready to sign', async () => {
     const clock = sinon.useFakeTimers()
-    // construct request payload LaunchpadMarketplaceCreateRequest
+    
     const getLaunchpadPSBTRequest = {
       launchpadId: 'someNamestring',
       status: 'pending',
     }
 
-    // construct request response LaunchpadMarketplaceCreateResponse
     const mockResponse = {
       psbt: 'encodedPSBTString',
       status: 'Pending Buyer Confirmation',

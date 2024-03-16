@@ -7,7 +7,7 @@ const sandbox = sinon.createSandbox()
 describe('Create Launchpad', function () {
   
   it('should return launchpadId and status without wallet provider', async () => {
-    // construct request response LaunchpadMarketplaceCreateResponse
+    // construct request response CreateLaunchpadRequest
     const inputRequest = getValidTestInput()
 
     sinon.stub(LaunchpadClient.prototype, 'createLaunchpad').resolves({
@@ -25,7 +25,7 @@ describe('Create Launchpad', function () {
   })
 
   it('should return launchpadId and status wallet provider', async () => {
-    // construct request response LaunchpadMarketplaceCreateResponse
+    // construct request response CreateLaunchpadRequest
     const inputRequest = getValidTestInput()
 
     inputRequest.walletProvider = 'Xverse'
