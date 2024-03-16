@@ -331,22 +331,20 @@ export class Launchpad {
         broadcast: false,
         inputsToSign: [sellerInput],
       }
-      return new Promise((resolve, reject) => {
-        signTransaction({
-          payload,
-          onFinish: async (response) => {
-            /** this Response will be used for the next submit offer request */
-            const submitLaunchpadOfferRequest: SubmitLaunchpadOfferRequest = {
-              ordinalId: offer.ordinalId,
-              launchpadPhase: offer.launchpadPhase,
-              signedBuyerPSBTBase64: response.psbtBase64,
-            }
-            resolve(submitLaunchpadOfferRequest)
-          },
-          onCancel: () => {
-            console.log('Transaction canceled')
-          },
-        })
+      
+      return new Promise(async (resolve, reject) => {
+        const response: SatsConnectWrapperResponse = await this.satsConnectWrapper(payload)
+        if (response && response.success && response.psbtBase64) {
+          /** this Response will be used for the next submit offer request */
+          const submitLaunchpadOfferRequest: SubmitLaunchpadOfferRequest = {
+            ordinalId: offer.ordinalId,
+            launchpadPhase: offer.launchpadPhase,
+            signedBuyerPSBTBase64: response.psbtBase64,
+          }
+          resolve(submitLaunchpadOfferRequest)
+        } else {
+          console.log('Transaction canceled')
+        }
       })
     } else {
       throw new Error('Wallet not supported')
