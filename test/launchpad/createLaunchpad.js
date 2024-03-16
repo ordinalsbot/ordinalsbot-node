@@ -24,7 +24,7 @@ describe('Create Launchpad', function () {
     sinon.restore()
   })
 
-  it('should return launchpadId and status wallet provider', async () => {
+  it('should return update message with wallet provider', async () => {
     // construct request response CreateLaunchpadRequest
     const inputRequest = getValidTestInput()
 
