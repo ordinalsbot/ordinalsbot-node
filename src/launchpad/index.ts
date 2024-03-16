@@ -287,16 +287,13 @@ export class Launchpad {
         inputsToSign: [buyerInputs],
       }
 
-      return new Promise((resolve, reject) => {
-        signTransaction({
-          payload,
-          onFinish: async (response: any) => {
-            return resolve(response)
-          },
-          onCancel: () => {
-            console.log('Transaction canceled')
-          },
-        })
+      return new Promise(async (resolve, reject) => {
+        const response: SatsConnectWrapperResponse = await this.satsConnectWrapper(payload)
+        if (response && response.success && response.psbtBase64) {
+          resolve({ psbtBase64: response.psbtBase64, txId: response.txId })
+        } else {
+          console.log('Transaction canceled')
+        }
       })
     } else {
       throw new Error('Wallet not supported')
