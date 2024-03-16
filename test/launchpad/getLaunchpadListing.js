@@ -5,12 +5,12 @@ const { LaunchpadClient } = require('../../dist/launchpad/client')
 const { LAUNCHPAD_STATUS } = require('../../dist/types/launchpad_types')
 
 const sandbox = sinon.createSandbox()
-describe('Save Launchpad', function () {
+describe('Get Launchpad listing', function () {
   afterEach(() => {
     sandbox.restore()
   })
 
-  it('should return success after successfully update the psbt on the launchpad', async () => {
+  it('should return launchpad listings', async () => {
     // construct request payload getLaunchpadListingRequest
     const getLaunchpadListingRequest = {
       query: {
