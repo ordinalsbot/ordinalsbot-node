@@ -2,9 +2,12 @@ const { expect } = require('chai')
 const sinon = require('sinon')
 const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
-const { LAUNCHPAD_STATUS } = require('../../dist/types/launchpad_types')
 
 describe('Confirm Padding Outputs ', function () {
+  afterEach(() => {
+    sinon.restore()
+  })
+
   it('Should return true if the buyer has padding Outputs', async () => {
     // construct request payload confirmPaddingOutputsRequest
     const confirmPaddingOutputsRequest = {

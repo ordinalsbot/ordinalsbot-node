@@ -4,10 +4,9 @@ const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 const { LAUNCHPAD_STATUS } = require('../../dist/types/launchpad_types')
 
-const sandbox = sinon.createSandbox()
 describe('Get Launchpad listing', function () {
   afterEach(() => {
-    sandbox.restore()
+    sinon.restore()
   })
 
   it('should return launchpad listings', async () => {

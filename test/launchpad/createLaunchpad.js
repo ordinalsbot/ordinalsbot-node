@@ -3,9 +3,11 @@ const sinon = require('sinon')
 const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 
-const sandbox = sinon.createSandbox()
 describe('Create Launchpad', function () {
-  
+  afterEach(() => {
+    sinon.restore()
+  })
+
   it('should return launchpadId and status without wallet provider', async () => {
     // construct request response CreateLaunchpadRequest
     const inputRequest = getValidTestInput()

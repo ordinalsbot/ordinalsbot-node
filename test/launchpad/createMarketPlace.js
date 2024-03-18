@@ -3,10 +3,9 @@ const sinon = require('sinon')
 const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 
-const sandbox = sinon.createSandbox()
 describe('Launchpad Create Marketplace', function () {
   afterEach(() => {
-    sandbox.restore()
+    sinon.restore()
   })
 
   it('should return marketplace id and api key', async () => {

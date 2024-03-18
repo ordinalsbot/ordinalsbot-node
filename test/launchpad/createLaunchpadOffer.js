@@ -3,6 +3,11 @@ const sinon = require('sinon')
 const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 describe('Create Launchpad offer', function () {
+  
+  afterEach(() => {
+    sinon.restore()
+  })
+
   it('should return psbt and buyerInputIndices without wallet provider', async () => {
     // construct request response createLaunchpadOfferRequest
     const inputRequest = getValidTestInput()

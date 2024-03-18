@@ -3,8 +3,12 @@ const sinon = require('sinon')
 const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 
-const sandbox = sinon.createSandbox()
 describe('Get Launchpad Status', function () {
+  
+  afterEach(() => {
+    sinon.restore()
+  })
+  
   it('should return status with the psbt ready to sign', async () => {
     const clock = sinon.useFakeTimers()
     

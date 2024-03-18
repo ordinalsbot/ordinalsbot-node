@@ -2,9 +2,13 @@ const { expect } = require('chai')
 const sinon = require('sinon')
 const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
-const { LAUNCHPAD_STATUS } = require('../../dist/types/launchpad_types')
 
 describe('Get Buyer Allocation', function () {
+
+  afterEach(() => {
+    sinon.restore()
+  })
+
   it('Should return the launchpad phases for the given buyer ordinal address', async () => {
     // construct request payload GetAllocationRequest
     const getAllocationRequest = {

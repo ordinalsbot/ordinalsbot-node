@@ -3,10 +3,9 @@ const sinon = require('sinon')
 const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 
-const sandbox = sinon.createSandbox()
 describe('Save Launchpad', function () {
   afterEach(() => {
-    sandbox.restore()
+    sinon.restore()
   })
 
   it('should return success after successfully update the psbt on the launchpad', async () => {

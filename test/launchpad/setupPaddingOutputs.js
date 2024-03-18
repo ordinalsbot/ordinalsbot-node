@@ -4,6 +4,10 @@ const { Launchpad } = require('../../dist/launchpad/index')
 const { LaunchpadClient } = require('../../dist/launchpad/client')
 
 describe('Setup Padding Outputs', function () {
+  afterEach(() => {
+    sinon.restore()
+  })
+  
   it('should return psbt and buyerInputIndices without wallet provider', async () => {
     // construct request response setupPaddingOutputsRequest
     const inputRequest = getValidTestInput()
