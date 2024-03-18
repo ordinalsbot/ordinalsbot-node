@@ -151,14 +151,49 @@ export interface MarketplaceSetupPaddingOutputsResponse {
   buyerInputIndices: Array<number>;
 }
 
+/**
+ * Request object for the ordinal listing
+ */
 export interface MarketplaceGetListingRequest {
-  query: { status: LISTING_STATUS };
+  /**
+   * Filter based on the status. 
+   */
+  filter: { status: LISTING_STATUS };
+  
+  /**
+   * Starting of the page. 
+   * Default page is 1
+   */
+  page? : number;
+
+  /**
+   * Records in a single listing result
+   * Default page is 1
+   */
+  itemsPerPage?: number;
+
+  /**
+   * sorting the result collection
+   * Default sort value is time.
+   */
+  sort?: string
 }
 
+/**
+ * Get market listing response object
+ */
 export interface MarketplaceGetListingResponse {
-  ordinals: Array<SellerOrdinal>;
+  /** Array of the listing */
+  results: Partial<SellerOrdinal[]>
+  /** total number records */
+  count: number
+  /**current page number */
+  currentPage: number
+  /** total pages */
+  totalPages: number
+  /** total number of items in the result array */
+  totalItems: number
 }
-
 export interface MarketplaceSaveListingRequest {
   ordinalId: String;
   updateListingData: { signedListingPSBT: string };
