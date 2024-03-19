@@ -156,7 +156,29 @@ export enum LAUNCHPAD_STATUS {
  * Get launchpad listing request object
  */
 export interface GetListingRequest {
-  query: { status: LAUNCHPAD_STATUS }
+  
+  /**
+   * Filter based on the status. 
+   */
+  filter: { status: LAUNCHPAD_STATUS };
+  
+  /**
+   * Starting of the page. 
+   * Default page is 1
+   */
+  page? : number;
+
+  /**
+   * Records in a single listing result
+   * Default page is 1
+   */
+  itemsPerPage?: number;
+
+  /**
+   * sorting the result collection
+   * Default sort value is time.
+   */
+  sort?: string
 }
 
 /**

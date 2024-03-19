@@ -10,11 +10,12 @@ describe('Get Launchpad listing', function () {
   })
 
   it('should return launchpad listings', async () => {
-    // construct request payload getLaunchpadListingRequest
+    // construct request payload GetListingRequest
     const getLaunchpadListingRequest = {
-      query: {
-        status: LAUNCHPAD_STATUS.active,
-      },
+      filter: { status: LAUNCHPAD_STATUS.active },
+      page: 1,
+      itemsPerPage: 100,
+      sort: 'time',
     }
     const mockResponse = {
       results: [

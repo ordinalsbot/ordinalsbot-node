@@ -1,14 +1,12 @@
 const { expect } = require('chai')
 const sinon = require('sinon')
 const { MarketPlace } = require('../../dist')
-const {
-  WALLET_PROVIDER,
-  LISTING_STATUS,
-} = require('../../dist/types/marketplace_types')
+const { LISTING_STATUS } = require('../../dist/types/marketplace_types')
 
+const sandbox = sinon.createSandbox()
 describe('Marketplace getListing Ordinal', function () {
   afterEach(() => {
-    sinon.restore()
+    sandbox.restore()
   })
 
   it('should return the listing response', async () => {
