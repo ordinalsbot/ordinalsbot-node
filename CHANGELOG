@@ -1,3 +1,15 @@
+## [0.1.6]
+
+#### APIs Updated
+
+- `Marketplace`
+
+  - getListing - Updated request and response object.
+
+- `Launchpad`
+
+  - getLaunchpadListing - Updated request and response object.
+
 ## [0.1.5]
 
 #### APIs Added
