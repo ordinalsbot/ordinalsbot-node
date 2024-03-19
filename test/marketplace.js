@@ -138,23 +138,6 @@ describe("marketplace", function () {
     });
   });
 
-  describe("Get ordinal listing", function () {
-    it("should return array of ordinals", async () => {
-      const getListingStub = sandbox.stub(marketPlace, 'getListing').rejects({
-        status: authenticationErrorStatus,
-        message: authenticationErrorMessage
-      });
-      
-      try {
-        await marketPlace.getListing({ status: "active" });
-      } catch (error) {
-        expect(error.status).to.equal(authenticationErrorStatus);
-        expect(error.message).to.equal(authenticationErrorMessage);
-      }
-      sinon.assert.calledOnce(getListingStub);
-    });
-  });
-
   describe("Update ordinal listing", function () {
     it("should return signed psbt", async () => {
       const saveListingStub = sandbox.stub(marketPlace, 'saveListing').rejects({

@@ -24,11 +24,14 @@ Install the package with:
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
 ```js
-import { MarketPlace, Inscription } from "ordinalsbot";
+
+import { Ordinalsbot } from 'ordinalsbot'
 
 // if no parameter given, default environment is 'live'
-let inscription = new Inscription("API_KEY", "dev");
-let marketplace = new MarketPlace("API_KEY", "dev");
+const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
+const marketPlace = ordinalsbotObj.MarketPlace
+const inscription = ordinalsbotObj.Inscription
+
 ```
 
 ## Usage
@@ -111,7 +114,11 @@ The following example demonstrates how to create a listing for sale. When you in
 
 ```js
 
-import { marketplace, WALLET_PROVIDER } from "ordinalsbot";
+import { Ordinalsbot } from 'ordinalsbot'
+
+// if no parameter given, default environment is 'live'
+const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
+const marketPlace = ordinalsbotObj.MarketPlace
 
 const listingRequest = {
   sellerOrdinals: [{
