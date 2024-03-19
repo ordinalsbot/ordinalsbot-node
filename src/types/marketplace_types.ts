@@ -184,7 +184,7 @@ export interface MarketplaceGetListingRequest {
  */
 export interface MarketplaceGetListingResponse {
   /** Array of the listing */
-  results: Partial<SellerOrdinal[]>
+  results: ListingOrdinal[]
   /** total number records */
   count: number
   /**current page number */
@@ -194,6 +194,33 @@ export interface MarketplaceGetListingResponse {
   /** total number of items in the result array */
   totalItems: number
 }
+
+/**
+ * Listing ordinal object
+ */
+interface ListingOrdinal {
+  _id: string;
+  ordinalId: string;
+  price: number;
+  sellerPaymentAddress: string;
+  sellerOrdinalAddress: string;
+  sellerOrdinalPublicKey: string;
+  status: string;
+  sellerOutputValue: number;
+  ordinalUtxoTxId: string;
+  ordinalUtxoVout: number;
+  indexInSellerPSBT: number;
+  marketPlaceId: string;
+  marketPlaceMakerFee: number;
+  marketPlaceTakerFee: number;
+  platformMakerFee: number;
+  platformTakerFee: number;
+  marketPlaceFeeBtcAddress: string;
+  createdAt: string;
+  updatedAt: string;
+  signedListingPSBT: string;
+}
+
 export interface MarketplaceSaveListingRequest {
   ordinalId: String;
   updateListingData: { signedListingPSBT: string };
