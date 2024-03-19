@@ -29,8 +29,12 @@ import { Ordinalsbot } from 'ordinalsbot'
 
 // if no parameter given, default environment is 'live'
 const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
-const marketPlace = ordinalsbotObj.MarketPlace
-const inscription = ordinalsbotObj.Inscription
+const marketPlace = ordinalsbotObj.MarketPlace()
+const inscription = ordinalsbotObj.Inscription()
+const launchpad = ordinalsbotObj.Launchpad()
+const mempool = ordinalsbotObj.Mempool()
+const satextractor = ordinalsbotObj.Satextractor()
+const satscanner = ordinalsbotObj.Satscanner()
 
 ```
 
@@ -105,6 +109,11 @@ marketplace
   });
 ```
 
+### Run examples   
+You can check and run examples after setting your API Key   
+```
+npx ts-node examples/example.ts
+```
 
 ### Using Wallets on the client side
 
@@ -118,7 +127,7 @@ import { Ordinalsbot } from 'ordinalsbot'
 
 // if no parameter given, default environment is 'live'
 const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
-const marketPlace = ordinalsbotObj.MarketPlace
+const marketPlace = ordinalsbotObj.MarketPlace()
 
 const listingRequest = {
   sellerOrdinals: [{

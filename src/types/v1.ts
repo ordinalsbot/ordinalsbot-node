@@ -300,13 +300,21 @@ export interface InscriptionCollectionCreateRequest {
   /** Bitcoin address to receive payouts from inscriptions */
   "creator-address": string;
   
-  allowList?: Object
+  // allowlist is optional
+  allowList?: AllocationMap;
   discord?: string;
   parent?: InscriptionOrderParentRequest
   /** brc20 collection fields */
   deployInscription?: string
   saleSize?:number
 }
+
+// allocation: -1 = unlimited, 0 = not allowed, any other number = allowed number of inscriptions
+export type AllocationMap = {
+  [address: string]: {
+    allocation: number;
+  };
+};
 
 export interface InscriptionCollectionCreateResponse extends InscriptionCollectionCreateRequest {
   averageSize: number;
