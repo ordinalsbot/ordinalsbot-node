@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from 'axios'
-import { InscriptionEnv } from '../types'
+import axios, { AxiosInstance } from "axios";
+import { InscriptionEnv } from "../types";
 import {
   ConfirmPaddingOutputsRequest,
   ConfirmPaddingOutputsResponse,
@@ -21,8 +21,8 @@ import {
   GetLaunchpadStatusResponse,
   SaveLaunchpadRequest,
   SaveLaunchpadResponse,
-} from '../types/launchpad_types'
-import { InscriptionError } from '../inscription/error'
+} from "../types/launchpad_types";
+import { InscriptionError } from "../inscription/error";
 
 /**
  * A client for interacting with the Launchpad marketplace API.
@@ -31,67 +31,67 @@ export class LaunchpadClient {
   /**
    * The environment for the API (e.g., 'live', 'dev').
    */
-  public env: InscriptionEnv
+  public env: InscriptionEnv;
 
   /**
    * The API key used for authentication.
    */
-  private api_key: string
+  private api_key: string;
 
   /**
    * The Axios instance for making API requests.
    */
-  private instanceV1: AxiosInstance
+  private instanceV1: AxiosInstance;
 
   /**
    * Creates an instance of LaunchpadClient.
    * @param {string} key - The API key for authentication.
    * @param {InscriptionEnv} environment - The environment for the API (e.g., 'live', 'dev').
    */
-  constructor(key: string = '', environment: InscriptionEnv = 'live') {
-    this.api_key = key
-    this.env = environment
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
+    this.api_key = key;
+    this.env = environment;
 
     const createInstance = (): AxiosInstance => {
       const headers: Record<string, string> = {
-        Connection: 'Keep-Alive',
-        'Content-Type': 'application/json',
-      }
+        Connection: "Keep-Alive",
+        "Content-Type": "application/json",
+      };
 
       // Add the API key header only if this.api_key has a value
       if (this.api_key) {
-        headers['x-api-key'] = this.api_key
+        headers["x-api-key"] = this.api_key;
       }
 
       const client = axios.create({
         baseURL:
-          this.env === 'live'
+          this.env === "live"
             ? `https://api.ordinalsbot.com/launchpad/`
             : `https://testnet-api.ordinalsbot.com/launchpad/`,
         headers: headers,
-      })
+      });
 
       client.interceptors.response.use(
-        ({ data }) => ('data' in data ? data.data : data),
+        ({ data }) => ("data" in data ? data.data : data),
         (err) => {
           if (axios.isAxiosError(err)) {
             throw new InscriptionError(
               err.message,
               err.response?.statusText,
               err.response?.status
-            )
+            );
           }
 
-          if (err instanceof Error) throw err
+          if (err instanceof Error) throw err;
 
-          return err
+          return err;
         }
-      )
+      );
 
-      return client
-    }
+      return client;
+    };
 
-    this.instanceV1 = createInstance()
+    this.instanceV1 = createInstance();
   }
 
   /**
@@ -104,7 +104,7 @@ export class LaunchpadClient {
   ): Promise<LaunchpadMarketplaceCreateResponse> {
     return this.instanceV1.post(`/create-marketplace`, {
       ...createMarketplaceRequest,
-    })
+    });
   }
 
   /**
@@ -117,7 +117,7 @@ export class LaunchpadClient {
   ): Promise<CreateLaunchpadResponse> {
     return this.instanceV1.post(`/create-launch`, {
       ...createLaunchpadRequest,
-    })
+    });
   }
 
   /**
@@ -130,7 +130,7 @@ export class LaunchpadClient {
   ): Promise<GetLaunchpadStatusResponse> {
     return this.instanceV1.get(
       `/get-launch-psbt/${getLaunchpadStatusRequest.launchpadId}`
-    )
+    );
   }
 
   /**
@@ -143,7 +143,7 @@ export class LaunchpadClient {
   ): Promise<SaveLaunchpadResponse> {
     return this.instanceV1.post(`/save-launch`, {
       ...saveLaunchpadRequest,
-    })
+    });
   }
 
   /**
@@ -156,7 +156,7 @@ export class LaunchpadClient {
   ): Promise<GetListingResponse> {
     return this.instanceV1.post(`/get-listings`, {
       ...getListingRequest,
-    })
+    });
   }
 
   /**
@@ -173,16 +173,16 @@ export class LaunchpadClient {
           await this.instanceV1.post(`/get-allocation`, {
             ...getAllocationRequest,
           })
-        )
+        );
       } catch (error) {
-        resolve({ phases: [] })
+        resolve({ phases: [] });
       }
-    })
+    });
   }
 
   /**
-   * Confirms Padding Outputs 
-   * @param {ConfirmPaddingOutputsRequest} confirmPaddingOutputsRequest - The request object for confirms padding outputs 
+   * Confirms Padding Outputs
+   * @param {ConfirmPaddingOutputsRequest} confirmPaddingOutputsRequest - The request object for confirms padding outputs
    * @returns {Promise<ConfirmPaddingOutputsResponse>} A promise that resolves to the response from the API.
    */
   async confirmPaddingOutputs(

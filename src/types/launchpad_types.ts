@@ -3,28 +3,28 @@
  */
 export interface LaunchpadMarketplaceCreateRequest {
   /** Name for the launchpad marketplace. */
-  name: string
+  name: string;
 
   /**
    * Fees to be charged to the seller when listing an ordinal for sale on the launchpad marketplace.
    * Fees should be specified in basis points; for example, 10% would be 1000.
    */
-  launchpadSellerFee?: number
+  launchpadSellerFee?: number;
 
   /**
    * Fees that will be charged to the buyer when an ordinal is sold on the launchpad marketplace.
    * Fees should be specified in basis points; for example, 10% would be 1000.
    */
-  launchpadBuyerFee?: number
+  launchpadBuyerFee?: number;
 
   /** The address for paying out launchpad marketplace fees. */
-  launchpadBtcFeePayoutAddress?: string
+  launchpadBtcFeePayoutAddress?: string;
 
   /** URL for the launchpad marketplace */
-  url?: string
+  url?: string;
 
   /** Short description for the launchpad marketplace */
-  description?: string
+  description?: string;
 }
 
 /**
@@ -32,10 +32,10 @@ export interface LaunchpadMarketplaceCreateRequest {
  */
 export interface LaunchpadMarketplaceCreateResponse {
   /** Your new launchpad marketplace id */
-  marketPlaceId: string
+  marketPlaceId: string;
 
   /** the api key you provided */
-  apiKey: string
+  apiKey: string;
 }
 
 /**
@@ -45,10 +45,10 @@ export interface AllowList {
   /** allow list where the buyer ordinal address as key */
   [key: string]: {
     /** the allowed claims per buyer ordinal address */
-    allocation: number
+    allocation: number;
     /** the total claimed inscriptions by the buyer */
-    inscriptionsClaimed?: number
-  }
+    inscriptionsClaimed?: number;
+  };
 }
 
 /**
@@ -56,17 +56,17 @@ export interface AllowList {
  */
 export interface LaunchpadPhase {
   /** An array of string */
-  ordinals: string[]
+  ordinals: string[];
   /** An object for allow list allocation and claimed inscriptions */
-  allowList: AllowList
+  allowList: AllowList;
   /** The isPublic key for the phase is public or protected*/
-  isPublic: Boolean
+  isPublic: Boolean;
   /** phase price for ordinal to buy */
-  price: number
+  price: number;
   /** start date of the phase */
-  startDate: string
+  startDate: string;
   /** An optional date field. Which is requried for the protected phase */
-  endDate?: string | null
+  endDate?: string | null;
 }
 
 /**
@@ -74,21 +74,21 @@ export interface LaunchpadPhase {
  */
 export interface CreateLaunchpadRequest {
   /** An array with a phases object */
-  phases: Array<LaunchpadPhase>
+  phases: Array<LaunchpadPhase>;
 
   /** The address to receive the sale proceeds when the ordinal is sold. This will be part of the sale transaction that the buyer will sign */
-  sellerPaymentAddress?: string
+  sellerPaymentAddress?: string;
 
   /** The public key for the wallet address that owns the ordinal being listed for sale */
-  sellerOrdinalPublicKey?: string
+  sellerOrdinalPublicKey?: string;
 
   /** The Oridnal Address that owns the ordinal being listed for sale */
-  sellerOrdinalAddress?: string
+  sellerOrdinalAddress?: string;
 
   /** Additional information for the Launchpad. e.g {title:'someTitle', description:'SomeText'} */
-  metaData: object
+  metaData: object;
   /** Wallet Provider name */
-  walletProvider?: string
+  walletProvider?: string;
 }
 
 /**
@@ -96,9 +96,9 @@ export interface CreateLaunchpadRequest {
  */
 export interface CreateLaunchpadResponse {
   /** Newly created launchpad id */
-  launchpadId: string
+  launchpadId: string;
   /** status of the newly created launchpad. */
-  status: string
+  status: string;
 }
 
 /**
@@ -106,9 +106,9 @@ export interface CreateLaunchpadResponse {
  */
 export interface GetLaunchpadStatusRequest {
   /** Id of the launchpad to fetch the status */
-  launchpadId: string
+  launchpadId: string;
   /** status of the launchpad */
-  status: string
+  status: string;
 }
 
 /**
@@ -116,9 +116,9 @@ export interface GetLaunchpadStatusRequest {
  */
 export interface GetLaunchpadStatusResponse {
   /** psbt of launchpad to sign transaction */
-  psbt: string
+  psbt: string;
   /** status of the launchpad. */
-  status: string
+  status: string;
 }
 
 /**
@@ -126,12 +126,12 @@ export interface GetLaunchpadStatusResponse {
  */
 export interface SaveLaunchpadRequest {
   /** Id of the launchpad to save the psbt */
-  launchpadId: string
+  launchpadId: string;
   /** data to be update on the launchpad */
   updateLaunchData: {
     /** signed psbt by the seller to updated */
-    signedListingPSBT: string
-  }
+    signedListingPSBT: string;
+  };
 }
 
 /**
@@ -139,34 +139,33 @@ export interface SaveLaunchpadRequest {
  */
 export interface SaveLaunchpadResponse {
   /** success message for update confirmation */
-  message: string
+  message: string;
 }
 
 export enum LAUNCHPAD_STATUS {
-  sold = 'Sold',
-  pending = 'Pending',
-  active = 'Active',
-  inactive = 'Inactive',
-  archived = 'Archived',
-  pending_seller_confirmation = 'Pending Seller Confirmation',
-  pending_buyer_confirmation = 'Pending Buyer Confirmation',
+  sold = "Sold",
+  pending = "Pending",
+  active = "Active",
+  inactive = "Inactive",
+  archived = "Archived",
+  pending_seller_confirmation = "Pending Seller Confirmation",
+  pending_buyer_confirmation = "Pending Buyer Confirmation",
 }
 
 /**
  * Get launchpad listing request object
  */
 export interface GetListingRequest {
-  
   /**
-   * Filter based on the status. 
+   * Filter based on the status.
    */
   filter: { status: LAUNCHPAD_STATUS };
-  
+
   /**
-   * Starting of the page. 
+   * Starting of the page.
    * Default page is 1
    */
-  page? : number;
+  page?: number;
 
   /**
    * Records in a single listing result
@@ -178,7 +177,7 @@ export interface GetListingRequest {
    * sorting the result collection
    * Default sort value is time.
    */
-  sort?: string
+  sort?: string;
 }
 
 /**
@@ -186,15 +185,15 @@ export interface GetListingRequest {
  */
 export interface GetListingResponse {
   /** Array of the launchpad listing */
-  results: Array<CreateLaunchpadRequest>
+  results: Array<CreateLaunchpadRequest>;
   /** total number records */
-  count: number
+  count: number;
   /**current page number */
-  currentPage: number
+  currentPage: number;
   /** total pages */
-  totalPages: number
+  totalPages: number;
   /** total number of items in the result array */
-  totalItems: number
+  totalItems: number;
 }
 
 /**
@@ -202,9 +201,9 @@ export interface GetListingResponse {
  */
 export interface GetAllocationRequest {
   /** launchpad id to get the buyer allocations by phase */
-  launchpadId: string
+  launchpadId: string;
   /** buyer ordinal address for the allocation */
-  buyerOrdinalAddress: string
+  buyerOrdinalAddress: string;
 }
 
 /**
@@ -212,7 +211,7 @@ export interface GetAllocationRequest {
  */
 export interface GetAllocationResponse {
   /** Array of the launchpad phases */
-  phases: Array<AllocationPhasesResponse>
+  phases: Array<AllocationPhasesResponse>;
 }
 
 /**
@@ -220,13 +219,13 @@ export interface GetAllocationResponse {
  */
 export interface AllocationPhasesResponse {
   /** id of the phase */
-  id: string
+  id: string;
   /** access type of the phase. i.e public or protected */
-  public: boolean
+  public: boolean;
   /** Allocation allowed to the buyer */
-  allocation?: number
+  allocation?: number;
   /** total claimed inscriptions by the buyer */
-  inscriptionsClaimed?: number
+  inscriptionsClaimed?: number;
 }
 
 /**
@@ -244,7 +243,7 @@ export enum ReeRateTier {
  */
 export interface ConfirmPaddingOutputsRequest {
   /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
-  address: string
+  address: string;
 }
 
 /**
@@ -252,7 +251,7 @@ export interface ConfirmPaddingOutputsRequest {
  */
 export interface ConfirmPaddingOutputsResponse {
   /** boolean, if padding outputs exist */
-  paddingOutputsExist: boolean
+  paddingOutputsExist: boolean;
 }
 
 /**
@@ -260,19 +259,19 @@ export interface ConfirmPaddingOutputsResponse {
  */
 export interface SetupPaddingOutputsRequest {
   /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
-  address: string
+  address: string;
 
   /** Public Key for buyer's payment wallet address. */
-  publicKey: string
+  publicKey: string;
 
   /** Number of dummy padding outputs to create. This defaults to 3 if not specified */
-  numOfOutPuts?: number
+  numOfOutPuts?: number;
 
   /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
-  feeRateTier?: ReeRateTier
+  feeRateTier?: ReeRateTier;
 
   /** Wallet Provider name */
-  walletProvider?: string
+  walletProvider?: string;
 }
 
 /**
@@ -280,10 +279,10 @@ export interface SetupPaddingOutputsRequest {
  */
 export interface SetupPaddingOutputsResponse {
   /** base64 transaction to be signed */
-  psbt: string
+  psbt: string;
 
   /** Array of indices of the inputs that need to be signed by the buyer */
-  buyerInputIndices: Array<number>
+  buyerInputIndices: Array<number>;
 }
 
 /**
@@ -291,10 +290,10 @@ export interface SetupPaddingOutputsResponse {
  */
 export interface SignTransactionResponse {
   /** base64 transaction to be signed */
-  psbtBase64: string
+  psbtBase64: string;
 
   /** transaction id of the transfer */
-  txId: string
+  txId: string;
 }
 
 /**
@@ -302,25 +301,25 @@ export interface SignTransactionResponse {
  */
 export interface CreateLaunchpadOfferRequest {
   /** launchpad id to buy the ordinal. */
-  launchpadId: string
+  launchpadId: string;
 
   /** Id of the launchpad phase for ordinal to buy. */
-  launchpadPhaseId?: string
+  launchpadPhaseId?: string;
 
   /** Buyer's payment wallet address. The buyer will need to pay the cost of the transaction from UTXOs belonging to this address. */
-  buyerPaymentAddress: string
+  buyerPaymentAddress: string;
 
   /** Buyer's Ordinal wallet address. The purchased Ordinal will be transferred to this address.. */
-  buyerOrdinalAddress: string
+  buyerOrdinalAddress: string;
 
   /** Public Key for buyer's payment wallet address. */
-  buyerPaymentPublicKey: string
+  buyerPaymentPublicKey: string;
 
   /** Transaction fee rate should be one of the following. Defaults to fastestFee if not specified: fastestFee | halfHourFee | hourFee | minimumFee */
-  feeRateTier?: ReeRateTier
+  feeRateTier?: ReeRateTier;
 
   /** Wallet Provider name */
-  walletProvider?: string
+  walletProvider?: string;
 }
 
 /**
@@ -328,19 +327,19 @@ export interface CreateLaunchpadOfferRequest {
  */
 export interface CreateLaunchpadOfferPhase {
   /** Id of the launchpad phase*/
-  _id: string
+  _id: string;
 
   /** access type of the phase. i.e public or protected */
-  isPublic: boolean
+  isPublic: boolean;
 
   /** price per ordinal in the launchpad phases */
-  price: number
+  price: number;
 
   /** Start date of the launchpad phase */
-  startDate: string
+  startDate: string;
 
   /** end date of the launchpad phase */
-  endDate: string | null
+  endDate: string | null;
 }
 
 /**
@@ -348,19 +347,19 @@ export interface CreateLaunchpadOfferPhase {
  */
 export interface CreateLaunchpadOfferResponse {
   /** launchpad phase object */
-  phase: CreateLaunchpadOfferPhase
+  phase: CreateLaunchpadOfferPhase;
 
   /** launchpad ordinal id which avaiable for the buyer */
-  ordinalId: string
+  ordinalId: string;
 
   /** Launhcpad phase id whose ordinal is available to the buyer */
-  launchpadPhase: string
+  launchpadPhase: string;
 
   /** Array of indices of the inputs that need to be signed by the buyer */
-  buyerInputIndices: Array<number>
+  buyerInputIndices: Array<number>;
 
   /** base64 transaction to be signed */
-  psbt: string
+  psbt: string;
 }
 
 /**
@@ -368,13 +367,13 @@ export interface CreateLaunchpadOfferResponse {
  */
 export interface SubmitLaunchpadOfferRequest {
   /** Id of the ordinal to buy. */
-  ordinalId: string
+  ordinalId: string;
 
   /** launchpad phase id whose ordinal is buying user */
-  launchpadPhase: string
+  launchpadPhase: string;
 
   /** Signed psbt transaction in base64 encoding. This is the output of the creating an offer using /create-launch-offer and singing it using the buyer's payment wallet */
-  signedBuyerPSBTBase64: string
+  signedBuyerPSBTBase64: string;
 }
 
 /**
@@ -382,15 +381,15 @@ export interface SubmitLaunchpadOfferRequest {
  */
 export interface SubmitLaunchpadOfferResponse {
   /** transaction id for the purchase transaction */
-  txId: string
+  txId: string;
 }
 
 /**
  * Sats connect wrapper response object
  */
 export interface SatsConnectWrapperResponse {
-  success: boolean,
-  message: string,
-  psbtBase64?: string,
-  txId?: string,
+  success: boolean;
+  message: string;
+  psbtBase64?: string;
+  txId?: string;
 }

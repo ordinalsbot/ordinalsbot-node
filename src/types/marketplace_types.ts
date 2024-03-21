@@ -156,15 +156,15 @@ export interface MarketplaceSetupPaddingOutputsResponse {
  */
 export interface MarketplaceGetListingRequest {
   /**
-   * Filter based on the status. 
+   * Filter based on the status.
    */
   filter: { status: LISTING_STATUS };
-  
+
   /**
-   * Starting of the page. 
+   * Starting of the page.
    * Default page is 1
    */
-  page? : number;
+  page?: number;
 
   /**
    * Records in a single listing result
@@ -176,7 +176,7 @@ export interface MarketplaceGetListingRequest {
    * sorting the result collection
    * Default sort value is time.
    */
-  sort?: string
+  sort?: string;
 }
 
 /**
@@ -184,15 +184,15 @@ export interface MarketplaceGetListingRequest {
  */
 export interface MarketplaceGetListingResponse {
   /** Array of the listing */
-  results: ListingOrdinal[]
+  results: ListingOrdinal[];
   /** total number records */
-  count: number
+  count: number;
   /**current page number */
-  currentPage: number
+  currentPage: number;
   /** total pages */
-  totalPages: number
+  totalPages: number;
   /** total number of items in the result array */
-  totalItems: number
+  totalItems: number;
 }
 
 /**
@@ -274,7 +274,7 @@ export interface MarketplaceTransferRequest {
 
   /** The sender's payment address */
   senderPaymentAddress: string;
-  
+
   /** The sender's payment public key */
   senderPaymentPublicKey: string;
 
@@ -283,7 +283,7 @@ export interface MarketplaceTransferRequest {
 
   /** The sender's ordinal address */
   senderOrdinalAddress: string;
-  
+
   /** Wallet Provider name */
   walletProvider?: string;
 }
@@ -321,7 +321,7 @@ export interface MarketplaceReListingRequest {
   ordinalId: string;
 
   /** updated price for ordinal */
-  price:number
+  price: number;
 
   /** The address to receive the sale proceeds when the ordinal is sold. This will be part of the sale transaction that the buyer will sign */
   sellerPaymentAddress?: string;
@@ -368,7 +368,6 @@ export interface MarketplaceConfirmReListResponse {
   message: string;
 }
 
-
 /**
  * Request object for deList ordinal.
  */
@@ -378,13 +377,13 @@ export interface MarketplaceDeListRequest {
 
   /** The seller's payment address */
   senderPaymentAddress: string;
-  
+
   /** The seller's payment public key */
   senderPaymentPublicKey: string;
 
   /** The seller's ordinal address */
   senderOrdinalAddress: string;
-  
+
   /** Wallet Provider name */
   walletProvider?: string;
 }

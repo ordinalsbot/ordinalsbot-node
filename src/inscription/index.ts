@@ -1,24 +1,24 @@
-import { InscriptionClient } from '../client'
-import { InscriptionEnv, v1 } from '../types'
+import { InscriptionClient } from "../client";
+import { InscriptionEnv, v1 } from "../types";
 
 /**
  * Main class for interacting with the Inscription API.
  */
 export class Inscription {
   /** The instance of InscriptionClient. */
-  instance!: InscriptionClient
+  instance!: InscriptionClient;
 
   /**
    * Creates an instance of Inscription.
    * @param {string} [key=''] The API key.
    * @param {InscriptionEnv} [environment='live'] The environment (live or dev).
    */
-  constructor(key: string = '', environment: InscriptionEnv = 'live') {
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
     if (this.instance !== undefined) {
-      console.error('inscription.setCredentials was called multiple times')
-      return
+      console.error("inscription.setCredentials was called multiple times");
+      return;
     }
-    this.instance = new InscriptionClient(key, environment)
+    this.instance = new InscriptionClient(key, environment);
   }
 
   /**
@@ -29,7 +29,7 @@ export class Inscription {
   getPrice(
     priceRequest: v1.InscriptionPriceRequest
   ): Promise<v1.InscriptionPriceResponse> {
-    return this.instance.getPrice(priceRequest)
+    return this.instance.getPrice(priceRequest);
   }
 
   /**
@@ -38,7 +38,7 @@ export class Inscription {
    * @returns {Promise<v1.InscriptionOrder>} A promise that resolves with the created order.
    */
   createOrder(order: v1.InscriptionOrderRequest): Promise<v1.InscriptionOrder> {
-    return this.instance.createOrder(order)
+    return this.instance.createOrder(order);
   }
 
   /**
@@ -47,7 +47,7 @@ export class Inscription {
    * @returns {Promise<v1.InscriptionOrder>} A promise that resolves with the retrieved order.
    */
   getOrder(id: string): Promise<v1.InscriptionOrder> {
-    return this.instance.getOrder(id)
+    return this.instance.getOrder(id);
   }
 
   /**
@@ -58,7 +58,7 @@ export class Inscription {
   createCollection(
     collection: v1.InscriptionCollectionCreateRequest
   ): Promise<v1.InscriptionCollectionCreateResponse> {
-    return this.instance.createCollection(collection)
+    return this.instance.createCollection(collection);
   }
 
   /**
@@ -69,7 +69,7 @@ export class Inscription {
   createCollectionOrder(
     collectionOrder: v1.InscriptionCollectionOrderRequest
   ): Promise<v1.InscriptionCollectionOrderResponse> {
-    return this.instance.createCollectionOrder(collectionOrder)
+    return this.instance.createCollectionOrder(collectionOrder);
   }
 
   /**
@@ -80,7 +80,7 @@ export class Inscription {
   createTextOrder(
     order: v1.InscriptionTextOrderRequest
   ): Promise<v1.InscriptionOrder> {
-    return this.instance.createTextOrder(order)
+    return this.instance.createTextOrder(order);
   }
 
   /**
@@ -88,7 +88,7 @@ export class Inscription {
    * @returns {Promise<v1.InscriptionInventoryResponse[]>} A promise that resolves with the inventory response.
    */
   getInventory(): Promise<v1.InscriptionInventoryResponse[]> {
-    return this.instance.getInventory()
+    return this.instance.getInventory();
   }
 
   /**
@@ -99,7 +99,7 @@ export class Inscription {
   setReferralCode(
     referral: v1.InscriptionReferralRequest
   ): Promise<v1.InscriptionReferralSetResponse> {
-    return this.instance.setReferralCode(referral)
+    return this.instance.setReferralCode(referral);
   }
 
   /**
@@ -110,7 +110,7 @@ export class Inscription {
   getReferralStatus(
     referral: v1.InscriptionReferralRequest
   ): Promise<v1.InscriptionReferralStatusResponse> {
-    return this.instance.getReferralStatus(referral)
+    return this.instance.getReferralStatus(referral);
   }
 
   /**
@@ -121,6 +121,6 @@ export class Inscription {
   createSpecialSatsPSBT(
     createSpecialSatsRequest: v1.CreateSpecialSatsRequest
   ): Promise<v1.CreateSpecialSatsResponse> {
-    return this.instance.createSpecialSatsPSBT(createSpecialSatsRequest)
+    return this.instance.createSpecialSatsPSBT(createSpecialSatsRequest);
   }
 }

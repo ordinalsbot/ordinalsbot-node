@@ -1,10 +1,10 @@
-import { SatscannerClient } from './client'
-import { InscriptionEnv } from '../types'
+import { SatscannerClient } from "./client";
+import { InscriptionEnv } from "../types";
 import {
   SatscannerSpecialRangesRequest,
   SatscannerSpecialRangesResponse,
   SatscannerSpecialRangesUtxoRequest,
-} from '../types/satscanner_types'
+} from "../types/satscanner_types";
 
 /**
  * A higher-level interface for interacting with the Satscanner API.
@@ -13,19 +13,19 @@ export class Satscanner {
   /**
    * The underlying SatscannerClient instance.
    */
-  private satscannerInstance!: SatscannerClient
+  private satscannerInstance!: SatscannerClient;
 
   /**
    * Creates a new Satscanner instance.
    * @param {string} [key=''] - The API key for authentication.
    * @param {InscriptionEnv} [environment='live'] - The environment (live or testnet) for the Satscanner.
    */
-  constructor(key: string = '', environment: InscriptionEnv = 'live') {
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
     if (this.satscannerInstance !== undefined) {
-      console.error('satscanner.setCredentials was called multiple times')
-      return
+      console.error("satscanner.setCredentials was called multiple times");
+      return;
     }
-    this.satscannerInstance = new SatscannerClient(key, environment)
+    this.satscannerInstance = new SatscannerClient(key, environment);
   }
 
   /**
@@ -33,7 +33,7 @@ export class Satscanner {
    * @returns {Promise<string[]>} A promise that resolves to an array of supported Satributes.
    */
   getSupportedSatributes(): Promise<string[]> {
-    return this.satscannerInstance.getSupportedSatributes()
+    return this.satscannerInstance.getSupportedSatributes();
   }
 
   /**
@@ -44,7 +44,7 @@ export class Satscanner {
   findSpecialRanges(
     specialRangesRequest: SatscannerSpecialRangesRequest
   ): Promise<SatscannerSpecialRangesResponse> {
-    return this.satscannerInstance.findSpecialRanges(specialRangesRequest)
+    return this.satscannerInstance.findSpecialRanges(specialRangesRequest);
   }
 
   /**
@@ -57,6 +57,6 @@ export class Satscanner {
   ): Promise<SatscannerSpecialRangesResponse> {
     return this.satscannerInstance.findSpecialRangesUtxo(
       specialRangesRequestUtxo
-    )
+    );
   }
 }

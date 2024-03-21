@@ -1,9 +1,9 @@
-import { MempoolClient } from './client'
-import { InscriptionEnv } from '../types'
+import { MempoolClient } from "./client";
+import { InscriptionEnv } from "../types";
 import {
   MempoolAddressUtxoResponse,
   RecommendedFees,
-} from '../types/mempool_types'
+} from "../types/mempool_types";
 
 /**
  * A interface for interacting with the Mempool API.
@@ -12,19 +12,19 @@ export class Mempool {
   /**
    * The MempoolClient instance.
    */
-  private mempoolInstance!: MempoolClient
+  private mempoolInstance!: MempoolClient;
 
   /**
    * Creates a new Mempool instance.
    * @param key The API key (optional).
    * @param environment The environment (live or dev) (optional, defaults to live).
    */
-  constructor(key: string = '', environment: InscriptionEnv = 'live') {
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
     if (this.mempoolInstance !== undefined) {
-      console.error('mempool.setCredentials was called multiple times')
-      return
+      console.error("mempool.setCredentials was called multiple times");
+      return;
     }
-    this.mempoolInstance = new MempoolClient(key, environment)
+    this.mempoolInstance = new MempoolClient(key, environment);
   }
 
   /**
@@ -32,7 +32,7 @@ export class Mempool {
    * @returns A promise that resolves to the recommended fees.
    */
   getFeeEstimation(): Promise<RecommendedFees> {
-    return this.mempoolInstance.getFeeEstimation()
+    return this.mempoolInstance.getFeeEstimation();
   }
 
   /**
@@ -41,6 +41,6 @@ export class Mempool {
    * @returns A promise that resolves to an array of UTXO responses.
    */
   getAddressUtxo(address: string): Promise<MempoolAddressUtxoResponse[]> {
-    return this.mempoolInstance.getAddressUtxo(address)
+    return this.mempoolInstance.getAddressUtxo(address);
   }
 }

@@ -1,6 +1,6 @@
-import axios, { AxiosInstance } from 'axios'
-import { InscriptionError } from './inscription/error'
-import { InscriptionEnv } from './types'
+import axios, { AxiosInstance } from "axios";
+import { InscriptionError } from "./inscription/error";
+import { InscriptionEnv } from "./types";
 import {
   InscriptionPriceRequest,
   InscriptionPriceResponse,
@@ -17,11 +17,11 @@ import {
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
-} from './types/v1'
+} from "./types/v1";
 
-const qs = require('qs')
-const version = require('../package.json')?.version || 'local'
-const packageVersion = `npm-inscription-v${version}`
+const qs = require("qs");
+const version = require("../package.json")?.version || "local";
+const packageVersion = `npm-inscription-v${version}`;
 
 /**
  * Represents a client for interacting with the Inscription API.
@@ -30,39 +30,39 @@ export class InscriptionClient {
   /**
    * The environment for the API client.
    */
-  public env: InscriptionEnv
+  public env: InscriptionEnv;
 
-  private api_key: string
-  private instanceV1: AxiosInstance
+  private api_key: string;
+  private instanceV1: AxiosInstance;
 
   /**
    * Constructs an instance of InscriptionClient.
    * @param {string} key - The API key for authentication.
    * @param {InscriptionEnv} environment - The environment for the client, either 'live' or 'dev'.
    */
-  constructor(key: string = '', environment: InscriptionEnv = 'live') {
-    this.api_key = key
-    this.env = environment
+  constructor(key: string = "", environment: InscriptionEnv = "live") {
+    this.api_key = key;
+    this.env = environment;
 
     const createInstance = (): AxiosInstance => {
       const client = axios.create({
         baseURL:
-          environment === 'live'
+          environment === "live"
             ? `https://api.ordinalsbot.com`
             : `https://testnet-api.ordinalsbot.com`,
         timeout: 30000,
         headers: {
-          'x-api-key': this.api_key,
-          Connection: 'Keep-Alive',
-          'Content-Type': 'application/json',
-          'Keep-Alive': 'timeout=10',
-          'User-Agent': packageVersion,
+          "x-api-key": this.api_key,
+          Connection: "Keep-Alive",
+          "Content-Type": "application/json",
+          "Keep-Alive": "timeout=10",
+          "User-Agent": packageVersion,
         },
-      })
+      });
 
       client.interceptors.response.use(
         // normalize responses
-        ({ data }) => ('data' in data ? data.data : data),
+        ({ data }) => ("data" in data ? data.data : data),
         (err) => {
           if (axios.isAxiosError(err)) {
             // added to keep compatibility with previous versions
@@ -70,19 +70,19 @@ export class InscriptionClient {
               err.message,
               err.response?.statusText,
               err.response?.status
-            )
+            );
           }
 
-          if (err instanceof Error) throw err
+          if (err instanceof Error) throw err;
 
-          return err
+          return err;
         }
-      )
+      );
 
-      return client
-    }
+      return client;
+    };
 
-    this.instanceV1 = createInstance()
+    this.instanceV1 = createInstance();
   }
 
   /**
@@ -90,7 +90,7 @@ export class InscriptionClient {
    * @returns {AxiosInstance} The Axios instance.
    */
   get axiosInstance(): AxiosInstance {
-    return this.instanceV1
+    return this.instanceV1;
   }
 
   /**
@@ -103,7 +103,7 @@ export class InscriptionClient {
   ): Promise<InscriptionPriceResponse> {
     return this.instanceV1.get(`/price`, {
       params: priceRequest,
-    })
+    });
   }
 
   /**
@@ -112,7 +112,7 @@ export class InscriptionClient {
    * @returns {Promise<InscriptionOrder>} A promise resolving with the created order.
    */
   async createOrder(order: InscriptionOrderRequest): Promise<InscriptionOrder> {
-    return this.instanceV1.post(`/order`, order)
+    return this.instanceV1.post(`/order`, order);
   }
 
   /**
@@ -123,7 +123,7 @@ export class InscriptionClient {
   async getOrder(id: string): Promise<InscriptionOrder> {
     return this.instanceV1.get(`/order`, {
       params: { id },
-    })
+    });
   }
 
   /**
@@ -135,30 +135,30 @@ export class InscriptionClient {
     collection: InscriptionCollectionCreateRequest
   ): Promise<InscriptionCollectionCreateResponse> {
     // modify normal json to valid form data for files
-    let plainObject = Object.assign({ ...collection })
-    let files = collection?.files
+    let plainObject = Object.assign({ ...collection });
+    let files = collection?.files;
     for (let index in files) {
-      let file: any = files[index]
-      let keys = Object.keys(file)
+      let file: any = files[index];
+      let keys = Object.keys(file);
       for (let key in keys) {
-        let propName = keys[key]
-        plainObject[`files[${index}][${propName}]`] = file[propName]
+        let propName = keys[key];
+        plainObject[`files[${index}][${propName}]`] = file[propName];
       }
     }
-    delete plainObject.files
-    let data = qs.stringify(plainObject)
+    delete plainObject.files;
+    let data = qs.stringify(plainObject);
     // modify normal json to valid form data for files
 
     let config = {
-      method: 'post',
+      method: "post",
       maxBodyLength: Infinity,
-      url: this.instanceV1.getUri() + '/collectioncreate',
+      url: this.instanceV1.getUri() + "/collectioncreate",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       data: data,
-    }
-    return axios.request(config)
+    };
+    return axios.request(config);
   }
 
   /**
@@ -169,7 +169,7 @@ export class InscriptionClient {
   async createCollectionOrder(
     collectionOrder: InscriptionCollectionOrderRequest
   ): Promise<InscriptionCollectionOrderResponse> {
-    return this.instanceV1.post(`/collectionorder`, collectionOrder)
+    return this.instanceV1.post(`/collectionorder`, collectionOrder);
   }
 
   /**
@@ -180,7 +180,7 @@ export class InscriptionClient {
   async createTextOrder(
     order: InscriptionTextOrderRequest
   ): Promise<InscriptionOrder> {
-    return this.instanceV1.post(`/textorder`, order)
+    return this.instanceV1.post(`/textorder`, order);
   }
 
   /**
@@ -188,7 +188,7 @@ export class InscriptionClient {
    * @returns {Promise<InscriptionInventoryResponse[]>} A promise resolving with the inventory information.
    */
   async getInventory(): Promise<InscriptionInventoryResponse[]> {
-    return this.instanceV1.get(`/inventory`)
+    return this.instanceV1.get(`/inventory`);
   }
 
   /**
@@ -199,7 +199,7 @@ export class InscriptionClient {
   async setReferralCode(
     referral: InscriptionReferralRequest
   ): Promise<InscriptionReferralSetResponse> {
-    return this.instanceV1.post(`/referrals`, referral)
+    return this.instanceV1.post(`/referrals`, referral);
   }
 
   /**
@@ -212,7 +212,7 @@ export class InscriptionClient {
   ): Promise<InscriptionReferralStatusResponse> {
     return this.instanceV1.get(`/referrals`, {
       params: referral,
-    })
+    });
   }
 
   /**
@@ -225,6 +225,6 @@ export class InscriptionClient {
   ): Promise<CreateSpecialSatsResponse> {
     return this.instanceV1.post(`/create-special-sats-psbt`, {
       ...createSpecialSatsRequest,
-    })
+    });
   }
 }
