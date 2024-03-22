@@ -1,3 +1,100 @@
+## [0.1.5]
+
+#### APIs Added
+- `Marketplace`
+
+  - getListing - Updated request and response object.
+
+- `Launchpad`
+
+  - constructor - Added method constructor for initialization of launchpad instance
+  - createMarketPlace - Added method for creating a launchpad marketplace
+  - createLaunchpad - Added method for creating a launchpad listing
+  - getLaunchpadPSBT - Added method for retrieving the launchpad PSBT to sign transaction
+  - saveLaunchpad - Added method for updating the signed PSBT on the launchpad
+  - getLaunchpadListing - Added method for retrieving the active launchpad listing
+  - getAllocation - Added method for buyers to check allowed and claimed inscription for launchpad phases
+  - confirmPaddingOutputs - Added method to check if the padding outputs are available in the buyer account
+  - setupPaddingOutputs - Added method to set up if the padding outputs are not available in the buyer account
+  - createLaunchpadOffer - Added method for buyers to request the ordinal from launchpad phase to buy
+  - submitLaunchpadOffer - Added method to update the signed PSBT and broadcast the buyer transaction
+
+
+- `Mempool`
+
+  - constructor - Added method constructor for initialization of Mempool instance
+  - getFeeEstimation - Added method to gets the recommended fee estimation 
+  - getAddressUtxo - Added method to Gets the UTXO (unspent transaction outputs) for a given address from the Mempool API. 
+
+- `Satextractor`
+
+  - constructor - Added method constructor for initialization of satextractor instance
+  - extract - Added method to extracts data using the Satextractor API 
+
+
+- `Satscanner`
+
+  - constructor - Added method constructor for initialization of Satscanner instance
+  - getSupportedSatributes - Added method to Retrieves the supported Satributes 
+  - findSpecialRanges - Added method to finds special ranges using the Satscanner API 
+  - findSpecialRangesUtxo - Added method to finds special ranges UTXO using the Satscanner API 
+
+- `Ordinalsbot`
+
+  - Added `Launchpad` instance in the Ordinalsbot class
+  - Added `Mempool` instance in the Ordinalsbot class
+  - Added `Satextractor` instance in the Ordinalsbot class
+  - Added `Satscanner` instance in the Ordinalsbot class
+  - Added properties for the classes.
+  
+  ```
+  import { Ordinalsbot } from 'ordinalsbot'
+
+  // If no parameter is given, the default environment is 'live'
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
+  const marketPlace = ordinalsbotObj.MarketPlace()
+  const inscription = ordinalsbotObj.Inscription()
+  const launchpad = ordinalsbotObj.Launchpad()
+  const mempool = ordinalsbotObj.Mempool()
+  const satextractor = ordinalsbotObj.Satextractor()
+  const satscanner = ordinalsbotObj.Satscanner()
+
+  ```
+
+## [0.1.4]
+
+#### APIs Added
+
+- `Inscription`
+
+  - createSpecialSats - Added method to create special sats.
+
+
+#### APIs Updated
+
+- `Inscription`
+
+  - getPrice - Updated the request and response object.
+  - createOrder - Updated the request and response object.
+  - createCollection - Updated the request and response object.
+  - createCollectionOrder - Updated the request and response object.
+  - createTextOrder - Updated the request and response object.
+
+- Ordinalsbot  
+
+  - Updated Usage of Ordinalsbot.
+  
+  ```
+  import { Ordinalsbot } from 'ordinalsbot'
+
+  // If no parameter is given, the default environment is 'live'
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
+  const marketPlace = ordinalsbotObj.MarketPlace
+  const inscription = ordinalsbotObj.Inscription
+
+  ```
+
+
 ## [0.1.3]
 
 #### APIs Updated
