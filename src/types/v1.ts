@@ -152,6 +152,7 @@ export interface InscriptionCharge {
   expires_at?: string;
   auto_settle?: boolean;
   chain_invoice?: InscriptionOnchainInvoice;
+  lightning_invoice?: InscriptionLightningInvoice;
   transactions?: InscriptionChargeTransaction[];
 }
 
@@ -177,6 +178,10 @@ export interface InscriptionOnchainInvoice {
   tx: string;
 }
 
+export interface InscriptionLightningInvoice {
+  expires_at: number,
+  payreq: string,
+}
 export interface InscriptionChargeTransaction {
   address: string;
   created_at: number;
