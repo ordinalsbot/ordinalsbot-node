@@ -126,7 +126,6 @@ export interface InscriptionOrderRequest {
   projectTag?: string;
 
   batchMode?: string;
-  paid?: boolean;
 }
 
 /**
@@ -175,6 +174,8 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   zeroConf: string | null;
   state: string;
   createdAt: number; // timestamp in ms,
+
+  paid?: boolean;
 }
 
 export interface InscriptionOnchainInvoice {
