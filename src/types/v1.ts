@@ -134,6 +134,7 @@ export interface InscriptionOrderRequest {
 export interface InscriptionOrderParentRequest {
   inscriptionId: string;
   returnAddress: string;
+  depositAddress: string;
 }
 
 export interface InscriptionCharge {
