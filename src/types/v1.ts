@@ -126,6 +126,7 @@ export interface InscriptionOrderRequest {
   projectTag?: string;
 
   batchMode?: string;
+  paid?: boolean;
 }
 
 /**
