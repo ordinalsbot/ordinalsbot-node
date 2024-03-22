@@ -154,6 +154,8 @@ export interface InscriptionCharge {
   chain_invoice?: InscriptionOnchainInvoice;
   lightning_invoice?: InscriptionLightningInvoice;
   transactions?: InscriptionChargeTransaction[];
+  uri?: string;
+  callback_url?: string;
 }
 
 export interface InscriptionOrder extends InscriptionOrderRequest {
