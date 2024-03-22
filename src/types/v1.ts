@@ -44,31 +44,60 @@ export interface InscriptionFile {
   metadataUrl?: string;
 
   metadataSize?: number;
-
 }
 
 export interface InscriptionOrderRequest {
+  /*
+   * An array of objects that includes:
+   *
+   * Mandatory
+   *    - name:string; => name of the file including extension.
+   *    - size:number; => size of the file in bytes
+   *    - url:string; => file URL hosted on OrdinalsBot buckets
+   *
+   * Optional
+   *    - metadataUrl:string; => metadata json file URL hosted on OrdinalsBot buckets
+   *    - metadataSize:number; => size of the metadata file in bytes
+   *    - metaprotocol:string; => Metaprotocol field to be included in the inscription data
+   *
+   * Note: you can send any dataURL text/json/image/video data in a parameter called dataURL instead of url for files
+   */
   files: InscriptionFile[];
-  fee: number;
 
-  /** Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-    (default=false) 
-  */
+  /**
+   * Miner fee that will be paid while inscribing the ordinals in sats/byte.
+   * (default=2 sats/byte)
+   */
+  fee?: number;
+
+  /**
+   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
+   * (default=false)
+   */
   lowPostage?: boolean;
-  receiveAddress?: string;
 
-  /** Inscribe on a rare, exotic, early sat. 
-   Options: vintage | block78 | pizza | uncommon | random (default=random) 
-    full list can be queried from inventory endpoint
-  */
+  /**
+   * A single Bitcoin address to receive the inscriptions for the whole order
+   * Or one receiver Address per file
+   */
+  receiveAddress?: string | string[];
+
+  /**
+   * Inscribe on a rare, exotic, early sat.
+   * Options: vintage | block78 | pizza | uncommon | random (default=random)
+   * full list can be queried from inventory endpoint
+   */
   rareSats?: string;
 
-  /** referral code to earn up to %15 of the order service fee. */
+  /**
+   * Referral code to earn up to %15 of the order service fee.
+   */
   referral?: string;
 
-  /** Amount of satoshis to charge extra for this order that will be added to "referral" account.
-    Needs to be used together with "referral" 
-  */
+  /**
+   * Amount of satoshis to charge extra for this order that will be added to "referral" account.
+   * Needs to be used together with "referral" parameter.
+   */
   additionalFee?: number;
 
   /* Order timeout in minutes. 
@@ -80,10 +109,31 @@ export interface InscriptionOrderRequest {
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string;
 
-  /** Use brotli compression to reduce file sizes on chain
+  /**
+   * Use brotli compression to reduce file sizes on chain
    * default=false
    */
   compress?: boolean;
+
+  /**
+   *
+   */
+  parent?: InscriptionOrderParentRequest;
+
+  /**
+   *
+   */
+  projectTag?: string;
+
+  batchMode?: string;
+}
+
+/**
+ * Parent Reqeust object for the Inscription order
+ */
+export interface InscriptionOrderParentRequest {
+  inscriptionId: string;
+  returnAddress: string;
 }
 
 export interface InscriptionCharge {
@@ -102,16 +152,25 @@ export interface InscriptionCharge {
   expires_at?: string;
   auto_settle?: boolean;
   chain_invoice?: InscriptionOnchainInvoice;
+  lightning_invoice?: InscriptionLightningInvoice;
   transactions?: InscriptionChargeTransaction[];
+  uri?: string;
+  callback_url?: string;
 }
 
 export interface InscriptionOrder extends InscriptionOrderRequest {
+  id: string;
   status: string;
   // ... input parameters from InscriptionOrderRequest
   charge: InscriptionCharge;
   chainFee: number; // in satoshis
   serviceFee: number; // in satoshis
+  baseFee: number;
+  rareSatsFee: number;
+  postage: number;
   orderType: string;
+  zeroConf: string | null;
+  state: string;
   createdAt: number; // timestamp in ms,
 }
 
@@ -121,6 +180,10 @@ export interface InscriptionOnchainInvoice {
   tx: string;
 }
 
+export interface InscriptionLightningInvoice {
+  expires_at: number,
+  payreq: string,
+}
 export interface InscriptionChargeTransaction {
   address: string;
   created_at: number;
@@ -135,6 +198,9 @@ export interface InscriptionChargeMetadata {
   invoice_id: string;
 }
 
+/**
+ * Represents a request for pricing information for inscribing files.
+ */
 export interface InscriptionPriceRequest {
   /** Total size of all files to be inscribed in bytes */
   size: number;
@@ -150,49 +216,100 @@ export interface InscriptionPriceRequest {
     full list can be queried from inventory endpoint
   */
   rareSats: string;
+
+  /** Esitmate fees for the files with minimum postage
+   * (padding) 546 sats instead of the standard 10,000 sats
+   * (default = false)
+   */
+  lowPostage?: boolean;
+
+  /**
+   * Estimate fees for a direct inscription order
+   * `/inscribe` endpoint which will be cheaper
+   * (default = false)
+   */
+  direct?: boolean;
+
+  /**
+   * Additional fee(in satoshis) to be added to order total and passed to your referral code.
+   */
+  additionalFee?: number;
+
+  /**
+   * The custom base fee from apikey
+   */
+  baseFee?: number;
 }
 
+/**
+ * Represents a response for pricing information for inscribing files.
+ */
 export interface InscriptionPriceResponse {
-  status: string;
   chainFee: number; // chain fee that will be paid to miners
   baseFee: number; // base service fee taken by inscription.com
   serviceFee: number; // total service fee taken by inscription.com
+  rareSatsFee: number;
+  additionalFee: number; //the additinal fee per file
+  postage: number; //postage fee according to provided lowPostage. i.e lowPostage is 546 and normalPostage is 10,000
+  amount: number; // amount to be paid by the user
   totalFee: number; // total amount to be paid by the user
 }
 
 export interface InscriptionCollectionCreateRequest {
-  /** URL safe unique collection slug. This will be used as part of mint URL. */
-  id: string;
+  /**
+   * An array of objects that includes:
+   *  - name:string; => name of the file including extension.
+   *  - size:number; => size of the file in bytes.
+   *  - url:string; => publicly accessible image URL
+   */
   files: InscriptionFile[];
 
-  // Inscription price per file (for collection creator) set to 0 for free mints
-  price: number;
-  // Max supply of the collection.
-  totalCount: number;
+  /** URL safe unique collection slug. Will be used as mint URL. */
+  id?: string;
 
-  // Miner fee that will be paid while inscribing the ordinals in sats/byte. (default=2 sats/byte)
-  fee?: number;
+  /** Collection Display Name */
+  name?: string;
 
-  // Inscription service fee per file taken by inscription.com, min: 27000 (sats)
-  serviceFee?: number;
-  // Bitcoin address to receive payouts from inscriptions
-  "creator-address": string;
+  /** Collection description */
+  description?: string;
 
-  // collection metadata
-  name: string;
-  description: string;
+  /** Collection creator */
   creator: string;
-  // optional info to be displayed on the mint page
-  twitter?: string;
-  website?: string;
-  discord?: string;
 
-  // images to be used on the mint page
+  /** Inscription price per file (for collection creator) set to 0 for free mints */
+  price: number;
+
+  /** Max supply of the collection */
+  totalCount?: number;
+
+  /** Collection twitter account */
+  twitter?: string;
+
+  /** Collection website */
+  website?: string;
+
+  /** Collection banner image URL */
   banner?: string;
+
+  /** Collection cover image URL */
   cover?: string;
 
+  /** Miner fee that will be paid while inscribing the ordinals in sats/byte. (default=2 sats/byte) */
+  fee?: number;
+
+  /** Inscription service fee per file taken by ordinalsbot.com, min: 27000 (sats)  */
+  serviceFee?: number;
+
+  /** Bitcoin address to receive payouts from inscriptions */
+  "creator-address": string;
+
   // allowlist is optional
-  allowlist?: AllocationMap;
+  allowList?: AllocationMap;
+  discord?: string;
+  parent?: InscriptionOrderParentRequest;
+  /** brc20 collection fields */
+  deployInscription?: string;
+  saleSize?: number;
 }
 
 // allocation: -1 = unlimited, 0 = not allowed, any other number = allowed number of inscriptions
@@ -204,7 +321,10 @@ export type AllocationMap = {
 
 export interface InscriptionCollectionCreateResponse
   extends InscriptionCollectionCreateRequest {
+  averageSize: number;
+  inscribedCount: number;
   status: string;
+  active: boolean;
   // ... input parameters from InscriptionCollectionCreateRequest
   createdAt: number;
 }
@@ -215,35 +335,88 @@ export interface InscriptionCollection {
 
   /** number of items requested from collection */
   count: number;
+
+  requestedIds?: number[];
 }
 
 export interface InscriptionCollectionOrderRequest {
-  collection: InscriptionCollection;
+  /** Mining fee to be paid for this collection inscription (sats/vB) */
+  fee?: number;
 
-  // cloudflare turnstile token
+  /** Bitcoin address to receive the inscriptions for the whole order */
+  receiveAddress?: string;
+
+  /**
+   * Object including
+   * id: Collection slug to be inscribed
+   * count: number of inscriptions being ordered.
+   * requestedIds: id to be requested. one from both count or requestedIds is must
+   */
+  collection?: InscriptionCollection;
+
+  referral?: string;
+
+  /** Cloudflare turnstile token. Required if no x-api-key header is present. */
   token?: string;
 
-  receiveAddress?: string;
-
-  /** Inscribe on a rare, exotic, early sat. 
-   Options: vintage | block78 | pizza | uncommon | random (default=random) 
-    full list can be queried from inventory endpoint
-  */
+  /**
+   * Inscribe on a rare, exotic, early sat.
+   * Options: vintage | block78 | pizza | uncommon | random (default=random)
+   * full list can be queried from inventory endpoint
+   */
   rareSats?: string;
+
+  /**
+   * Order timeout in minutes.
+   * Generated payment invoice will be valid for this duration only. Payments that are sent after this will not be processed.
+   * (default=4320)
+   */
+  timeout?: number;
+
+  /**
+   * Amount of satoshis to charge extra for this order that will be added to "referral" account.
+   * Needs to be used together with "referral" parameter.
+   */
+  additionalFee?: number;
 }
 
-export interface InscriptionTextOrderRequest {
-  texts: string[];
+/**
+ * Create collectionorder response Object
+ */
+export interface InscriptionCollectionOrderResponse {
+  charge: InscriptionCharge;
+  collection: InscriptionCollection;
   fee: number;
+  rareSatsFee: number;
+  serviceFee: number; // in satoshis
+  price: number;
+  fileCount: number;
+  orderType: string;
+  postage: number;
+  lowPostage: number;
+  chainFee: number; // in satoshis
+  amount: number; // in satoshis
+  id: string;
+  additionalFee: number;
+  rareSats: string;
+  receiveAddress: string;
+  referral: string;
+  zeroConf: string;
+  status: string;
+  state: string;
+  createdAt: number; // timestamp in ms,
+}
 
-  /** Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-    (default=false) 
-  */
-  lowPostage?: boolean;
-  receiveAddress?: string;
+/**
+ * Create textorder request object
+ */
+export interface InscriptionTextOrderRequest extends InscriptionOrderRequest {
+  // ... input parameters from InscriptionOrderRequest
 
-  /** referral code to earn up to %15 of the order service fee. */
-  referral?: string;
+  /**
+   * An array of strings to be inscribed
+   */
+  texts: string[];
 }
 
 type InscriptionInventoryData = {
@@ -301,4 +474,37 @@ export interface InscriptionReferralStatusResponse {
 
 export interface InscriptionReferralSetResponse {
   status: string;
+}
+
+/**
+ * Response object for create special Sats.
+ */
+export interface CreateSpecialSatsResponse {
+  /**
+   * base64 transaction to be signed
+   */
+  psbt: string;
+}
+
+/**
+ * Request object for Create Special Sats.
+ */
+export interface CreateSpecialSatsRequest {
+  /** Charge amount for creating Create Special Sats */
+  chargeAmount: string;
+
+  /** The funding payment address */
+  fundingAddress: string;
+
+  /** The Special Sats Output public key */
+  specialSatsOutput: string;
+
+  /** user's payment address */
+  userAddress: string;
+
+  /** user's payment public key*/
+  userPublicKey: string;
+
+  /**feeRate */
+  feeRate: number;
 }

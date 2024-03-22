@@ -24,14 +24,16 @@ Install the package with:
 The package needs to be configured with your account's API key which you can get by opening a ticket in our Discord for now. Our developer dashboard is coming soon...
 
 ```js
-import { MarketPlace, Inscription, Satscanner, Satextractor, Mempool } from "ordinalsbot";
+import { Ordinalsbot } from "ordinalsbot";
 
 // if no parameter given, default environment is 'live'
-let inscription = new Inscription("API_KEY", "dev");
-let marketplace = new MarketPlace("API_KEY", "dev");
-let satscanner = new Satscanner("API_KEY", "dev");
-let satextractor = new Satextractor("API_KEY", "dev");
-let mempool = new Mempool("API_KEY", "dev");
+const ordinalsbotObj = new Ordinalsbot(API_KEY, "dev");
+const marketPlace = ordinalsbotObj.MarketPlace();
+const inscription = ordinalsbotObj.Inscription();
+const launchpad = ordinalsbotObj.Launchpad();
+const mempool = ordinalsbotObj.Mempool();
+const satextractor = ordinalsbotObj.Satextractor();
+const satscanner = ordinalsbotObj.Satscanner();
 ```
 
 ## Usage
@@ -118,8 +120,11 @@ For client-side applications, the methods `marketplace.createListing()`, `market
 The following example demonstrates how to create a listing for sale. When you invoke `marketplace.createListing()` and specify `"xverse"` as the `walletProvider`, it initiates an API call to generate a listing transaction. The method processes the response, formatting the data according to the requirements of the Xverse wallet. Subsequently, the Xverse wallet is activated to prompt the user to sign the transaction. Once the user successfully signs, this method additionally triggers the `save-listing` API, using the appropriately formatted data. Finally, it returns the confirmed listing information as the response.
 
 ```js
+import { Ordinalsbot } from "ordinalsbot";
 
-import { marketplace, WALLET_PROVIDER } from "ordinalsbot";
+// if no parameter given, default environment is 'live'
+const ordinalsbotObj = new Ordinalsbot(API_KEY, "dev");
+const marketPlace = ordinalsbotObj.MarketPlace();
 
 const listingRequest = {
   sellerOrdinals: [{
