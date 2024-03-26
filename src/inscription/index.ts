@@ -64,7 +64,7 @@ export class Inscription {
   /**
    * Creates a collection order with the given collection order request.
    * @param {v1.InscriptionCollectionOrderRequest} collectionOrder The collection order request.
-   * @returns {Promise<v1.InscriptionOrder>} A promise that resolves with the created collection order.
+   * @returns {Promise<v1.InscriptionCollectionOrderResponse>} A promise that resolves with the created collection order.
    */
   createCollectionOrder(
     collectionOrder: v1.InscriptionCollectionOrderRequest
