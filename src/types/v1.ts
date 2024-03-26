@@ -134,6 +134,8 @@ export interface InscriptionOrderRequest {
 export interface InscriptionOrderParentRequest {
   inscriptionId: string;
   returnAddress: string;
+  depositAddress: string;
+  parentReturnTx: string;
 }
 
 export interface InscriptionCharge {
@@ -172,6 +174,8 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   zeroConf: string | null;
   state: string;
   createdAt: number; // timestamp in ms,
+
+  paid?: boolean;
 }
 
 export interface InscriptionOnchainInvoice {
