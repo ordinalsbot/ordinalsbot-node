@@ -309,6 +309,7 @@ export interface InscriptionCollectionCreateRequest {
 
   // allowlist is optional
   allowList?: AllocationMap;
+  phases: CollectionPhase[];
   discord?: string;
   parent?: InscriptionOrderParentRequest;
   /** brc20 collection fields */
@@ -318,9 +319,33 @@ export interface InscriptionCollectionCreateRequest {
 
 // allocation: -1 = unlimited, 0 = not allowed, any other number = allowed number of inscriptions
 export type AllocationMap = {
+  /** allow list  */
   [address: string]: {
+    /** the allowed claims per address */
     allocation: number;
   };
+};
+
+/**
+ * collection phase object
+ */
+export type CollectionPhase = {
+  /** total number of inscriptions in the phase */
+  inscriptionsCount: number,
+  /** An object for allow list allocation and claimed inscriptions */
+  allowList?: AllocationMap[];
+  /** 
+   * The isPublic key for the phase is public or protected,
+   * private = 0
+   * public = 1
+  */
+  isPublic: number;
+  /** phase price for inscriptions */
+  price: number;
+  /** start date of the phase */
+  startDate: string;
+  /** An optional date field. Which is requried for the protected phase */
+  endDate?: string | null;
 };
 
 export interface InscriptionCollectionCreateResponse

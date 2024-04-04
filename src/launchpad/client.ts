@@ -167,10 +167,10 @@ export class LaunchpadClient {
   getAllocation(
     getAllocationRequest: GetAllocationRequest
   ): Promise<GetAllocationResponse> {
-    return new Promise(async (resolve) => {
+    return new Promise((resolve) => {
       try {
         resolve(
-          await this.instanceV1.post(`/get-allocation`, {
+          this.instanceV1.post(`/get-allocation`, {
             ...getAllocationRequest,
           })
         );

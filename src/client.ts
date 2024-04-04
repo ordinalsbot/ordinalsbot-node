@@ -135,21 +135,21 @@ export class InscriptionClient {
     collection: InscriptionCollectionCreateRequest
   ): Promise<InscriptionCollectionCreateResponse> {
     // modify normal json to valid form data for files
-    let plainObject = Object.assign({ ...collection });
-    let files = collection?.files;
-    for (let index in files) {
-      let file: any = files[index];
-      let keys = Object.keys(file);
-      for (let key in keys) {
-        let propName = keys[key];
+    const plainObject = Object.assign({ ...collection });
+    const files = collection?.files;
+    for (const index in files) {
+      const file: any = files[index];
+      const keys = Object.keys(file);
+      for (const key in keys) {
+        const propName = keys[key];
         plainObject[`files[${index}][${propName}]`] = file[propName];
       }
     }
     delete plainObject.files;
-    let data = qs.stringify(plainObject);
+    const data = qs.stringify(plainObject);
     // modify normal json to valid form data for files
 
-    let config = {
+    const config = {
       method: "post",
       maxBodyLength: Infinity,
       url: this.instanceV1.getUri() + "/collectioncreate",

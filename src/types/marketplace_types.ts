@@ -222,7 +222,7 @@ interface ListingOrdinal {
 }
 
 export interface MarketplaceSaveListingRequest {
-  ordinalId: String;
+  ordinalId: string;
   updateListingData: { signedListingPSBT: string };
 }
 
