@@ -358,6 +358,17 @@ export interface InscriptionCollectionCreateResponse
   createdAt: number;
 }
 
+/**
+ * API request object for the updating collection phases
+ */
+export interface UpdateCollectionPhasesRequest {
+  
+  /** URL safe unique collection slug. Will be used as mint URL. */
+  id?: string;
+  /** updated collection phases */
+  phases: CollectionPhase[];
+}
+
 export interface InscriptionCollection {
   /** unique ID of the collection being requested */
   id: string;

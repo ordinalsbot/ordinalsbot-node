@@ -17,6 +17,7 @@ import {
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
+  UpdateCollectionPhasesRequest,
 } from "./types/v1";
 
 const qs = require("qs");
@@ -159,6 +160,17 @@ export class InscriptionClient {
       data: data,
     };
     return axios.request(config);
+  }
+  
+  /**
+   * updates collection phases.
+   * @param {UpdateCollectionPhasesRequest} collection - The request object for updating the collection phases.
+   * @returns {Promise<InscriptionCollectionCreateResponse>} A promise resolving with the created collection response.
+   */
+  async updateCollectionPhases(
+    collection: UpdateCollectionPhasesRequest
+  ): Promise<InscriptionCollectionCreateResponse> {
+    return this.instanceV1.post(`/updatecollectionphases`, collection);
   }
 
   /**

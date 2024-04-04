@@ -62,6 +62,17 @@ export class Inscription {
   }
 
   /**
+   * updates collection phases with the given collection id.
+   * @param {v1.UpdateCollectionPhasesRequest} collection The request data.
+   * @returns {Promise<v1.InscriptionCollectionCreateResponse>} A promise that resolves with the updated collection response.
+   */
+  updateCollectionPhases(
+    collection: v1.UpdateCollectionPhasesRequest
+  ): Promise<v1.InscriptionCollectionCreateResponse> {
+    return this.instance.updateCollectionPhases(collection);
+  }
+
+  /**
    * Creates a collection order with the given collection order request.
    * @param {v1.InscriptionCollectionOrderRequest} collectionOrder The collection order request.
    * @returns {Promise<v1.InscriptionCollectionOrderResponse>} A promise that resolves with the created collection order.
