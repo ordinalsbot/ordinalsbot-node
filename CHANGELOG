@@ -1,10 +1,13 @@
-## [0.1.6]
+## [0.2.1]
 
 #### APIs Updated
 - `Inscription`
   - createCollection - Added the phases in the request and response object.
   - updateCollectionPhases - Added the method for updating the phases of collection object.
+## [0.2.0]
+- `Types`
 
+  - type syncronization with OrdinalsBot API
 ## [0.1.5]
 
 #### APIs Added
