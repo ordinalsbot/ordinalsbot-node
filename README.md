@@ -145,3 +145,6 @@ const response = await marketPlace.createListing(listingRequest);
 // returned as the response
 
 ```
+
+## Testing
+`npm run test`
