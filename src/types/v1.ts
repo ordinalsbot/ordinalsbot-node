@@ -172,7 +172,7 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   postage: number;
   orderType: string;
   zeroConf: string | null;
-  state: string;
+  state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
 
   paid?: boolean;
@@ -407,7 +407,7 @@ export interface InscriptionCollectionOrderResponse {
   referral: string;
   zeroConf: string;
   status: string;
-  state: string;
+  state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
 }
 
@@ -511,4 +511,19 @@ export interface CreateSpecialSatsRequest {
 
   /**feeRate */
   feeRate: number;
+}
+
+// Order states enum
+export enum InscriptionOrderState {
+  WAITING_PAYMENT = 'waiting-payment', // order is waiting for a payment to be detected
+  WAITING_CONFIRMATION = 'waiting-confirmation', // payment is detected, waiting for confirmations
+  WAITING_PARENT = 'waiting-parent', // order is waiting for the parent inscription to hit the wallet
+  PREP = 'prep', // order files are being downloaded
+  QUEUED = 'queued', // order is queued for inscription
+  ERROR = 'error', // order has an error
+  CANCELED = 'cancelled', // order is cancelled
+  WAITING_REFUND = 'waiting-refund', // collection order is waiting refund
+  REFUNDED = 'refunded', // collection order was refunded
+  EXPIRED = 'expired', // payment processor invoice expired
+  COMPLETED = 'completed', // order is completed, files are inscribed
 }
