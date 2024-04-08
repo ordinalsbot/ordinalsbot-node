@@ -1,3 +1,10 @@
+## [0.2.1]
+- `Types`
+
+  - Added InscriptionOrderState enum
+  - Updated InscriptionTextOrderRequest so the examples script runs
+  - Added testing section in README
+
 ## [0.2.0]
 - `Types`
 
