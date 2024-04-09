@@ -172,7 +172,7 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   postage: number;
   orderType: string;
   zeroConf: string | null;
-  state: string;
+  state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
 
   paid?: boolean;
@@ -443,20 +443,83 @@ export interface InscriptionCollectionOrderResponse {
   referral: string;
   zeroConf: string;
   status: string;
-  state: string;
+  state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
 }
 
 /**
  * Create textorder request object
+ * Does not use files, but instead uses an array of strings to be inscribed.
  */
-export interface InscriptionTextOrderRequest extends InscriptionOrderRequest {
-  // ... input parameters from InscriptionOrderRequest
-
+export interface InscriptionTextOrderRequest {
   /**
    * An array of strings to be inscribed
    */
   texts: string[];
+
+  /**
+   * Miner fee that will be paid while inscribing the ordinals in sats/byte.
+   * (default=2 sats/byte)
+   */
+  fee?: number;
+
+  /**
+   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
+   * (default=false)
+   */
+  lowPostage?: boolean;
+
+  /**
+   * A single Bitcoin address to receive the inscriptions for the whole order
+   * Or one receiver Address per file
+   */
+  receiveAddress?: string | string[];
+
+  /**
+   * Inscribe on a rare, exotic, early sat.
+   * Options: vintage | block78 | pizza | uncommon | random (default=random)
+   * full list can be queried from inventory endpoint
+   */
+  rareSats?: string;
+
+  /**
+   * Referral code to earn up to %15 of the order service fee.
+   */
+  referral?: string;
+
+  /**
+   * Amount of satoshis to charge extra for this order that will be added to "referral" account.
+   * Needs to be used together with "referral" parameter.
+   */
+  additionalFee?: number;
+
+  /* Order timeout in minutes. 
+    Generated payment invoice will be valid for this duration only. Payments that are sent after this will not be processed.
+    default=4320 (3 days)
+  */
+  timeout?: number;
+
+  /** URL to receive a POST request when each file in the order is inscribed */
+  webhookUrl?: string;
+
+  /**
+   * Use brotli compression to reduce file sizes on chain
+   * default=false
+   */
+  compress?: boolean;
+
+  /**
+   *
+   */
+  parent?: InscriptionOrderParentRequest;
+
+  /**
+   *
+   */
+  projectTag?: string;
+
+  batchMode?: string;
+  
 }
 
 type InscriptionInventoryData = {
@@ -547,4 +610,19 @@ export interface CreateSpecialSatsRequest {
 
   /**feeRate */
   feeRate: number;
+}
+
+// Order states enum
+export enum InscriptionOrderState {
+  WAITING_PAYMENT = 'waiting-payment', // order is waiting for a payment to be detected
+  WAITING_CONFIRMATION = 'waiting-confirmation', // payment is detected, waiting for confirmations
+  WAITING_PARENT = 'waiting-parent', // order is waiting for the parent inscription to hit the wallet
+  PREP = 'prep', // order files are being downloaded
+  QUEUED = 'queued', // order is queued for inscription
+  ERROR = 'error', // order has an error
+  CANCELED = 'cancelled', // order is cancelled
+  WAITING_REFUND = 'waiting-refund', // collection order is waiting refund
+  REFUNDED = 'refunded', // collection order was refunded
+  EXPIRED = 'expired', // payment processor invoice expired
+  COMPLETED = 'completed', // order is completed, files are inscribed
 }

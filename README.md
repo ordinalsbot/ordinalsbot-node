@@ -34,6 +34,7 @@ const launchpad = ordinalsbotObj.Launchpad();
 const mempool = ordinalsbotObj.Mempool();
 const satextractor = ordinalsbotObj.Satextractor();
 const satscanner = ordinalsbotObj.Satscanner();
+const opi = ordinalsbotObj.Opi();
 ```
 
 ## Usage
@@ -145,3 +146,6 @@ const response = await marketPlace.createListing(listingRequest);
 // returned as the response
 
 ```
+
+## Testing
+`npm run test`
