@@ -309,7 +309,7 @@ export interface InscriptionCollectionCreateRequest {
 
   // allowlist is optional
   allowList?: AllocationMap;
-  phases: CollectionPhase[];
+  phases?: CollectionPhase[];
   discord?: string;
   parent?: InscriptionOrderParentRequest;
   /** brc20 collection fields */
