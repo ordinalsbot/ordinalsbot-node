@@ -1,3 +1,13 @@
+## [0.2.2]
+- `Types`
+
+  - Added OrderType enum
+  - Added Runes Etching Types
+  - Added 'sent' to InscriptionFile
+
+- `Inscription`
+  - Added Rune Etching Order endpoint
+
 ## [0.2.1]
 - `Types`
 

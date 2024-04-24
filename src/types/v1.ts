@@ -38,6 +38,12 @@ export interface InscriptionFile {
   /** Inscription transaction details */
   tx?: InscriptionTransaction;
 
+  /*
+   For some transactions this gets set to the txid 
+   that inscription gets sent to user receiveAddress
+  */
+  sent?: string;
+
   // only 1 of metadataDataURL or metadataUrl should be present. not both!
   /* metadata json to be stored on chain */
   metadataDataURL?: string;
@@ -589,4 +595,12 @@ export enum InscriptionOrderState {
   REFUNDED = 'refunded', // collection order was refunded
   EXPIRED = 'expired', // payment processor invoice expired
   COMPLETED = 'completed', // order is completed, files are inscribed
+}
+
+export enum OrderType {
+  RUNE_ETCH = 'rune-etch',
+  RUNE_MINT = 'rune-mint',
+  BULK = 'bulk',
+  DIRECT = 'direct',
+  BRC20 = 'brc20',
 }
