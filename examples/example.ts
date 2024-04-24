@@ -123,7 +123,7 @@ const runesEtchOrder = {
   symbol: 'D',
   premine: 0,
   divisibility: 10,
-  fee: 110,
+  fee: 510,
   receiveAddress: 'tb1p4mn7h5nsdtuhkkhlvg30hyfglz30whtgfs8qwr2efdjvw0yqm4cquzd8m7',
   terms: {
     amount: 1,
