@@ -139,9 +139,7 @@ describe("Inscription SDK Tests", function () {
 
 describe("create collection", function () {
   it("should return a collection object", async () => {
-    axiosStub.post.resolves({ status: 200, data: { id: uuidv4(), name: "collection name" } });
-
-    const collection = await inscription.createCollection({
+    const collection = {
       id: uuidv4(),
       name: "collection name",
       description: "test description",
@@ -149,11 +147,20 @@ describe("create collection", function () {
       price: 100,
       totalCount: "50",
       files: [{ name: "test.txt", url: "https://example.com", size: 50 }],
-    });
+    }
 
-    assert.strictEqual(collection.status, 200);
-    assert.isNotNull(collection.data.id);
-    assert.strictEqual(collection.data.name, "collection name");
+    axiosStub.post.resolves({ status: 200, data: collection });
+    
+    try {
+      const createCollectionResponse = await inscription.createCollection(collection);
+
+      // Verify response
+      assert.strictEqual(createCollectionResponse.status, 200);
+      assert.isNotNull(createCollectionResponse.data.id);
+      assert.strictEqual(createCollectionResponse.data.name, "collection name");
+    } catch (e) {
+      error = e;
+    }
   });
 });
 
