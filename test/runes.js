@@ -80,4 +80,41 @@ describe("Runes SDK Tests", function () {
     assert.strictEqual(error.response.data, 'Bad Request');
     sinon.assert.calledOnce(axiosStub.post);
   });
+
+  it("should return a rune mint order object with status 'ok' and verify payload", async () => {
+    const orderPayload = {
+      rune: 'THIRTEENCHARS',
+      numberOfMints: 5,
+      fee: 110,
+      receiveAddress: 'tb1p4mn7h5nsdtuhkkhlvg30hyfglz30whtgfs8qwr2efdjvw0yqm4cquzd8m7',
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createRunesMintOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/runes/mint', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
+
+  it("should throw a (400) Bad Request when creating a rune etching order with invalid parameters", async () => {
+    axiosStub.post.rejects({
+      response: {
+        status: 400,
+        data: 'Bad Request'
+      }
+    });
+
+    let error;
+
+    try {
+      await inscription.createRunesMintOrder({ description: "hello world" });
+    } catch (e) {
+      error = e;
+    }
+
+    assert.isDefined(error);
+    assert.strictEqual(error.response.status, 400);
+    assert.strictEqual(error.response.data, 'Bad Request');
+    sinon.assert.calledOnce(axiosStub.post);
+  });
 });

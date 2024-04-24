@@ -105,7 +105,6 @@ inscription
     });
 
 /**
- *
  * Creating a runes etching order
  */
 const runesEtchOrder = {
@@ -138,6 +137,25 @@ const runesEtchOrder = {
 (async () => {
   try {
     const response = await inscription.createRunesEtchOrder(runesEtchOrder);
+    console.log(response);
+  } catch (error) {
+    console.error(`${error.status} | ${error.message}`);
+  }
+})();
+
+/**
+ * Creating a runes mint order
+ */
+const runesMintOrder = {
+  rune: 'UNCOMMON.GOODS',
+  numberOfMints: 2,
+  fee: 510,
+  receiveAddress: 'tb1p4mn7h5nsdtuhkkhlvg30hyfglz30whtgfs8qwr2efdjvw0yqm4cquzd8m7',
+};
+
+(async () => {
+  try {
+    const response = await inscription.createRunesMintOrder(runesMintOrder);
     console.log(response);
   } catch (error) {
     console.error(`${error.status} | ${error.message}`);

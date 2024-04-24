@@ -1,6 +1,6 @@
 import { InscriptionClient } from "../client";
 import { InscriptionEnv, v1 } from "../types";
-import { RunesEtchOrderRequest, RunesEtchOrderResponse } from "../types/runes_types";
+import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "../types/runes_types";
 
 /**
  * Main class for interacting with the Inscription API.
@@ -91,6 +91,15 @@ export class Inscription {
    */
   createRunesEtchOrder(order: RunesEtchOrderRequest): Promise<RunesEtchOrderResponse> {
     return this.instance.createRunesEtchOrder(order);
+  }
+
+  /**
+   * Creates an runes mint order with the given order request.
+   * @param {RunesMintOrderRequest} order The order request.
+   * @returns {Promise<RunesMintOrderResponse>} A promise that resolves with the created order.
+   */
+  createRunesMintOrder(order: RunesMintOrderRequest): Promise<RunesMintOrderResponse> {
+    return this.instance.createRunesMintOrder(order);
   }
 
   /**

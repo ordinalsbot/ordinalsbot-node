@@ -73,3 +73,33 @@ export interface RuneProperties {
   offset: RuneTermsOffset;
   height: RuneTermsHeight;
 };
+
+export interface RunesMintOrderRequest {
+  rune: string;
+  receiveAddress: string;
+  numberOfMints: number;
+  fee: number;
+  additionalFee?: number;
+  referral?: string;
+}
+
+export interface RunesMintOrderResponse {
+  charge: InscriptionCharge;
+  rune: string;
+  receiveAddress: string;
+  fee: number;
+  chainFee: number;
+  serviceFee: number;
+  baseFee: number;
+  rareSatsFee: number;
+  postage: number;
+  numberOfMints: number;
+  id: string;
+  orderType: OrderType;
+  state: InscriptionOrderState;
+  createdAt: string;
+  executedMints: number;
+  mintingTxs: string[];
+  additionalFee?: number;
+  referral?: string;
+}
