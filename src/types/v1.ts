@@ -590,3 +590,11 @@ export enum InscriptionOrderState {
   EXPIRED = 'expired', // payment processor invoice expired
   COMPLETED = 'completed', // order is completed, files are inscribed
 }
+
+export enum OrderType {
+  RUNE_ETCH = 'rune-etch',
+  RUNE_MINT = 'rune-mint',
+  BULK = 'bulk',
+  DIRECT = 'direct',
+  BRC20 = 'brc20',
+}
