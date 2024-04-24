@@ -18,6 +18,7 @@ import {
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
 } from "./types/v1";
+import { RunesEtchOrderRequest, RunesEtchOrderResponse } from "./types/runes_types";
 
 const qs = require("qs");
 const version = require("../package.json")?.version || "local";
@@ -182,6 +183,17 @@ export class InscriptionClient {
   ): Promise<InscriptionOrder> {
     return this.instanceV1.post(`/textorder`, order);
   }
+
+  /**
+   * Creates an runes etch order.
+   * @param {RunesEtchOrderRequest} order - The request object for creating the text order.
+   * @returns {Promise<RunesEtchOrder>} A promise resolving with the created text order.
+   */
+    async createRunesEtchOrder(
+      order: RunesEtchOrderRequest
+    ): Promise<RunesEtchOrderResponse> {
+      return this.instanceV1.post(`/runes/etch`, order);
+    }
 
   /**
    * Retrieves inventory information.
