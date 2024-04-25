@@ -60,7 +60,7 @@ export interface LaunchpadPhase {
   /** An object for allow list allocation and claimed inscriptions */
   allowList?: AllowList;
   /** The isPublic key for the phase is public or protected*/
-  isPublic: boolean;
+  isPublic: Boolean;
   /** phase price for ordinal to buy */
   price: number;
   /** start date of the phase */

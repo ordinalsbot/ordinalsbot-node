@@ -38,6 +38,12 @@ export interface InscriptionFile {
   /** Inscription transaction details */
   tx?: InscriptionTransaction;
 
+  /*
+   For some transactions this gets set to the txid 
+   that inscription gets sent to user receiveAddress
+  */
+  sent?: string;
+
   // only 1 of metadataDataURL or metadataUrl should be present. not both!
   /* metadata json to be stored on chain */
   metadataDataURL?: string;
@@ -319,17 +325,30 @@ export interface InscriptionCollectionCreateRequest {
 
 // allocation: -1 = unlimited, 0 = not allowed, any other number = allowed number of inscriptions
 export type AllocationMap = {
-  /** allow list  */
   [address: string]: {
-    /** the allowed claims per address */
     allocation: number;
   };
 };
 
 /**
+ * API request object for the updating collection phases
+ */
+export interface UpdateCollectionPhasesRequest {
+
+  /** URL safe unique collection slug. Will be used as mint URL. */
+  id?: string;
+  /** updated collection phases */
+  phases: CollectionPhase[];
+}
+
+/**
  * collection phase object
  */
 export type CollectionPhase = {
+  
+  /** phase id which is required for the update the collection phases */
+  id?: string,
+
   /** total number of inscriptions in the phase */
   inscriptionsCount: number,
   /** An object for allow list allocation and claimed inscriptions */
@@ -356,17 +375,6 @@ export interface InscriptionCollectionCreateResponse
   active: boolean;
   // ... input parameters from InscriptionCollectionCreateRequest
   createdAt: number;
-}
-
-/**
- * API request object for the updating collection phases
- */
-export interface UpdateCollectionPhasesRequest {
-  
-  /** URL safe unique collection slug. Will be used as mint URL. */
-  id?: string;
-  /** updated collection phases */
-  phases: CollectionPhase[];
 }
 
 export interface InscriptionCollection {
@@ -625,4 +633,12 @@ export enum InscriptionOrderState {
   REFUNDED = 'refunded', // collection order was refunded
   EXPIRED = 'expired', // payment processor invoice expired
   COMPLETED = 'completed', // order is completed, files are inscribed
+}
+
+export enum OrderType {
+  RUNE_ETCH = 'rune-etch',
+  RUNE_MINT = 'rune-mint',
+  BULK = 'bulk',
+  DIRECT = 'direct',
+  BRC20 = 'brc20',
 }

@@ -17,8 +17,10 @@ import {
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
-  UpdateCollectionPhasesRequest,
+  UpdateCollectionPhasesRequest
 } from "./types/v1";
+import { sha256 } from 'bitcoinjs-lib/src/crypto';
+import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "./types/runes_types";
 
 const qs = require("qs");
 const version = require("../package.json")?.version || "local";
@@ -35,6 +37,7 @@ export class InscriptionClient {
 
   private api_key: string;
   private instanceV1: AxiosInstance;
+  private apikeyhash: string;
 
   /**
    * Constructs an instance of InscriptionClient.
@@ -84,6 +87,8 @@ export class InscriptionClient {
     };
 
     this.instanceV1 = createInstance();
+
+    this.apikeyhash = sha256(Buffer.from(this.api_key)).toString("hex");
   }
 
   /**
@@ -136,21 +141,22 @@ export class InscriptionClient {
     collection: InscriptionCollectionCreateRequest
   ): Promise<InscriptionCollectionCreateResponse> {
     // modify normal json to valid form data for files
-    const plainObject = Object.assign({ ...collection });
-    const files = collection?.files;
-    for (const index in files) {
-      const file: any = files[index];
-      const keys = Object.keys(file);
-      for (const key in keys) {
-        const propName = keys[key];
+    let plainObject = Object.assign({ ...collection });
+    let files = collection?.files;
+    for (let index in files) {
+      let file: any = files[index];
+      let keys = Object.keys(file);
+      for (let key in keys) {
+        let propName = keys[key];
         plainObject[`files[${index}][${propName}]`] = file[propName];
       }
     }
     delete plainObject.files;
+    plainObject.apikeyhash = this.apikeyhash;
     const data = qs.stringify(plainObject);
     // modify normal json to valid form data for files
 
-    const config = {
+    let config = {
       method: "post",
       maxBodyLength: Infinity,
       url: this.instanceV1.getUri() + "/collectioncreate",
@@ -161,7 +167,7 @@ export class InscriptionClient {
     };
     return axios.request(config);
   }
-  
+
   /**
    * updates collection phases.
    * @param {UpdateCollectionPhasesRequest} collection - The request object for updating the collection phases.
@@ -170,7 +176,10 @@ export class InscriptionClient {
   async updateCollectionPhases(
     collection: UpdateCollectionPhasesRequest
   ): Promise<InscriptionCollectionCreateResponse> {
-    return this.instanceV1.post(`/updatecollectionphases`, collection);
+    return this.instanceV1.post(`/updatecollectionphases`, {
+      ...collection,
+      apikeyhash: this.apikeyhash,
+    });
   }
 
   /**
@@ -193,6 +202,28 @@ export class InscriptionClient {
     order: InscriptionTextOrderRequest
   ): Promise<InscriptionOrder> {
     return this.instanceV1.post(`/textorder`, order);
+  }
+
+  /**
+   * Creates an runes etch order.
+   * @param {RunesEtchOrderRequest} order - The request object for creating the runes etch order.
+   * @returns {Promise<RunesEtchOrder>} A promise resolving with the created runes etch order.
+   */
+  async createRunesEtchOrder(
+    order: RunesEtchOrderRequest
+  ): Promise<RunesEtchOrderResponse> {
+    return this.instanceV1.post(`/runes/etch`, order);
+  }
+
+  /**
+   * Creates an runes mint order.
+   * @param {RunesMintOrderRequest} order - The request object for creating the runes mint order.
+   * @returns {Promise<RunesMintOrder>} A promise resolving with the created runes mint order.
+   */
+  async createRunesMintOrder(
+    order: RunesMintOrderRequest
+  ): Promise<RunesMintOrderResponse> {
+    return this.instanceV1.post(`/runes/mint`, order);
   }
 
   /**

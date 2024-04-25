@@ -1,22 +1,12 @@
 ## [0.2.2]
+- `Types`
 
-#### APIs Updated
+  - Added OrderType enum
+  - Added Runes Etching Types
+  - Added 'sent' to InscriptionFile
+
 - `Inscription`
-  - createCollection - Added  phases in request and response object.
-  - updateCollectionPhases - Added method for updating phases of collection object.
-
-#### Module Added
-- `Opi`
-  - constructor - Added method constructor for initialization of opi instance
-  - blockHeight - Added method to get block height.
-
-  ```
-  import { Ordinalsbot } from 'ordinalsbot'
-
-  // If no parameter is given, the default environment is 'live'
-  const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
-  const opiObj = ordinalsbotObj.Opi()
-  ```
+  - Added Rune Etching Order endpoint
 
 ## [0.2.1]
 - `Types`
@@ -29,6 +19,13 @@
 - `Types`
 
   - type syncronization with OrdinalsBot API
+
+## [0.1.6]
+
+#### APIs Updated
+- `Inscription`
+  - createCollection - Added the phases in the request and response object.
+  - updateCollectionPhases - Added the method for updating the phases of collection object.
 
 ## [0.1.5]
 

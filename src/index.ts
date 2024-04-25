@@ -4,7 +4,6 @@ import { MarketPlace } from "./marketplace";
 import { Mempool } from "./mempool/index";
 import { Satextractor } from "./satextractor/index";
 import { Satscanner } from "./satscanner/index";
-import { Opi } from "./opi/index";
 import { InscriptionEnv } from "./types";
 
 export { InscriptionClient } from "./client";
@@ -14,7 +13,6 @@ export { MarketPlace } from "./marketplace";
 export { Inscription } from "./inscription/index";
 export { Satscanner } from "./satscanner/index";
 export { Satextractor } from "./satextractor/index";
-export { Opi } from "./opi/index";
 export { Mempool } from "./mempool/index";
 
 /**
@@ -50,11 +48,6 @@ export class Ordinalsbot {
    * The satscanner instance.
    */
   private satscannerObj!: Satscanner;
-
-  /**
-   * The opi instance.
-   */
-  private opiObj!: Opi;
 
   /**
    * Creates an instance of Ordinalsbot.
@@ -102,13 +95,6 @@ export class Ordinalsbot {
      */
     if (this.satscannerObj === undefined) {
       this.satscannerObj = new Satscanner(key, environment);
-    }
-
-    /**
-     * initialising the opi instance
-     */
-    if (this.opiObj === undefined) {
-      this.opiObj = new Opi(key, environment);
     }
   }
 
@@ -158,13 +144,5 @@ export class Ordinalsbot {
    */
   Satscanner(): Satscanner {
     return this.satscannerObj;
-  }
-
-  /**
-   * Returns the opi instance.
-   * @returns {Opi} The opi instance.
-   */
-  Opi(): Opi {
-    return this.opiObj;
   }
 }

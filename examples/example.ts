@@ -104,6 +104,63 @@ inscription
         console.error(`${error.status} | ${error.message}`);
     });
 
+/**
+ * Creating a runes etching order
+ */
+const runesEtchOrder = {
+  files: [
+      {
+        size: 10,
+        type: "plain/text",
+        name: "my-runes-file.txt",
+        dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+      }
+  ],
+  turbo: true,
+  rune: 'THIRTEENCHARS',
+  supply: 10000,
+  symbol: 'D',
+  premine: 0,
+  divisibility: 10,
+  fee: 510,
+  receiveAddress: 'tb1p4mn7h5nsdtuhkkhlvg30hyfglz30whtgfs8qwr2efdjvw0yqm4cquzd8m7',
+  terms: {
+    amount: 1,
+    cap: 10000,
+    height: {
+      start: 8000010,
+      end: 9000010,
+    },
+  },
+};
+
+(async () => {
+  try {
+    const response = await inscription.createRunesEtchOrder(runesEtchOrder);
+    console.log(response);
+  } catch (error) {
+    console.error(`${error.status} | ${error.message}`);
+  }
+})();
+
+/**
+ * Creating a runes mint order
+ */
+const runesMintOrder = {
+  rune: 'UNCOMMON.GOODS',
+  numberOfMints: 2,
+  fee: 510,
+  receiveAddress: 'tb1p4mn7h5nsdtuhkkhlvg30hyfglz30whtgfs8qwr2efdjvw0yqm4cquzd8m7',
+};
+
+(async () => {
+  try {
+    const response = await inscription.createRunesMintOrder(runesMintOrder);
+    console.log(response);
+  } catch (error) {
+    console.error(`${error.status} | ${error.message}`);
+  }
+})();
 
 
 /** Satscanner - API Key is required */

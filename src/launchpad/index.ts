@@ -104,12 +104,12 @@ export class Launchpad {
             createLaunchpadRequest
           );
 
-        const inputIndices: any = [];
+        let inputIndices: any = [];
         let index = 0;
 
         //input indices for the all the ordinals in the phase
         createLaunchpadRequest.phases.forEach((phase) => {
-          phase.ordinals.forEach(() => {
+          phase.ordinals.forEach((ordinal) => {
             inputIndices.push(index);
             index++;
           });
@@ -137,25 +137,26 @@ export class Launchpad {
           broadcast: false,
           inputsToSign: [sellerInput],
         };
-        return new Promise((resolve, reject) => {
-          this.satsConnectWrapper(payload)
-            .then((response: SatsConnectWrapperResponse) => {
-              if (response && response.success && response.psbtBase64) {
-                const saveLaunchpadRequestPayload: SaveLaunchpadRequest = {
-                  launchpadId: launchpadId,
-                  updateLaunchData: {
-                    signedListingPSBT: response.psbtBase64,
-                  },
-                };
-                resolve(this.saveLaunchpad(saveLaunchpadRequestPayload));
-              } else {
-                console.log("Transaction canceled");
-              }
-            })
-            .catch((error) => {
+        return new Promise(async (resolve, reject) => {
+          const response: SatsConnectWrapperResponse =
+            await this.satsConnectWrapper(payload);
+          if (response && response.success && response.psbtBase64) {
+            try {
+              // contruct the request payload for save the launchpad after signing the transaction
+              const saveLaunchpadRequestPayload: SaveLaunchpadRequest = {
+                launchpadId: launchpadId,
+                updateLaunchData: {
+                  signedListingPSBT: response.psbtBase64,
+                },
+              };
+              resolve(this.saveLaunchpad(saveLaunchpadRequestPayload));
+            } catch (error) {
               console.error("Error saving launchpad:", error);
               reject(error);
-            });
+            }
+          } else {
+            console.log("Transaction canceled");
+          }
         });
       } else {
         throw new Error("Wallet not supported");
@@ -286,18 +287,14 @@ export class Launchpad {
         inputsToSign: [buyerInputs],
       };
 
-      return new Promise((resolve) => {
-        this.satsConnectWrapper(payload)
-          .then((response: SatsConnectWrapperResponse) => {
-            if (response && response.success && response.psbtBase64) {
-              resolve({ psbtBase64: response.psbtBase64, txId: response.txId });
-            } else {
-              console.log("Transaction canceled");
-            }
-          })
-          .catch((error: any) => {
-            console.log("Transaction canceled", error.message);
-          });
+      return new Promise(async (resolve, reject) => {
+        const response: SatsConnectWrapperResponse =
+          await this.satsConnectWrapper(payload);
+        if (response && response.success && response.psbtBase64) {
+          resolve({ psbtBase64: response.psbtBase64, txId: response.txId });
+        } else {
+          console.log("Transaction canceled");
+        }
       });
     } else {
       throw new Error("Wallet not supported");
@@ -336,24 +333,20 @@ export class Launchpad {
         inputsToSign: [sellerInput],
       };
 
-      return new Promise((resolve) => {
-        this.satsConnectWrapper(payload)
-          .then((response: SatsConnectWrapperResponse) => {
-            if (response && response.success && response.psbtBase64) {
-              /** this Response will be used for the next submit offer request */
-              const submitLaunchpadOfferRequest: SubmitLaunchpadOfferRequest = {
-                ordinalId: offer.ordinalId,
-                launchpadPhase: offer.launchpadPhase,
-                signedBuyerPSBTBase64: response.psbtBase64,
-              };
-              resolve(submitLaunchpadOfferRequest);
-            } else {
-              console.log("Transaction canceled");
-            }
-          })
-          .catch((error: any) => {
-            console.log("Transaction canceled", error.message);
-          });
+      return new Promise(async (resolve, reject) => {
+        const response: SatsConnectWrapperResponse =
+          await this.satsConnectWrapper(payload);
+        if (response && response.success && response.psbtBase64) {
+          /** this Response will be used for the next submit offer request */
+          const submitLaunchpadOfferRequest: SubmitLaunchpadOfferRequest = {
+            ordinalId: offer.ordinalId,
+            launchpadPhase: offer.launchpadPhase,
+            signedBuyerPSBTBase64: response.psbtBase64,
+          };
+          resolve(submitLaunchpadOfferRequest);
+        } else {
+          console.log("Transaction canceled");
+        }
       });
     } else {
       throw new Error("Wallet not supported");
@@ -378,10 +371,10 @@ export class Launchpad {
    * @param {SignTransactionPayload} payload The request payload for transaction.
    * @returns {Promise<SatsConnectWrapperResponse>} A promise that resolves to the response of transaction.
    */
-  satsConnectWrapper(
+  async satsConnectWrapper(
     payload: SignTransactionPayload
   ): Promise<SatsConnectWrapperResponse> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       signTransaction({
         payload,
         onFinish: async (response) => {

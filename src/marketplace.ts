@@ -92,7 +92,7 @@ export class MarketPlace {
             onFinish: async (response) => {
               try {
                 // ordinal ids to confirm the listing
-                const sellerOrdinalIds = createListingRequest.sellerOrdinals.map(item => item.id)
+                const sellerOrdinalIds = createListingRequest.sellerOrdinals.map((item, index) => item.id)
                 
                 const confirmListingPayload: MarketplaceConfirmListingRequest = {
                   sellerOrdinals: sellerOrdinalIds as string[],
@@ -202,7 +202,7 @@ export class MarketPlace {
         broadcast: false,
         inputsToSign: [sellerInput],
       };
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         signTransaction({
           payload,
           onFinish: async (response) => {
@@ -235,7 +235,7 @@ export class MarketPlace {
 
   async setupPaddingOutputs(
     setupPaddingOutputsRequest: MarketplaceSetupPaddingOutputsRequest
-  ): Promise<MarketplaceSetupPaddingOutputsResponse | SignTransactionResponse> {
+  ): Promise<MarketplaceSetupPaddingOutputsResponse> {
     if (!setupPaddingOutputsRequest.walletProvider) {
       return this.marketplaceInstance.setupPaddingOutputs(setupPaddingOutputsRequest);
     } else if (setupPaddingOutputsRequest.walletProvider === WALLET_PROVIDER.xverse) {
@@ -255,12 +255,10 @@ export class MarketPlace {
         inputsToSign: [buyerInputs],
       };
       
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         signTransaction({
           payload,
-          onFinish: async (response) => {
-            return resolve(response)
-          },
+          onFinish: async (response) => response,
           onCancel: () => {
             console.log('Transaction canceled');
           }
@@ -336,7 +334,7 @@ export class MarketPlace {
       inputsToSign,
     };
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       signTransaction({
         payload,
         onFinish: async (response: any) => {
@@ -385,7 +383,7 @@ export class MarketPlace {
       inputsToSign,
     };
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       signTransaction({
         payload,
         onFinish: async (response: any) => {
