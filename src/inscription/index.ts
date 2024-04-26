@@ -100,9 +100,7 @@ export class Inscription {
    * @param {RunesEtchOrderRequest} order The order request.
    * @returns {Promise<RunesEtchOrderResponse>} A promise that resolves with the created order.
    */
-  createRunesEtchOrder(
-    order: RunesEtchOrderRequest
-  ): Promise<RunesEtchOrderResponse> {
+  createRunesEtchOrder(order: RunesEtchOrderRequest): Promise<RunesEtchOrderResponse> {
     return this.instance.createRunesEtchOrder(order);
   }
 
@@ -111,9 +109,7 @@ export class Inscription {
    * @param {RunesMintOrderRequest} order The order request.
    * @returns {Promise<RunesMintOrderResponse>} A promise that resolves with the created order.
    */
-  createRunesMintOrder(
-    order: RunesMintOrderRequest
-  ): Promise<RunesMintOrderResponse> {
+  createRunesMintOrder(order: RunesMintOrderRequest): Promise<RunesMintOrderResponse> {
     return this.instance.createRunesMintOrder(order);
   }
 
