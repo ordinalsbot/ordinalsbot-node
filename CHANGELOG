@@ -1,3 +1,9 @@
+## [0.2.3]
+- `Marketplace`
+
+  - deList - Added the confirmDelisting method after signTransaction.
+  - confirmDeListing - Added confirmation method to delist the ordinal from the listing.
+
 ## [0.2.2]
 - `Types`
 
