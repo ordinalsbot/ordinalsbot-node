@@ -1,10 +1,11 @@
+import { Store, Wallet } from "l402";
 import { Inscription } from "./inscription/index";
 import { Launchpad } from "./launchpad/index";
 import { MarketPlace } from "./marketplace";
 import { Mempool } from "./mempool/index";
 import { Satextractor } from "./satextractor/index";
 import { Satscanner } from "./satscanner/index";
-import { InscriptionEnv } from "./types";
+import { ClientOptions, InscriptionEnv } from "./types";
 
 export { InscriptionClient } from "./client";
 export { InscriptionError } from "./inscription/error";
@@ -14,6 +15,7 @@ export { Inscription } from "./inscription/index";
 export { Satscanner } from "./satscanner/index";
 export { Satextractor } from "./satextractor/index";
 export { Mempool } from "./mempool/index";
+
 
 /**
  * Represents a bot for managing marketplaces and inscriptions.
@@ -54,7 +56,7 @@ export class Ordinalsbot {
    * @param {string} key - The API key for authentication.
    * @param {InscriptionEnv} environment - The environment (e.g., "live" or "dev") for the inscription.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     /**
      * initialising the marketplace instance
      */
@@ -94,7 +96,7 @@ export class Ordinalsbot {
      * initialising the satextractor instance
      */
     if (this.satscannerObj === undefined) {
-      this.satscannerObj = new Satscanner(key, environment);
+      this.satscannerObj = new Satscanner(key, environment, options);
     }
   }
 
