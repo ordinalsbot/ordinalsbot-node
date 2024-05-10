@@ -16,7 +16,9 @@ const albyClient = new Client(albyToken)
 const albyWallet = new AlbyWallet(albyClient);
 
 // Initialize the MemoryTokenStore
-const store = new MemoryTokenStore();
+const store = new MemoryTokenStore({
+  keyMode: 'hostname-only'
+});
 
 // Create Options
 const options: ClientOptions = {
@@ -37,7 +39,6 @@ const satscanner = new Satscanner("", "live", options);
 /**
  * Using promises
  */
-
 (async () => {
     try {
       const response = await satscanner.findSpecialRanges({ address: "bc1pjqmzr4ad437ltvfyn8pslcy8quls9ujfkrudpz6qxdh2j75qrncq44mp47" });

@@ -52,7 +52,7 @@ export class SatscannerClient {
 
       // Choose the base URL based on whether L402 is used or not
       const baseURL = options?.useL402
-        ? "https://ordinals-bot-demo.ln.sulu.sh/satscanner/"
+        ? "https://ordinalsbot.ln.sulu.sh/satscanner/"
         : this.env === "live"
           ? "https://api.ordinalsbot.com/satscanner/"
           : "https://testnet-api.ordinalsbot.com/satscanner/";
