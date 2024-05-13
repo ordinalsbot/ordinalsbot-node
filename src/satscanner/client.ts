@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { InscriptionError } from "../inscription/error";
 import { SatscannerSpecialRangesRequest, SatscannerSpecialRangesResponse, SatscannerSpecialRangesUtxoRequest } from "../types/satscanner_types";
 import { InscriptionEnv, ClientOptions } from "../types";
-import { Wallet, Store, setupL402Interceptor } from "l402"; 
+import { setupL402Interceptor } from "l402"; 
 
 
 
