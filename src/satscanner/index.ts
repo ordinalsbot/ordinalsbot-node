@@ -19,6 +19,7 @@ export class Satscanner {
    * Creates a new Satscanner instance.
    * @param {string} [key=''] - The API key for authentication.
    * @param {InscriptionEnv} [environment='live'] - The environment (live or testnet) for the Satscanner.
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
   constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     if (this.satscannerInstance !== undefined) {

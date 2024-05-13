@@ -4,7 +4,8 @@ import {
   SatextractorExtractRequest,
   SatextractorExtractResponse,
 } from "../types/satextractor_types";
-import { InscriptionEnv } from "../types";
+import { ClientOptions, InscriptionEnv } from "../types";
+import { setupL402Interceptor } from "l402";
 
 /**
  * A client for interacting with the Satextractor API.
@@ -26,11 +27,12 @@ export class SatextractorClient {
   private instanceV1: AxiosInstance;
 
   /**
-   * Creates a new SatextractorClient instance.
-   * @param {string} [key=''] - The API key (optional).
+   * Creates a new SatscannerClient instance.
+   * @param {string} [key=''] - The API key for authentication.
    * @param {InscriptionEnv} [environment='live'] - The environment (live or dev) (optional, defaults to live).
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     this.api_key = key;
     this.env = environment;
 
@@ -49,18 +51,23 @@ export class SatextractorClient {
         headers["x-api-key"] = this.api_key;
       }
 
+      // Choose the base URL based on whether L402 is used or not
+      const baseURL = options?.useL402
+        ? "https://ordinalsbot.ln.sulu.sh/satextractor/"
+        : this.env === "live"
+          ? "https://api.ordinalsbot.com/satextractor/"
+          : "https://testnet-api.ordinalsbot.com/satextractor/";
+
+      // Create the Axios client with the appropriate base URL
       const client = axios.create({
-        baseURL:
-          this.env === "live"
-            ? `https://api.ordinalsbot.com/satextractor/`
-            : `https://testnet-api.ordinalsbot.com/satextractor/`,
+        baseURL,
         headers: headers,
       });
 
       client.interceptors.response.use(
         ({ data }) => ("data" in data ? data.data : data),
         (err) => {
-          if (axios.isAxiosError(err)) {
+          if (axios.isAxiosError(err) && err.response?.status !== 402) { // avoid modifying L402 errors.
             throw new InscriptionError(
               err.message,
               err.response?.statusText,
@@ -74,9 +81,15 @@ export class SatextractorClient {
         }
       );
 
+      // If L402 is enabled and configuration is provided, set up the L402 interceptor
+      if (options?.useL402 && options.l402Config) {
+        setupL402Interceptor(client, options.l402Config.wallet, options.l402Config.tokenStore);
+      };
+
       return client;
     };
 
+    // Create the Axios instance
     this.instanceV1 = createInstance();
   }
 

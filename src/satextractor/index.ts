@@ -1,5 +1,5 @@
 import { SatextractorClient } from "./client";
-import { InscriptionEnv } from "../types/index";
+import { ClientOptions, InscriptionEnv } from "../types/index";
 import {
   SatextractorExtractRequest,
   SatextractorExtractResponse,
@@ -18,13 +18,14 @@ export class Satextractor {
    * Creates a new Satextractor instance.
    * @param {string} [key=''] - The API key for authentication.
    * @param {InscriptionEnv} [environment='live'] - The environment (live or dev) for the Satextractor.
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     if (this.satextractorInstance !== undefined) {
       console.error("satextractor.setCredentials was called multiple times");
       return;
     }
-    this.satextractorInstance = new SatextractorClient(key, environment);
+    this.satextractorInstance = new SatextractorClient(key, environment, options);
   }
 
   /**

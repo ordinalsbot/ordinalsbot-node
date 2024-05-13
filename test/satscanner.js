@@ -139,7 +139,7 @@ describe("Satscanner SDK Tests", function () {
   });
 });
 
-// Mock Wallet and Store as they would be used within the Satscanner
+// Mock Wallet as it would be used within the Satscanner
 class MockWallet  {
   payInvoice(invoice) {
       // Assuming payment is always successful for testing
