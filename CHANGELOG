@@ -1,3 +1,8 @@
+## [0.2.3]
+- `Types`
+  - Added `delegates` support to inscriptions and rune etching
+  - Added `metaprotocol` to files or delegates array element
+
 ## [0.2.2]
 - `Types`
 
