@@ -630,7 +630,9 @@ export enum InscriptionOrderState {
 export enum OrderType {
   RUNE_ETCH = 'rune-etch',
   RUNE_MINT = 'rune-mint',
+  RUNE_LAUNCHPAD_MINT = 'rune-launchpad-mint',
   BULK = 'bulk',
   DIRECT = 'direct',
   BRC20 = 'brc20',
+  MANAGED = 'managed',
 }

@@ -2,6 +2,7 @@
 - `Types`
   - Added `delegates` support to inscriptions and rune etching
   - Added `metaprotocol` to files or delegates array element
+  - Added `orderType`: managed and rune-launchpad-mint
 
 ## [0.2.2]
 - `Types`
