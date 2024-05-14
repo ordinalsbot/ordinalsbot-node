@@ -55,41 +55,42 @@ export class Ordinalsbot {
    * Creates an instance of Ordinalsbot.
    * @param {string} key - The API key for authentication.
    * @param {InscriptionEnv} environment - The environment (e.g., "live" or "dev") for the inscription.
-   */
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
+  */
   constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     /**
      * initialising the marketplace instance
      */
     if (this.marketPlaceObj === undefined) {
-      this.marketPlaceObj = new MarketPlace(key, environment);
+      this.marketPlaceObj = new MarketPlace(key, environment, options);
     }
 
     /**
      * initialising the inscription instance
      */
     if (this.inscriptionObj === undefined) {
-      this.inscriptionObj = new Inscription(key, environment);
+      this.inscriptionObj = new Inscription(key, environment, options);
     }
 
     /**
      * initialising the launchpad instance
      */
     if (this.launchpadObj === undefined) {
-      this.launchpadObj = new Launchpad(key, environment);
+      this.launchpadObj = new Launchpad(key, environment, options);
     }
 
     /**
      * initialising the mempool instance
      */
     if (this.mempoolObj === undefined) {
-      this.mempoolObj = new Mempool(key, environment);
+      this.mempoolObj = new Mempool(key, environment, options);
     }
 
     /**
      * initialising the satextractor instance
      */
     if (this.satextractorObj === undefined) {
-      this.satextractorObj = new Satextractor(key, environment);
+      this.satextractorObj = new Satextractor(key, environment, options);
     }
 
     /**
