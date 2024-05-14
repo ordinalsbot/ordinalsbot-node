@@ -232,3 +232,4 @@ describe("create text inscription order", function () {
     sinon.assert.calledWithExactly(axiosGetStub2, `/order`, { params: { id: sampleOrderId2 } });
   });
 });
+
