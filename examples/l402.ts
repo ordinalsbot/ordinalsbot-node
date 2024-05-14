@@ -17,7 +17,9 @@ const albyWallet = new AlbyWallet(albyClient);
 
 // Initialize the MemoryTokenStore
 const store = new MemoryTokenStore({
-  keyMode: 'hostname-only'
+  keyMode: 'hostname-only' // this is IMPORTANT, since all endpoints are monetized 
+                           // using the same hostname-level package ie. the same 
+                           // L402 token can be used for all endpoints.
 });
 
 // Create Options
