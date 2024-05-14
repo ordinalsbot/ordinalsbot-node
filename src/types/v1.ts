@@ -50,6 +50,33 @@ export interface InscriptionFile {
   metadataUrl?: string;
 
   metadataSize?: number;
+
+  /** Metaprotocol field to be included in the inscription data */
+  metaprotocol?: string;
+}
+
+export interface Delegate {
+  /** valid inscription id e.g. 552448ac8b668f2b8610a4c9aa1d82dbcc3cb1b28139ad99309563aad4f1b0c1i0 */
+  delegateId: string;
+
+  /** Inscription transaction details */
+  tx?: InscriptionTransaction;
+
+  /*
+   For some transactions this gets set to the txid 
+   that inscription gets sent to user receiveAddress
+  */
+  sent?: string;
+
+  // only 1 of metadataDataURL or metadataUrl should be present. not both!
+  /* metadata json to be stored on chain */
+  metadataDataURL?: string;
+  metadataUrl?: string;
+
+  metadataSize?: number;
+
+  /** Metaprotocol field to be included in the inscription data */
+  metaprotocol?: string;
 }
 
 export interface InscriptionOrderRequest {
@@ -68,7 +95,10 @@ export interface InscriptionOrderRequest {
    *
    * Note: you can send any dataURL text/json/image/video data in a parameter called dataURL instead of url for files
    */
-  files: InscriptionFile[];
+  files?: InscriptionFile[];
+
+  /** files OR delegates array is mandatory for an order */
+  delegates?: Delegate[];
 
   /**
    * Miner fee that will be paid while inscribing the ordinals in sats/byte.

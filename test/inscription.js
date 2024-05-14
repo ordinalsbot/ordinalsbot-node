@@ -57,6 +57,26 @@ describe("Inscription SDK Tests", function () {
     assert.deepEqual(orderResponse.data, { status: "ok" });
   });
 
+  it("should create an order with delegates", async () => {
+    const orderPayload = {
+      delegates: [
+        {
+          delegateId: '552448ac8b668f2b8610a4c9aa1d82dbcc3cb1b28139ad99309563aad4f1b0c1i0'
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/order', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
+
   it("should create an order with brotli compression", async () => {
     const orderPayload = {
       files: [
@@ -91,6 +111,30 @@ describe("Inscription SDK Tests", function () {
           size: 10,
           metadataDataURL: "data:text/plain;base64,ewogICAgaW5zY3JpYmVkX2J5OiAiT3JkaW5hbHNCb3QiCn0=",
           metadataSize: 35
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/order', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
+
+  it("should create an order with metaprotocol field", async () => {
+    const orderPayload = {
+      files: [
+        {
+          type: "plain/text",
+          name: "test-my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+          size: 10,
+          metaprotocol: "some-protocol"
         },
       ],
       lowPostage: true,
