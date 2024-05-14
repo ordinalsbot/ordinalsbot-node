@@ -27,7 +27,7 @@ export class SatextractorClient {
   private instanceV1: AxiosInstance;
 
   /**
-   * Creates a new SatscannerClient instance.
+   * Creates a new Satextractor instance.
    * @param {string} [key=''] - The API key for authentication.
    * @param {InscriptionEnv} [environment='live'] - The environment (live or dev) (optional, defaults to live).
    * @param {ClientOptions} [options] - Options for enabling L402 support.

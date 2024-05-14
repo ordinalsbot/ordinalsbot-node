@@ -1,5 +1,5 @@
 import * as bitcoin from "bitcoinjs-lib";
-import { InscriptionEnv } from "../types";
+import { ClientOptions, InscriptionEnv } from "../types";
 import { LaunchpadClient } from "./client";
 import {
   BitcoinNetworkType,
@@ -47,12 +47,13 @@ export class Launchpad {
 
   /**
    * Creates an instance of Launchpad.
-   * @param {string} key - The API key for authentication.
-   * @param {InscriptionEnv} environment - The environment for the API (e.g., 'live', 'dev').
+    * @param key The API key (optional).
+   * @param environment The environment (live or dev) (optional, defaults to live).
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     if (this.launchpadClientInstance !== undefined) {
-      console.error("marketplace constructore was called multiple times");
+      console.error("launchpad constructor was called multiple times");
       return;
     }
 
@@ -61,7 +62,7 @@ export class Launchpad {
         ? BitcoinNetworkType.Mainnet
         : BitcoinNetworkType.Testnet;
 
-    this.launchpadClientInstance = new LaunchpadClient(key, environment);
+    this.launchpadClientInstance = new LaunchpadClient(key, environment, options);
   }
 
   /**
