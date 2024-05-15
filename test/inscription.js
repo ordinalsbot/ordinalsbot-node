@@ -2,7 +2,6 @@ const { assert, expect } = require("chai");
 const sinon = require("sinon");
 const { Inscription } = require("../dist");
 const { v4: uuidv4 } = require("uuid");
-const axios = require('axios');
 
 describe("Inscription SDK Tests", function () {
   let sandbox;
@@ -43,6 +42,26 @@ describe("Inscription SDK Tests", function () {
           type: "plain/text",
           name: "test-my-text-inscription-file.txt",
           dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/order', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
+
+  it("should create an order with delegates", async () => {
+    const orderPayload = {
+      delegates: [
+        {
+          delegateId: '552448ac8b668f2b8610a4c9aa1d82dbcc3cb1b28139ad99309563aad4f1b0c1i0'
         },
       ],
       lowPostage: true,
@@ -107,6 +126,30 @@ describe("Inscription SDK Tests", function () {
     assert.deepEqual(orderResponse.data, { status: "ok" });
   });
 
+  it("should create an order with metaprotocol field", async () => {
+    const orderPayload = {
+      files: [
+        {
+          type: "plain/text",
+          name: "test-my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+          size: 10,
+          metaprotocol: "some-protocol"
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/order', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
+
   it("should return an order object when getting an order", async () => {
     axiosStub.get.resolves({ data: { id: sampleOrderId1 } });
 
@@ -139,17 +182,6 @@ describe("Inscription SDK Tests", function () {
   });
 
 describe("create collection", function () {
-  sinon.stub(axios, 'getUri').resolves("http://localhost/")
-  const collectionRequest = {
-    id: uuidv4(),
-    name: "collection name",
-    description: "test description",
-    creator: "creator",
-    price: 100,
-    totalCount: "50",
-    files: [{ name: "test.txt", url: "https://example.com", size: 50 }],
-  };
-
   it("should return a collection object", async () => {
     const collection = {
       id: uuidv4(),

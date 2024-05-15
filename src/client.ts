@@ -17,9 +17,7 @@ import {
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
-  UpdateCollectionPhasesRequest
 } from "./types/v1";
-import { sha256 } from 'bitcoinjs-lib/src/crypto';
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "./types/runes_types";
 
 const qs = require("qs");
@@ -37,7 +35,6 @@ export class InscriptionClient {
 
   private api_key: string;
   private instanceV1: AxiosInstance;
-  private apikeyhash: string;
 
   /**
    * Constructs an instance of InscriptionClient.
@@ -87,8 +84,6 @@ export class InscriptionClient {
     };
 
     this.instanceV1 = createInstance();
-
-    this.apikeyhash = sha256(Buffer.from(this.api_key)).toString("hex");
   }
 
   /**
@@ -152,8 +147,7 @@ export class InscriptionClient {
       }
     }
     delete plainObject.files;
-    plainObject.apikeyhash = this.apikeyhash;
-    const data = qs.stringify(plainObject);
+    let data = qs.stringify(plainObject);
     // modify normal json to valid form data for files
 
     let config = {
@@ -166,20 +160,6 @@ export class InscriptionClient {
       data: data,
     };
     return axios.request(config);
-  }
-
-  /**
-   * updates collection phases.
-   * @param {UpdateCollectionPhasesRequest} collection - The request object for updating the collection phases.
-   * @returns {Promise<InscriptionCollectionCreateResponse>} A promise resolving with the created collection response.
-   */
-  async updateCollectionPhases(
-    collection: UpdateCollectionPhasesRequest
-  ): Promise<InscriptionCollectionCreateResponse> {
-    return this.instanceV1.post(`/updatecollectionphases`, {
-      ...collection,
-      apikeyhash: this.apikeyhash,
-    });
   }
 
   /**

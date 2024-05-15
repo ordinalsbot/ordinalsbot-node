@@ -50,6 +50,33 @@ export interface InscriptionFile {
   metadataUrl?: string;
 
   metadataSize?: number;
+
+  /** Metaprotocol field to be included in the inscription data */
+  metaprotocol?: string;
+}
+
+export interface Delegate {
+  /** valid inscription id e.g. 552448ac8b668f2b8610a4c9aa1d82dbcc3cb1b28139ad99309563aad4f1b0c1i0 */
+  delegateId: string;
+
+  /** Inscription transaction details */
+  tx?: InscriptionTransaction;
+
+  /*
+   For some transactions this gets set to the txid 
+   that inscription gets sent to user receiveAddress
+  */
+  sent?: string;
+
+  // only 1 of metadataDataURL or metadataUrl should be present. not both!
+  /* metadata json to be stored on chain */
+  metadataDataURL?: string;
+  metadataUrl?: string;
+
+  metadataSize?: number;
+
+  /** Metaprotocol field to be included in the inscription data */
+  metaprotocol?: string;
 }
 
 export interface InscriptionOrderRequest {
@@ -68,7 +95,10 @@ export interface InscriptionOrderRequest {
    *
    * Note: you can send any dataURL text/json/image/video data in a parameter called dataURL instead of url for files
    */
-  files: InscriptionFile[];
+  files?: InscriptionFile[];
+
+  /** files OR delegates array is mandatory for an order */
+  delegates?: Delegate[];
 
   /**
    * Miner fee that will be paid while inscribing the ordinals in sats/byte.
@@ -131,7 +161,7 @@ export interface InscriptionOrderRequest {
    */
   projectTag?: string;
 
-  batchMode?: string;
+  batchMode?: BatchModeType;
 }
 
 /**
@@ -234,11 +264,16 @@ export interface InscriptionPriceRequest {
   lowPostage?: boolean;
 
   /**
-   * Estimate fees for a direct inscription order
-   * `/inscribe` endpoint which will be cheaper
-   * (default = false)
+   * Type of inscription order that is being requested.
+   * (default = managed)
    */
-  direct?: boolean;
+  type?: OrderType;
+
+  /**
+   * Type of batch mode that is being requested.
+   * (optional)
+   */
+  batchMode?: BatchModeType;
 
   /**
    * Additional fee(in satoshis) to be added to order total and passed to your referral code.
@@ -315,7 +350,6 @@ export interface InscriptionCollectionCreateRequest {
 
   // allowlist is optional
   allowList?: AllocationMap;
-  phases?: CollectionPhase[];
   discord?: string;
   parent?: InscriptionOrderParentRequest;
   /** brc20 collection fields */
@@ -328,43 +362,6 @@ export type AllocationMap = {
   [address: string]: {
     allocation: number;
   };
-};
-
-/**
- * API request object for the updating collection phases
- */
-export interface UpdateCollectionPhasesRequest {
-
-  /** URL safe unique collection slug. Will be used as mint URL. */
-  id?: string;
-  /** updated collection phases */
-  phases: CollectionPhase[];
-}
-
-/**
- * collection phase object
- */
-export type CollectionPhase = {
-  
-  /** phase id which is required for the update the collection phases */
-  id?: string,
-
-  /** total number of inscriptions in the phase */
-  inscriptionsCount: number,
-  /** An object for allow list allocation and claimed inscriptions */
-  allowList?: AllocationMap[];
-  /** 
-   * The isPublic key for the phase is public or protected,
-   * private = 0
-   * public = 1
-  */
-  isPublic: number;
-  /** phase price for inscriptions */
-  price: number;
-  /** start date of the phase */
-  startDate: string;
-  /** An optional date field. Which is requried for the protected phase */
-  endDate?: string | null;
 };
 
 export interface InscriptionCollectionCreateResponse
@@ -526,7 +523,7 @@ export interface InscriptionTextOrderRequest {
    */
   projectTag?: string;
 
-  batchMode?: string;
+  batchMode?: BatchModeType;
   
 }
 
@@ -638,7 +635,14 @@ export enum InscriptionOrderState {
 export enum OrderType {
   RUNE_ETCH = 'rune-etch',
   RUNE_MINT = 'rune-mint',
+  RUNE_LAUNCHPAD_MINT = 'rune-launchpad-mint',
   BULK = 'bulk',
   DIRECT = 'direct',
   BRC20 = 'brc20',
+  MANAGED = 'managed',
+}
+
+export enum BatchModeType {
+  SEPARATE_OUTPUTS = 'separate-outputs',
+  SHARED_OUTPUT = 'shared-output'
 }
