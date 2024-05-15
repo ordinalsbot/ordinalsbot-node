@@ -1,6 +1,9 @@
-import { InscriptionCharge, InscriptionFile, InscriptionOrderState, OrderType } from "./v1";
+import { Delegate, InscriptionCharge, InscriptionFile, InscriptionOrderState, OrderType } from "./v1";
 
 export interface RunesEtchOrderRequest {
+  files?: InscriptionFile[];
+  delegates?: Delegate[];
+
   rune: string;
 
   supply: number;
