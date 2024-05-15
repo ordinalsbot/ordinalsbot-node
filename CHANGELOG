@@ -1,3 +1,15 @@
+## [0.2.5]
+- `Inscription`
+  - createCollection - Added the phases in the request and response object.
+  - updateCollectionPhases - Added the method for updating the phases of collection object.
+  - getAllocation - Added method to check allowed and claimed inscription in collection phases for the allowed address
+
+## [0.2.4]
+- `Marketplace`
+
+  - deList - Added the confirmDelisting method after signTransaction.
+  - confirmDeListing - Added confirmation method to delist the ordinal from the listing.
+
 ## [0.2.3]
 - `Types`
   - Added `delegates` support to inscriptions and rune etching
@@ -29,14 +41,6 @@
 - `Types`
 
   - type syncronization with OrdinalsBot API
-
-## [0.1.6]
-
-#### APIs Updated
-- `Inscription`
-  - createCollection - Added the phases in the request and response object.
-  - updateCollectionPhases - Added the method for updating the phases of collection object.
-  - getAllocation - Added method to check allowed and claimed inscription in collection phases for the allowed address
 
 ## [0.1.5]
 
