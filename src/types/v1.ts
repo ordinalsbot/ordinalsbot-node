@@ -161,7 +161,7 @@ export interface InscriptionOrderRequest {
    */
   projectTag?: string;
 
-  batchMode?: string;
+  batchMode?: BatchModeType;
 }
 
 /**
@@ -264,11 +264,16 @@ export interface InscriptionPriceRequest {
   lowPostage?: boolean;
 
   /**
-   * Estimate fees for a direct inscription order
-   * `/inscribe` endpoint which will be cheaper
-   * (default = false)
+   * Type of inscription order that is being requested.
+   * (default = managed)
    */
-  direct?: boolean;
+  type?: OrderType;
+
+  /**
+   * Type of batch mode that is being requested.
+   * (optional)
+   */
+  batchMode?: BatchModeType;
 
   /**
    * Additional fee(in satoshis) to be added to order total and passed to your referral code.
@@ -518,7 +523,7 @@ export interface InscriptionTextOrderRequest {
    */
   projectTag?: string;
 
-  batchMode?: string;
+  batchMode?: BatchModeType;
   
 }
 
@@ -635,4 +640,9 @@ export enum OrderType {
   DIRECT = 'direct',
   BRC20 = 'brc20',
   MANAGED = 'managed',
+}
+
+export enum BatchModeType {
+  SEPARATE_OUTPUTS = 'separate-outputs',
+  SHARED_OUTPUT = 'shared-output'
 }

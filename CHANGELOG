@@ -3,6 +3,10 @@
   - Added `delegates` support to inscriptions and rune etching
   - Added `metaprotocol` to files or delegates array element
   - Added `orderType`: managed and rune-launchpad-mint
+  - Added `BatchModeType`: for batchMode price and order requests
+
+- `Inscription`
+  - Updated `getPrice` with type and batchMode
 
 ## [0.2.2]
 - `Types`
