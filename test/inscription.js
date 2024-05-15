@@ -2,6 +2,7 @@ const { assert, expect } = require("chai");
 const sinon = require("sinon");
 const { Inscription } = require("../dist");
 const { v4: uuidv4 } = require("uuid");
+const axios = require('axios');
 
 describe("Inscription SDK Tests", function () {
   let sandbox;
@@ -182,29 +183,75 @@ describe("Inscription SDK Tests", function () {
   });
 
 describe("create collection", function () {
+  sinon.stub(axios, 'getUri').resolves("http://localhost/")
+  const collectionRequest = {
+    id: uuidv4(),
+    name: "collection name",
+    description: "test description",
+    creator: "creator",
+    price: 100,
+    totalCount: "50",
+    files: [{ name: "test.txt", url: "https://example.com", size: 50 }],
+  };
+
   it("should return a collection object", async () => {
-    const collection = {
-      id: uuidv4(),
-      name: "collection name",
-      description: "test description",
-      creator: "creator",
-      price: 100,
-      totalCount: "50",
-      files: [{ name: "test.txt", url: "https://example.com", size: 50 }],
+    const axiosRequestStub = sinon.stub(axios, 'request').resolves({ status: 200, data: { id: uuidv4(), name: "collection name" } })
+
+    const requestObj = {
+      ...collectionRequest,
+      phases: [
+        {
+          inscriptionsCount: 10,
+          allowList: {
+            tb1pr7980dqpeh9cc7qjevf4pmrh2yz7hr877tnj7eq0au5drlduw9aq629zea: {
+              allocation: 10,
+            },
+            tb1p79l2gnn7u8uqxfepd7ddeeajzrmuv9nkl20wpf77t2u473a2h89s483yk3: {
+              allocation: -1,
+            },
+          },
+          isPublic: 0,
+          price: 6000,
+          startDate: 1715753340,
+          endDate: 1715760540,
+        },
+        {
+          inscriptionsCount: 20,
+          isPublic: 1,
+          price: 8000,
+          startDate: 1715674140,
+          endDate: 1715846940,
+        },
+      ],
     }
+    const collection = await inscription.createCollection(requestObj);
+    assert.strictEqual(collection.status, 200);
+    assert.isNotNull(collection.data.id);
+    assert.strictEqual(collection.data.name, "collection name");
+    axiosRequestStub.restore()
+  });
 
-    axiosStub.post.resolves({ status: 200, data: collection });
-    
+  it('should throw a Bad Request when creating an order without phases', async () => {
+    let error;    
+    let axiosRequestStub
     try {
-      const createCollectionResponse = await inscription.createCollection(collection);
+      axiosRequestStub = sinon.stub(axios, 'request').rejects({
+        response: {
+          status: 400,
+          data: 'Bad Request'
+        }
+      })
+      await inscription.createCollection(collectionRequest);
 
-      // Verify response
-      assert.strictEqual(createCollectionResponse.status, 200);
-      assert.isNotNull(createCollectionResponse.data.id);
-      assert.strictEqual(createCollectionResponse.data.name, "collection name");
     } catch (e) {
       error = e;
     }
+
+    assert.isDefined(error);
+    assert.strictEqual(error.response.status, 400);
+    assert.strictEqual(error.response.data, 'Bad Request');
+    sinon.assert.calledOnce(axios.request);
+    axiosRequestStub.restore()
   });
 });
 

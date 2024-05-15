@@ -350,6 +350,7 @@ export interface InscriptionCollectionCreateRequest {
 
   // allowlist is optional
   allowList?: AllocationMap;
+  phases?: CollectionPhase[];
   discord?: string;
   parent?: InscriptionOrderParentRequest;
   /** brc20 collection fields */
@@ -362,6 +363,70 @@ export type AllocationMap = {
   [address: string]: {
     allocation: number;
   };
+};
+
+/**
+ * API request object for the updating collection phases
+ */
+export interface UpdateCollectionPhasesRequest {
+
+  /** URL safe unique collection id */
+  id?: string;
+  /** updated collection phases */
+  phases: CollectionPhase[];
+}
+
+/**
+ * API request object for the updating collection phases
+ */
+export interface GetAllocationRequest {
+
+  /** URL safe unique collection id.*/
+  id: String;
+  /** Bitcoin address for allowlist in collection phases */
+  receiveAddress: String;
+}
+
+interface allocationPhase {
+  /** allowed phase id */
+  phaseId: String,
+  /** Access type of the phase. i.e public = 1, not public = 0*/
+  public: Boolean,
+  /** max allowed inscrptions to the reciever address*/
+  allocation?: Number,
+  /** total inscriptions claimed by the reciever address*/
+  inscribedCount?: Number
+}
+
+export interface GetAllocationResponse {
+  /** collection phases */
+  phases: allocationPhase[]
+}
+
+/**
+ * collection phase object
+ */
+export type CollectionPhase = {
+  
+  /** phase id which is required for the update the collection phases */
+  id?: string,
+
+  /** total number of inscriptions in the phase */
+  inscriptionsCount: number,
+  /** An object for allow list allocation and claimed inscriptions */
+  allowList?: AllocationMap[];
+  /** 
+   * The isPublic key for the phase is public or protected,
+   * private = 0
+   * public = 1
+  */
+  isPublic: number;
+  /** phase price for inscriptions */
+  price: number;
+  /** start date of the phase */
+  startDate: number;
+  /** An optional date field. Which is requried for the protected phase */
+  endDate?: number | null;
 };
 
 export interface InscriptionCollectionCreateResponse
