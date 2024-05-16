@@ -1,3 +1,9 @@
+## [0.2.4]
+- `Marketplace`
+
+  - deList - Added the confirmDelisting method after signTransaction.
+  - confirmDeListing - Added confirmation method to delist the ordinal from the listing.
+
 ## [0.2.3]
 - `Types`
   - Added `delegates` support to inscriptions and rune etching

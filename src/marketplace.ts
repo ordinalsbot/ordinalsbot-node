@@ -27,7 +27,9 @@ import {
   MarketplaceConfirmReListResponse,
   MarketplaceConfirmReListRequest,
   MarketplaceDeListRequest,
-  MarketplaceDeListAPIResponse
+  MarketplaceDeListAPIResponse,
+  MarketplaceConfirmDeListRequest,
+  MarketplaceConfirmDeListResponse
 } from "./types/marketplace_types";
 
 import * as bitcoin from 'bitcoinjs-lib';
@@ -354,7 +356,7 @@ export class MarketPlace {
    */
   async deList(
     deListingRequest: MarketplaceDeListRequest
-  ): Promise<MarketplaceDeListAPIResponse | SignTransactionResponse> {
+  ): Promise<MarketplaceDeListAPIResponse | MarketplaceConfirmDeListResponse> {
     if (!deListingRequest.walletProvider) {
       return this.marketplaceInstance.deList(
         deListingRequest
@@ -382,17 +384,42 @@ export class MarketPlace {
       broadcast: true,
       inputsToSign,
     };
-
     return new Promise((resolve, reject) => {
       signTransaction({
         payload,
-        onFinish: async (response: any) => {
-          return resolve(response)
+        onFinish: async (response) => {
+          try {
+            const confirmDeListingPayload = {
+              ordinalId: deListingRequest.ordinalId,
+              sellerPaymentAddress: deListingRequest.senderPaymentAddress,
+            };
+            const confirmDeListResponse = await this.confirmDeListing(
+              confirmDeListingPayload
+            );
+            resolve({
+              ...confirmDeListResponse,
+              txId: response?.txId,
+            });
+          } catch (error) {
+            console.error("Error delisting ordinal:", error);
+            reject(error);
+          }
         },
         onCancel: () => {
-          console.log('Transaction canceled');
-        }
+          console.log("Transaction canceled");
+        },
       });
     });
+  }
+
+  /**
+   * Confirms delisting in the marketplace.
+   * @param {MarketplaceConfirmDeListRequest} confirmDeListingRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmDeListResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  confirmDeListing(
+    confirmDeListingRequest: MarketplaceConfirmDeListRequest
+  ): Promise<MarketplaceConfirmDeListResponse> {
+    return this.marketplaceInstance.confirmDeListing(confirmDeListingRequest)
   }
 }
