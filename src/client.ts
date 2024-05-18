@@ -179,8 +179,7 @@ export class InscriptionClient {
     collection: UpdateCollectionPhasesRequest
   ): Promise<InscriptionCollectionCreateResponse> {
     return this.instanceV1.post(`/updatecollectionphases`, {
-      ...collection,
-      apikeyhash: this.apikeyhash,
+      ...collection
     });
   }
 

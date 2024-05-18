@@ -396,6 +396,8 @@ interface allocationPhase {
   allocation?: Number,
   /** total inscriptions claimed by the reciever address*/
   inscribedCount?: Number
+  /** total paid item count by the reciever address*/
+  paidItemCount?: Number
 }
 
 export interface GetAllocationResponse {
@@ -435,6 +437,7 @@ export interface InscriptionCollectionCreateResponse
   inscribedCount: number;
   status: string;
   active: boolean;
+  apikeyhash?: string;
   // ... input parameters from InscriptionCollectionCreateRequest
   createdAt: number;
 }

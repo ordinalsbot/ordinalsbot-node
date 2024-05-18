@@ -20,18 +20,21 @@ describe("Get Allocation", function () {
           public: 0,
           allocation: 1,
           inscribedCount: 0,
+          paidItemCount: 0
         },
         {
           phaseId: "13a5b8b1-ba0d-4ef6-b2c8-0e6348f5dfc4",
           public: 0,
           allocation: 4,
           inscribedCount: 0,
+          paidItemCount: 0
         },
         {
           phaseId: "d859e70a-a4e5-4073-809f-686c0a9b69ef",
           public: 0,
           allocation: 4,
           inscribedCount: 0,
+          paidItemCount: 0
         },
       ],
     };
