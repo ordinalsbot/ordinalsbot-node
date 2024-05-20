@@ -1,3 +1,10 @@
+## [0.2.5]
+- `Types`
+  - Added `direct` inscription types
+
+- `Inscription`
+  - Added `inscribe` endpoint to enable support for direct inscriptions
+
 ## [0.2.4]
 - `Marketplace`
 
