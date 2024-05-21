@@ -275,4 +275,27 @@ describe("create text inscription order", function () {
     sinon.assert.calledWithExactly(axiosGetStub1, `/order`, { params: { id: sampleOrderId1 } });
     sinon.assert.calledWithExactly(axiosGetStub2, `/order`, { params: { id: sampleOrderId2 } });
   });
+
+  it("should create a direct inscription order object with status 'ok' and verify payload", async () => {
+    const orderPayload = {
+      files: [
+        {
+          size: 10,
+          type: "plain/text",
+          name: "test-my-text-inscription-file.txt",
+          dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
+        },
+      ],
+      lowPostage: true,
+      receiveAddress: "",
+      fee: 10,
+      timeout: 1440,
+    };
+    axiosStub.post.resolves({ data: { status: "ok" } });
+
+    const orderResponse = await inscription.createDirectOrder(orderPayload);
+
+    sinon.assert.calledWithMatch(axiosStub.post, '/inscribe', orderPayload);
+    assert.deepEqual(orderResponse.data, { status: "ok" });
+  });
 });
