@@ -57,6 +57,7 @@ export class InscriptionClient {
       const headers: Record<string, string> = {
         Connection: "Keep-Alive",
         "Content-Type": "application/json",
+        "User-Agent": packageVersion,
       };
 
       // Add the API key header only if this.api_key has a value
