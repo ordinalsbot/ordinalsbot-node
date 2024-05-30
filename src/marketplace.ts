@@ -1,5 +1,5 @@
 import { MarketPlaceClient } from "./marketplaceClient";
-import { InscriptionEnv } from "./types";
+import { ClientOptions, InscriptionEnv } from "./types";
 import {
   MarketplaceConfirmPaddingOutputsRequest,
   MarketplaceConfirmPaddingOutputsResponse,
@@ -38,13 +38,13 @@ import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sa
 export class MarketPlace {
   private network: BitcoinNetworkType;
   private marketplaceInstance!: MarketPlaceClient;
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     if (this.marketplaceInstance !== undefined) {
       console.error("marketplace constructore was called multiple times");
       return;
     }
     this.network = environment === 'live' ? BitcoinNetworkType.Mainnet : BitcoinNetworkType.Testnet;
-    this.marketplaceInstance = new MarketPlaceClient(key, environment);
+    this.marketplaceInstance = new MarketPlaceClient(key, environment, options);
   }
 
   createMarketplace(
