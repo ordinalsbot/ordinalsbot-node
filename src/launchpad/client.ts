@@ -71,10 +71,10 @@ export class LaunchpadClient {
 
       // Choose the base URL based on whether L402 is used or not
       const baseURL = options?.useL402
-        ? "https://ordinalsbot.ln.sulu.sh/runes/launchpad/"
+        ? "https://ordinalsbot.ln.sulu.sh/launchpad/"
         : this.env === "live"
-          ? "https://api.ordinalsbot.com/runes/launchpad/"
-          : "https://testnet-api.ordinalsbot.com/runes/launchpad/";
+          ? "https://api.ordinalsbot.com/launchpad/"
+          : "https://testnet-api.ordinalsbot.com/launchpad/";
 
       // Create the Axios client with the appropriate base URL
       const client = axios.create({
