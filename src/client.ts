@@ -17,6 +17,8 @@ import {
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
+  DirectInscriptionOrderRequest,
+  DirectInscriptionOrder,
 } from "./types/v1";
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "./types/runes_types";
 import { setupL402Interceptor } from "l402";
@@ -132,6 +134,15 @@ export class InscriptionClient {
    */
   async createOrder(order: InscriptionOrderRequest): Promise<InscriptionOrder> {
     return this.instanceV1.post(`/order`, order);
+  }
+
+  /**
+   * Creates a direct (non-custodial) inscription order.
+   * @param {DirectInscriptionOrderRequest} order - The request object for creating the order.
+   * @returns {Promise<DirectInscriptionOrder>} A promise resolving with the created order.
+   */
+  async createDirectOrder(order: DirectInscriptionOrderRequest): Promise<DirectInscriptionOrder> {
+    return this.instanceV1.post(`/inscribe`, order);
   }
 
   /**

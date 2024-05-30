@@ -48,7 +48,7 @@ describe('Marketplace DeList Ordinal', function () {
   it('should handle the DeList and transfer process to back to seller ordinal address with wallet provider', async () => {
     const marketPlace = new MarketPlace('someApiKey', 'dev')
     const transferStub = sandbox.stub(marketPlace, 'deList').resolves({
-      psbtBase64: 'somePSBTString',
+      message: 'Ordinal successfully delisted',
       txId: 'someTransactionString'
     })
 
@@ -65,8 +65,8 @@ describe('Marketplace DeList Ordinal', function () {
     const response = await marketPlace.deList(mockTransferRequest)
 
     expect(response)
-      .to.have.property('psbtBase64')
-      .that.equals('somePSBTString')
+      .to.have.property('message')
+      .that.equals('Ordinal successfully delisted')
       
     expect(response)
       .to.have.property('txId')

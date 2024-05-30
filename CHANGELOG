@@ -1,3 +1,26 @@
+## [0.2.5]
+- `Types`
+  - Added `direct` inscription types
+
+- `Inscription`
+  - Added `inscribe` endpoint to enable support for direct inscriptions
+
+## [0.2.4]
+- `Marketplace`
+
+  - deList - Added the confirmDelisting method after signTransaction.
+  - confirmDeListing - Added confirmation method to delist the ordinal from the listing.
+
+## [0.2.3]
+- `Types`
+  - Added `delegates` support to inscriptions and rune etching
+  - Added `metaprotocol` to files or delegates array element
+  - Added `orderType`: managed and rune-launchpad-mint
+  - Added `BatchModeType`: for batchMode price and order requests
+
+- `Inscription`
+  - Updated `getPrice` with type and batchMode
+
 ## [0.2.2]
 - `Types`
 

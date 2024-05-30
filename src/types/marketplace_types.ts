@@ -401,3 +401,30 @@ export interface MarketplaceDeListAPIResponse {
   /** Array of Payment indices that need to be signed by the Seller */
   senderPaymentInputs: Array<number>;
 }
+
+/**
+ * Request object for confirming a delisting in the marketplace.
+ */
+export interface MarketplaceConfirmDeListRequest {
+  /**
+   * The ordinal id for relist
+   */
+  ordinalId: string;
+
+  /**
+   * seller payment address 
+   */
+  sellerPaymentAddress: string;
+}
+/**
+ * Response object for confirming a delisting in the marketplace.
+ */
+export interface MarketplaceConfirmDeListResponse {
+  /**
+   * A message indicating the result of the confirmation operation.
+   */
+  message: string;
+
+  /** transaction id of the transfer */
+  txId: string | undefined;
+}

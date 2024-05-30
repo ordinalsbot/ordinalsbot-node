@@ -53,6 +53,15 @@ export class Inscription {
   }
 
   /**
+   * Creates an order with the given order request.
+   * @param {v1.DirectInscriptionOrderRequest} order The order request.
+   * @returns {Promise<v1.DirectInscriptionOrder>} A promise that resolves with the created order.
+   */
+  createDirectOrder(order: v1.DirectInscriptionOrderRequest): Promise<v1.DirectInscriptionOrder> {
+    return this.instance.createDirectOrder(order);
+  }
+
+  /**
    * Creates a collection with the given collection create request.
    * @param {v1.InscriptionCollectionCreateRequest} collection The collection create request.
    * @returns {Promise<v1.InscriptionCollectionCreateResponse>} A promise that resolves with the created collection response.

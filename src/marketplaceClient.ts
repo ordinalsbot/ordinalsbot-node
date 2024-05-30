@@ -27,6 +27,8 @@ import {
   MarketplaceConfirmReListResponse,
   MarketplaceDeListRequest,
   MarketplaceDeListAPIResponse,
+  MarketplaceConfirmDeListRequest,
+  MarketplaceConfirmDeListResponse,
 } from "./types/marketplace_types";
 import { ClientOptions, InscriptionEnv } from "./types";
 import { setupL402Interceptor } from "l402";
@@ -215,6 +217,19 @@ export class MarketPlaceClient {
     return this.instanceV1.post(`/delist`, {
       ...deListRequest,
     });
+  }
+
+  /**
+   * Confirms delisting in the marketplace.
+   * @param {MarketplaceConfirmDeListRequest} confirmDeListRequest - The request object for confirming the listing.
+   * @returns {Promise<MarketplaceConfirmDeListResponse>} A promise that resolves with the response from confirming the listing.
+   */
+  async confirmDeListing(
+    confirmDeListRequest: MarketplaceConfirmDeListRequest
+  ): Promise<MarketplaceConfirmDeListResponse> {
+    return this.instanceV1.post(`/confirm-delist`, {
+      ...confirmDeListRequest,
+    })
   }
 
   /**
