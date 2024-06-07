@@ -1,5 +1,5 @@
 import { SatscannerClient } from "./client";
-import { InscriptionEnv } from "../types";
+import { ClientOptions, InscriptionEnv } from "../types";
 import {
   SatscannerSpecialRangesRequest,
   SatscannerSpecialRangesResponse,
@@ -19,13 +19,14 @@ export class Satscanner {
    * Creates a new Satscanner instance.
    * @param {string} [key=''] - The API key for authentication.
    * @param {InscriptionEnv} [environment='live'] - The environment (live or testnet) for the Satscanner.
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     if (this.satscannerInstance !== undefined) {
       console.error("satscanner.setCredentials was called multiple times");
       return;
     }
-    this.satscannerInstance = new SatscannerClient(key, environment);
+    this.satscannerInstance = new SatscannerClient(key, environment, options);
   }
 
   /**

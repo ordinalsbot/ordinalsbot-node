@@ -1,5 +1,5 @@
 import { InscriptionClient } from "../client";
-import { InscriptionEnv, v1 } from "../types";
+import { ClientOptions, InscriptionEnv, v1 } from "../types";
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "../types/runes_types";
 
 /**
@@ -13,13 +13,14 @@ export class Inscription {
    * Creates an instance of Inscription.
    * @param {string} [key=''] The API key.
    * @param {InscriptionEnv} [environment='live'] The environment (live or dev).
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     if (this.instance !== undefined) {
       console.error("inscription.setCredentials was called multiple times");
       return;
     }
-    this.instance = new InscriptionClient(key, environment);
+    this.instance = new InscriptionClient(key, environment, options);
   }
 
   /**

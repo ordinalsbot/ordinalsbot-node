@@ -1,6 +1,8 @@
 const { assert, expect } = require("chai");
 const sinon = require("sinon");
+const nock = require("nock");
 const { Mempool } = require("../dist");
+const { PaymentResult, MemoryTokenStore } = require('l402');
 
 describe("Mempool SDK Tests", function () {
   let sandbox;
@@ -52,5 +54,70 @@ describe("Mempool SDK Tests", function () {
 
     sinon.assert.calledWithMatch(axiosStub.get, `api/address/${sampleTestNetAddress}/utxo`);
     assert.deepEqual(utxoResponse.data, expectedResponse);
+  });
+});
+
+// Mock classes for Wallet and Store
+class MockWallet {
+  payInvoice(invoice) {
+      // Simulate successful payment for testing
+      return Promise.resolve(new PaymentResult('mock-preimage', true));
+  }
+}
+
+describe("Mempool with L402 Handling", () => {
+  let mempool;
+  let wallet;
+  let store;
+
+  beforeEach(() => {
+    wallet = new MockWallet();
+    store = new MemoryTokenStore();
+
+    // Initialize Mempool with L402 enabled
+    mempool = new Mempool("", "dev", {
+      useL402: true,
+      l402Config: {
+          wallet: wallet,
+          tokenStore: store
+      }
+    });
+
+    // Setup nock to clean all interceptors
+    nock.cleanAll();
+  });
+
+  it('should handle L402 Payment Required response by retrying the request', async () => {
+    const resourceUrl = "https://ordinalsbot.ln.sulu.sh/mempool/api/address/tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6/utxo";
+    const invoice = 'mockinvoice';
+    
+    // Simulate a 402 response with invoice details
+    nock('https://ordinalsbot.ln.sulu.sh')
+      .get('/mempool/api/address/tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6/utxo')
+      .reply(402, '', {
+          'WWW-Authenticate': `L402 invoice="${invoice}", macaroon="mockmacaroon"`
+      });
+
+    // Simulate successful access after payment
+    nock('https://ordinalsbot.ln.sulu.sh')
+      .get('/mempool/api/address/tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6/utxo')
+      .reply(200, {data: 'UTXO data after L402 handled'});
+
+    const response = await mempool.getAddressUtxo('tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6');
+    expect(response).to.equal('UTXO data after L402 handled');
+    expect(store.get(resourceUrl)).to.include('mock-preimage');
+  });
+
+  it('should store and reuse tokens for subsequent requests', async () => {
+    const resourceUrl = 'https://ordinalsbot.ln.sulu.sh/mempool/api/address/tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6/utxo';
+    store.put(resourceUrl, 'L402 mocktoken');
+
+    nock('https://ordinalsbot.ln.sulu.sh')
+        .get('/mempool/api/address/tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6/utxo')
+        .matchHeader('Authorization', 'L402 mocktoken')
+        .reply(200, {data: "UTXO data"});
+
+    const response = await mempool.getAddressUtxo('tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6');
+    expect(response).to.equal('UTXO data');
   });
 });

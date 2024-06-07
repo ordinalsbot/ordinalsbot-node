@@ -1,5 +1,5 @@
 import { MempoolClient } from "./client";
-import { InscriptionEnv } from "../types";
+import { ClientOptions, InscriptionEnv } from "../types";
 import {
   MempoolAddressUtxoResponse,
   RecommendedFees,
@@ -18,13 +18,14 @@ export class Mempool {
    * Creates a new Mempool instance.
    * @param key The API key (optional).
    * @param environment The environment (live or dev) (optional, defaults to live).
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
     if (this.mempoolInstance !== undefined) {
       console.error("mempool.setCredentials was called multiple times");
       return;
     }
-    this.mempoolInstance = new MempoolClient(key, environment);
+    this.mempoolInstance = new MempoolClient(key, environment, options);
   }
 
   /**
