@@ -53,6 +53,18 @@ export interface InscriptionFile {
 
   /** Metaprotocol field to be included in the inscription data */
   metaprotocol?: string;
+
+  completed?: boolean;
+  inscriptionId?: string;
+
+  iqueued?: boolean;
+  iqueuedAt?: number;
+  processing?: boolean;
+  status?: string;
+  itemId?: string;
+  error?: string;
+
+
 }
 
 export interface Delegate {
@@ -267,6 +279,7 @@ export interface InscriptionCharge {
   transactions?: InscriptionChargeTransaction[];
   uri?: string;
   callback_url?: string;
+  hosted_checkout_url?: string;
 }
 
 export interface DirectInscriptionCharge {
@@ -288,6 +301,20 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   zeroConf: string | null;
   state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
+  
+  
+  tx?: string;
+  error?: string;
+  refund?: string;
+  underpaid?: boolean;
+  overpaid?: boolean;
+  launchpadId?: string;
+  sent?: string;
+  expired?: boolean;
+  amount?: number;
+  
+  inscribedCount?: number;
+
 
   paid?: boolean;
 }
