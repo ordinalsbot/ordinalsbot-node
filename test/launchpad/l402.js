@@ -42,19 +42,19 @@ describe("Launchpad with L402 Handling", () => {
     });
   
     it('should handle L402 Payment Required response by retrying the request', async () => {
-      const resourceUrl = "https://ordinalsbot.ln.sulu.sh/runes/launchpad/create-launch";
+      const resourceUrl = "https://ordinalsbot.ln.sulu.sh/launchpad/create-launch";
       const invoice = 'mockinvoice';
       
       // Simulate a 402 response with invoice details
       nock('https://ordinalsbot.ln.sulu.sh')
-        .post('/runes/launchpad/create-launch')
+        .post('/launchpad/create-launch')
         .reply(402, '', {
             'WWW-Authenticate': `L402 invoice="${invoice}", macaroon="mockmacaroon"`
         });
   
       // Simulate successful access after payment
       nock('https://ordinalsbot.ln.sulu.sh')
-        .post('/runes/launchpad/create-launch')
+        .post('/launchpad/create-launch')
         .reply(200, {data: 'data after L402 handled'});
   
       const response = await launchpad.createLaunchpad(request);
@@ -63,11 +63,11 @@ describe("Launchpad with L402 Handling", () => {
     });
   
     it('should store and reuse tokens for subsequent requests', async () => {
-      const resourceUrl = 'https://ordinalsbot.ln.sulu.sh/runes/launchpad/create-launch';
+      const resourceUrl = 'https://ordinalsbot.ln.sulu.sh/launchpad/create-launch';
       store.put(resourceUrl, 'L402 mocktoken', 'POST');
   
       nock('https://ordinalsbot.ln.sulu.sh')
-          .post('/runes/launchpad/create-launch')
+          .post('/launchpad/create-launch')
           .matchHeader('Authorization', 'L402 mocktoken')
           .reply(200, {data: "data"});
   
