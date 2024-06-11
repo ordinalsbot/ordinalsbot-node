@@ -301,8 +301,6 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   zeroConf: string | null;
   state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
-
-
   tx?: string;
   error?: string;
   refund?: string;
@@ -312,7 +310,6 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   sent?: string;
   expired?: boolean;
   amount?: number;
-
   inscribedCount?: number;
 
 
@@ -629,7 +626,6 @@ export interface InscriptionTextOrderRequest {
   projectTag?: string;
 
   batchMode?: BatchModeType;
-
 }
 
 type InscriptionInventoryData = {
