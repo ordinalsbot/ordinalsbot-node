@@ -301,8 +301,8 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   zeroConf: string | null;
   state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
-  
-  
+
+
   tx?: string;
   error?: string;
   refund?: string;
@@ -312,7 +312,7 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   sent?: string;
   expired?: boolean;
   amount?: number;
-  
+
   inscribedCount?: number;
 
 
@@ -629,7 +629,7 @@ export interface InscriptionTextOrderRequest {
   projectTag?: string;
 
   batchMode?: BatchModeType;
-  
+
 }
 
 type InscriptionInventoryData = {
@@ -743,8 +743,7 @@ export enum OrderType {
   RUNE_LAUNCHPAD_MINT = 'rune-launchpad-mint',
   BULK = 'bulk',
   DIRECT = 'direct',
-  BRC20 = 'brc20',
-  MANAGED = 'managed',
+  BRC20 = 'brc20'
 }
 
 export enum BatchModeType {
