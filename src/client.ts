@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { InscriptionError } from "./inscription/error";
-import { ClientOptions, InscriptionEnv } from "./types";
+import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "./types";
 import {
   InscriptionPriceRequest,
   InscriptionPriceResponse,
@@ -42,12 +42,12 @@ export class InscriptionClient {
   /**
    * Constructs an instance of InscriptionClient.
    * @param {string} [key=''] - The API key for authentication.
-   * @param {InscriptionEnv} [environment='live'] - The environment (live or dev) (optional, defaults to live).
+   * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
    * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
     this.api_key = key;
-    this.env = environment;
+    this.env = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
 
     /**
      * Creates a new Axios instance with appropriate headers.
@@ -68,9 +68,7 @@ export class InscriptionClient {
       // Choose the base URL based on whether L402 is used or not
       const baseURL = options?.useL402
         ? "https://ordinalsbot.ln.sulu.sh"
-        : this.env === "live"
-          ? "https://api.ordinalsbot.com"
-          : "https://testnet-api.ordinalsbot.com";
+        : EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet
 
       // Create the Axios client with the appropriate base URL
       const client = axios.create({

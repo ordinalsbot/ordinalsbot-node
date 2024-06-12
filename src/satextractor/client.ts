@@ -4,7 +4,7 @@ import {
   SatextractorExtractRequest,
   SatextractorExtractResponse,
 } from "../types/satextractor_types";
-import { ClientOptions, InscriptionEnv } from "../types";
+import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "../types";
 import { setupL402Interceptor } from "l402";
 
 /**
@@ -29,11 +29,12 @@ export class SatextractorClient {
   /**
    * Creates a new Satextractor instance.
    * @param {string} [key=''] - The API key for authentication.
-   * @param {InscriptionEnv} [environment='live'] - The environment (live or dev) (optional, defaults to live).
+   * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
    * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
     this.api_key = key;
+    environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
     this.env = environment;
 
     /**
@@ -54,9 +55,7 @@ export class SatextractorClient {
       // Choose the base URL based on whether L402 is used or not
       const baseURL = options?.useL402
         ? "https://ordinalsbot.ln.sulu.sh/satextractor/"
-        : this.env === "live"
-          ? "https://api.ordinalsbot.com/satextractor/"
-          : "https://testnet-api.ordinalsbot.com/satextractor/";
+        : `${EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet}/satextractor/`;
 
       // Create the Axios client with the appropriate base URL
       const client = axios.create({
