@@ -26,7 +26,7 @@ describe('Get Launchpad Status', function () {
       .stub(LaunchpadClient.prototype, 'getLaunchpadStatus')
       .resolves(mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.getLaunchpadPSBT(getLaunchpadPSBTRequest)
     clock.tick(5 * 60 * 1000)
     expect(response).to.be.a('object')

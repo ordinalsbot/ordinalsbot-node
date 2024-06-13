@@ -29,7 +29,7 @@ describe('Launchpad Create Marketplace', function () {
       .stub(LaunchpadClient.prototype, 'createMarketPlace')
       .callsFake(() => mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.createMarketPlace(createMarketPlaceRequest)
 
     expect(response).to.equal(mockResponse)

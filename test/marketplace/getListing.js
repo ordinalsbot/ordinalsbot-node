@@ -10,7 +10,7 @@ describe('Marketplace getListing Ordinal', function () {
   })
 
   it('should return the listing response', async () => {
-    const marketPlace = new MarketPlace('someApiKey', 'dev')
+    const marketPlace = new MarketPlace('someApiKey', 'testnet')
     const mockResponse = {
       results: [
         {

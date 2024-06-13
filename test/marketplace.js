@@ -19,7 +19,7 @@ const mockData = {
 
 describe("marketplace", function () {
   before(() => {
-    marketPlace = new MarketPlace("3b834bce-92d2-45fb-81de-bfcc89ea9d57","dev");
+    marketPlace = new MarketPlace("3b834bce-92d2-45fb-81de-bfcc89ea9d57","testnet");
   });
 
   afterEach(() => {

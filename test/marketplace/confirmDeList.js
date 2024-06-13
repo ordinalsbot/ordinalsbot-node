@@ -22,7 +22,7 @@ describe('Marketplace Confirm DeListing', function () {
       .stub(MarketPlaceClient.prototype, 'confirmDeListing')
       .callsFake(() => mockResponse)
 
-    const marketPlace = new MarketPlace('someApiKey', 'dev')
+    const marketPlace = new MarketPlace('someApiKey', 'testnet')
     const response = await marketPlace.confirmDeListing(confirmDeListingRequest)
 
     expect(response).to.equal(mockResponse)

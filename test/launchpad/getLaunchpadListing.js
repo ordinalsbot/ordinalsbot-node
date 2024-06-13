@@ -127,7 +127,7 @@ describe('Get Launchpad listing', function () {
       .stub(LaunchpadClient.prototype, 'getLaunchpadListing')
       .resolves(mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.getLaunchpadListing(
       getLaunchpadListingRequest
     )

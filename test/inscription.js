@@ -13,7 +13,7 @@ describe("Inscription SDK Tests", function () {
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
-    inscription = new Inscription("", "dev");
+    inscription = new Inscription("", "testnet");
     axiosStub = {
       get: sandbox.stub(inscription.instance.axiosInstance, 'get'),
       post: sandbox.stub(inscription.instance.axiosInstance, 'post')
@@ -262,8 +262,8 @@ describe("create text inscription order", function () {
     });
   });
   it("should allow multiple clients with different credentials", async () => {
-    const client1 = new Inscription("test1", "dev");
-    const client2 = new Inscription("test2", "dev");
+    const client1 = new Inscription("test1", "testnet");
+    const client2 = new Inscription("test2", "testnet");
     const axiosGetStub1 = sandbox.stub(client1.instance.axiosInstance, 'get').resolves({ data: { id: sampleOrderId1 } });
     const axiosGetStub2 = sandbox.stub(client2.instance.axiosInstance, 'get').resolves({ data: { id: sampleOrderId2 } });
 

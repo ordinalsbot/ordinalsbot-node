@@ -29,7 +29,7 @@ describe("Marketplace with L402 Handling", () => {
       store = new MemoryTokenStore();
   
       // Initialize Mempool with L402 enabled
-      marketplace = new MarketPlace("", "dev", {
+      marketplace = new MarketPlace("", "testnet", {
         useL402: true,
         l402Config: {
             wallet: wallet,

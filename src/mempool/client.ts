@@ -12,7 +12,7 @@ import { setupL402Interceptor } from "l402";
  */
 export class MempoolClient {
   /**
-   * The environment for the Mempool API (live or dev).
+   * The environment for the Mempool API (e.g., "testnet" , "mainnet", "signet").
    */
   public env: InscriptionEnv;
 

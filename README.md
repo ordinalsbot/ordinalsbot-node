@@ -26,8 +26,9 @@ The package needs to be configured with your account's API key which you can get
 ```js
 import { Ordinalsbot } from "ordinalsbot";
 
-// if no parameter given, default environment is 'live'
-const ordinalsbotObj = new Ordinalsbot(API_KEY, "dev");
+// Allowed environments are ('testnet', 'mainnet', 'signet')
+// default environment is 'mainnet'.
+const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet");
 const marketPlace = ordinalsbotObj.MarketPlace();
 const inscription = ordinalsbotObj.Inscription();
 const launchpad = ordinalsbotObj.Launchpad();
@@ -122,8 +123,9 @@ The following example demonstrates how to create a listing for sale. When you in
 ```js
 import { Ordinalsbot } from "ordinalsbot";
 
-// if no parameter given, default environment is 'live'
-const ordinalsbotObj = new Ordinalsbot(API_KEY, "dev");
+// Allowed environments are ('testnet', 'mainnet', 'signet')
+// default environment is 'mainnet'.
+const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet");
 const marketPlace = ordinalsbotObj.MarketPlace();
 
 const listingRequest = {
@@ -191,7 +193,9 @@ const options: ClientOptions = {
 };
 
 // Create a new Satscanner instance
-const satscanner = new Satscanner("", "live", options);
+// Allowed environments are ('testnet', 'mainnet', 'signet')
+// default environment is 'mainnet'.
+const satscanner = new Satscanner("", "mainnet", options);
 
 /**
  * use satscanner to get information about utxos owned by an address

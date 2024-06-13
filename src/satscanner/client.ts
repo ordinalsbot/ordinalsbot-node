@@ -11,7 +11,7 @@ import { setupL402Interceptor } from "l402";
  */
 export class SatscannerClient {
   /**
-   * The environment for the Satscanner API (live or dev).
+   * The environment for the Satscanner API (e.g., "testnet" , "mainnet", "signet").
    */
   public env: InscriptionEnv;
 

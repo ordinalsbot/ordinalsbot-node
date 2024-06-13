@@ -12,7 +12,7 @@ import { setupL402Interceptor } from "l402";
  */
 export class SatextractorClient {
   /**
-   * The environment for the Satextractor API (live or dev).
+   * The environment for the Satextractor API (e.g., "testnet" , "mainnet", "signet").
    */
   public env: InscriptionEnv;
 

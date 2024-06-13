@@ -30,7 +30,7 @@ import { setupL402Interceptor } from "l402";
  */
 export class LaunchpadClient {
   /**
-   * The environment for the API (e.g., 'live', 'dev').
+   * The environment for the API (e.g., "testnet" , "mainnet", "signet").
    */
   public env: InscriptionEnv;
 
