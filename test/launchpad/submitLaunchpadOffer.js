@@ -21,7 +21,7 @@ describe('Submit Launchpad Offer', function () {
       txId: 'someTransactionString',
     })
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.submitLaunchpadOffer(
       submitLaunchpadOfferRequest
     )

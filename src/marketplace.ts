@@ -1,5 +1,5 @@
 import { MarketPlaceClient } from "./marketplaceClient";
-import { InscriptionEnv } from "./types";
+import { ClientOptions, InscriptionEnv, InscriptionEnvNetwork } from "./types";
 import {
   MarketplaceConfirmPaddingOutputsRequest,
   MarketplaceConfirmPaddingOutputsResponse,
@@ -38,13 +38,36 @@ import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sa
 export class MarketPlace {
   private network: BitcoinNetworkType;
   private marketplaceInstance!: MarketPlaceClient;
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+
+  /**
+   * Creates an instance of MarketPlace.
+   * @param {string} key - The API key for authentication.
+   * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
+  */
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
     if (this.marketplaceInstance !== undefined) {
       console.error("marketplace constructore was called multiple times");
       return;
     }
-    this.network = environment === 'live' ? BitcoinNetworkType.Mainnet : BitcoinNetworkType.Testnet;
-    this.marketplaceInstance = new MarketPlaceClient(key, environment);
+    
+    environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
+    switch (environment) {
+      case InscriptionEnvNetwork.mainnet:
+        this.network = BitcoinNetworkType.Mainnet;
+        break;
+      case InscriptionEnvNetwork.testnet:
+        this.network = BitcoinNetworkType.Testnet;
+        break;
+      case InscriptionEnvNetwork.signet:
+        // this.network = '';
+        break;
+    
+      default:
+        this.network = BitcoinNetworkType.Mainnet
+        break;
+    }
+    this.marketplaceInstance = new MarketPlaceClient(key, environment, options);
   }
 
   createMarketplace(

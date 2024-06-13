@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { InscriptionEnv } from "../types";
+import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "../types";
 import {
   ConfirmPaddingOutputsRequest,
   ConfirmPaddingOutputsResponse,
@@ -23,13 +23,14 @@ import {
   SaveLaunchpadResponse,
 } from "../types/launchpad_types";
 import { InscriptionError } from "../inscription/error";
+import { setupL402Interceptor } from "l402";
 
 /**
  * A client for interacting with the Launchpad marketplace API.
  */
 export class LaunchpadClient {
   /**
-   * The environment for the API (e.g., 'live', 'dev').
+   * The environment for the API (e.g., "testnet" , "mainnet", "signet").
    */
   public env: InscriptionEnv;
 
@@ -44,14 +45,20 @@ export class LaunchpadClient {
   private instanceV1: AxiosInstance;
 
   /**
-   * Creates an instance of LaunchpadClient.
-   * @param {string} key - The API key for authentication.
-   * @param {InscriptionEnv} environment - The environment for the API (e.g., 'live', 'dev').
+   * Creates a new Launchpad instance.
+   * @param {string} [key=''] - The API key for authentication.
+   * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
     this.api_key = key;
+    environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
     this.env = environment;
 
+    /**
+     * Creates a new Axios instance with appropriate headers.
+     * @returns {AxiosInstance} The new Axios instance.
+     */
     const createInstance = (): AxiosInstance => {
       const headers: Record<string, string> = {
         Connection: "Keep-Alive",
@@ -63,18 +70,21 @@ export class LaunchpadClient {
         headers["x-api-key"] = this.api_key;
       }
 
+      // Choose the base URL based on whether L402 is used or not
+      const baseURL = options?.useL402
+        ? "https://ordinalsbot.ln.sulu.sh/launchpad/"
+        : `${EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet}/launchpad/`;
+
+      // Create the Axios client with the appropriate base URL
       const client = axios.create({
-        baseURL:
-          this.env === "live"
-            ? `https://api.ordinalsbot.com/launchpad/`
-            : `https://testnet-api.ordinalsbot.com/launchpad/`,
+        baseURL,
         headers: headers,
       });
 
       client.interceptors.response.use(
         ({ data }) => ("data" in data ? data.data : data),
         (err) => {
-          if (axios.isAxiosError(err)) {
+          if (axios.isAxiosError(err) && err.response?.status !== 402) { // avoid modifying L402 errors.
             throw new InscriptionError(
               err.message,
               err.response?.statusText,
@@ -88,9 +98,15 @@ export class LaunchpadClient {
         }
       );
 
+      // If L402 is enabled and configuration is provided, set up the L402 interceptor
+      if (options?.useL402 && options.l402Config) {
+        setupL402Interceptor(client, options.l402Config.wallet, options.l402Config.tokenStore);
+      };
+
       return client;
     };
 
+    // Create the Axios instance
     this.instanceV1 = createInstance();
   }
 

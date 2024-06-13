@@ -41,3 +41,6 @@ dist
 yarn.lock
 package-lock.json
 .vscode/settings.json
+
+*.env
+.vscode/

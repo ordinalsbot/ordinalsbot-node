@@ -1,6 +1,8 @@
 const { assert, expect } = require("chai");
 const sinon = require("sinon");
 const { Satscanner } = require("../dist");
+const nock = require("nock");
+const {PaymentResult, MemoryTokenStore} = require('l402');
 
 describe("Satscanner SDK Tests", function () {
   let sandbox;
@@ -11,7 +13,7 @@ describe("Satscanner SDK Tests", function () {
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
-    satscanner = new Satscanner("", "dev");
+    satscanner = new Satscanner("", "testnet");
     axiosStub = {
       get: sandbox.stub(satscanner.satscannerInstance.instanceV1, 'get'),
       post: sandbox.stub(satscanner.satscannerInstance.instanceV1, 'post')
@@ -134,5 +136,69 @@ describe("Satscanner SDK Tests", function () {
 
     sinon.assert.calledWithMatch(axiosStub.post, '/find-special-ranges-utxo', { ...expectedParams });
     assert.deepEqual(specialRangesUtxoResponse.data, expectedResponse);
+  });
+});
+
+// Mock Wallet as it would be used within the Satscanner
+class MockWallet  {
+  payInvoice(invoice) {
+      // Assuming payment is always successful for testing
+      return Promise.resolve(new PaymentResult('mock-preimage', true));
+  }
+}
+
+describe('Satscanner with L402 Handling', () => {
+  let satscanner;
+  let wallet;
+  let store;
+
+  beforeEach(() => {
+      wallet = new MockWallet();
+      store = new MemoryTokenStore();
+
+      // Initialize Satscanner with L402 enabled
+      satscanner = new Satscanner("", "testnet", {
+          useL402: true,
+          l402Config: {
+              wallet: wallet,
+              tokenStore: store
+          }
+      });
+      
+      nock.cleanAll();
+  });
+
+  it('should handle L402 Payment Required response by retrying the request', async () => {
+      const resourceUrl = "https://ordinalsbot.ln.sulu.sh/satscanner/supported-satributes";
+      const invoice = 'mockinvoice';
+      
+      // First call returns 402 with an invoice challenge
+      nock('https://ordinalsbot.ln.sulu.sh')
+        .get('/satscanner/supported-satributes')
+        .reply(402, '', {
+            'WWW-Authenticate': `L402 invoice="${invoice}", macaroon="mockmacaroon"`
+        });
+
+      // Second call simulates successful access after payment
+      nock('https://ordinalsbot.ln.sulu.sh')
+        .get('/satscanner/supported-satributes')
+        .reply(200, {data: 'Resource data after L402 handled'});
+
+      const response = await satscanner.getSupportedSatributes();
+      expect(response).to.equal('Resource data after L402 handled');
+      expect(store.get(resourceUrl)).to.include('mock-preimage');
+  });
+
+  it('should store and reuse tokens for subsequent requests', async () => {
+      const resourceUrl = 'https://ordinalsbot.ln.sulu.sh/satscanner/supported-satributes';
+      store.put(resourceUrl, 'L402 mocktoken');
+
+      nock('https://ordinalsbot.ln.sulu.sh')
+          .get('/satscanner/supported-satributes')
+          .matchHeader('Authorization', 'L402 mocktoken')
+          .reply(200, {"data": "Resource data"});
+
+      const response = await satscanner.getSupportedSatributes();
+      expect(response).to.equal('Resource data');
   });
 });

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { InscriptionError } from "./inscription/error";
-import { InscriptionEnv } from "./types";
+import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "./types";
 import {
   InscriptionPriceRequest,
   InscriptionPriceResponse,
@@ -19,10 +19,13 @@ import {
   InscriptionCollectionOrderResponse,
   UpdateCollectionPhasesRequest,
   GetAllocationRequest,
-  GetAllocationResponse
+  GetAllocationResponse,
+  DirectInscriptionOrderRequest,
+  DirectInscriptionOrder,
 } from "./types/v1";
 import { sha256 } from 'bitcoinjs-lib/src/crypto';
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "./types/runes_types";
+import { setupL402Interceptor } from "l402";
 
 const qs = require("qs");
 const version = require("../package.json")?.version || "local";
@@ -43,35 +46,45 @@ export class InscriptionClient {
 
   /**
    * Constructs an instance of InscriptionClient.
-   * @param {string} key - The API key for authentication.
-   * @param {InscriptionEnv} environment - The environment for the client, either 'live' or 'dev'.
+   * @param {string} [key=''] - The API key for authentication.
+   * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
+   * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live") {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
     this.api_key = key;
-    this.env = environment;
+    this.env = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
 
+    /**
+     * Creates a new Axios instance with appropriate headers.
+     * @returns {AxiosInstance} The new Axios instance.
+     */
     const createInstance = (): AxiosInstance => {
+      const headers: Record<string, string> = {
+        Connection: "Keep-Alive",
+        "Content-Type": "application/json",
+        "User-Agent": packageVersion,
+      };
+
+      // Add the API key header only if this.api_key has a value
+      if (this.api_key) {
+        headers["x-api-key"] = this.api_key;
+      }
+
+      // Choose the base URL based on whether L402 is used or not
+      const baseURL = options?.useL402
+        ? "https://ordinalsbot.ln.sulu.sh"
+        : EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet
+
+      // Create the Axios client with the appropriate base URL
       const client = axios.create({
-        baseURL:
-          environment === "live"
-            ? `https://api.ordinalsbot.com`
-            : `https://testnet-api.ordinalsbot.com`,
-        timeout: 30000,
-        headers: {
-          "x-api-key": this.api_key,
-          Connection: "Keep-Alive",
-          "Content-Type": "application/json",
-          "Keep-Alive": "timeout=10",
-          "User-Agent": packageVersion,
-        },
+        baseURL,
+        headers: headers,
       });
 
       client.interceptors.response.use(
-        // normalize responses
         ({ data }) => ("data" in data ? data.data : data),
         (err) => {
-          if (axios.isAxiosError(err)) {
-            // added to keep compatibility with previous versions
+          if (axios.isAxiosError(err) && err.response?.status !== 402) { // avoid modifying L402 errors.
             throw new InscriptionError(
               err.message,
               err.response?.statusText,
@@ -85,9 +98,15 @@ export class InscriptionClient {
         }
       );
 
+      // If L402 is enabled and configuration is provided, set up the L402 interceptor
+      if (options?.useL402 && options.l402Config) {
+        setupL402Interceptor(client, options.l402Config.wallet, options.l402Config.tokenStore);
+      };
+
       return client;
     };
 
+    // Create the Axios instance
     this.instanceV1 = createInstance();
 
     this.apikeyhash = sha256(Buffer.from(this.api_key)).toString("hex");
@@ -121,6 +140,15 @@ export class InscriptionClient {
    */
   async createOrder(order: InscriptionOrderRequest): Promise<InscriptionOrder> {
     return this.instanceV1.post(`/order`, order);
+  }
+
+  /**
+   * Creates a direct (non-custodial) inscription order.
+   * @param {DirectInscriptionOrderRequest} order - The request object for creating the order.
+   * @returns {Promise<DirectInscriptionOrder>} A promise resolving with the created order.
+   */
+  async createDirectOrder(order: DirectInscriptionOrderRequest): Promise<DirectInscriptionOrder> {
+    return this.instanceV1.post(`/inscribe`, order);
   }
 
   /**

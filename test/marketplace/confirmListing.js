@@ -24,7 +24,7 @@ describe('Marketplace Confirm Listing', function () {
       .stub(MarketPlaceClient.prototype, 'confirmListing')
       .callsFake(() => mockResponse)
     
-    const marketPlace = new MarketPlace('someApiKey', 'dev')
+    const marketPlace = new MarketPlace('someApiKey', 'testnet')
     const response = await marketPlace.confirmListing(confirmListingRequest)
     
     expect(response).to.equal(mockResponse)

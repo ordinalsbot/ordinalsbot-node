@@ -1,5 +1,7 @@
 const { assert, expect } = require("chai");
 const sinon = require("sinon");
+const nock = require("nock");
+const { PaymentResult, MemoryTokenStore } = require('l402');
 const { Satextractor } = require("../dist");
 
 describe("Satextractor SDK Tests", function () {
@@ -11,7 +13,7 @@ describe("Satextractor SDK Tests", function () {
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
-    satextractor = new Satextractor("", "dev");
+    satextractor = new Satextractor("", "testnet");
     axiosStub = {
       get: sandbox.stub(satextractor.satextractorInstance.instanceV1, 'get'),
       post: sandbox.stub(satextractor.satextractorInstance.instanceV1, 'post')
@@ -50,5 +52,70 @@ describe("Satextractor SDK Tests", function () {
 
     sinon.assert.calledWithMatch(axiosStub.post, '/extract', { ...expectedParams });
     assert.deepEqual(extractResponse.data, expectedResponse);
+  });
+});
+
+// Mock classes for Wallet and Store similar to the Satscanner tests
+class MockWallet {
+  payInvoice(invoice) {
+      // Simulate successful payment for testing
+      return Promise.resolve(new PaymentResult('mock-preimage', true));
+  }
+}
+
+describe("Satextractor with L402 Handling", () => {
+  let satextractor;
+  let wallet;
+  let store;
+
+  beforeEach(() => {
+    wallet = new MockWallet();
+    store = new MemoryTokenStore();
+
+    // Initialize Satextractor with L402 enabled
+    satextractor = new Satextractor("", "testnet", {
+      useL402: true,
+      l402Config: {
+          wallet: wallet,
+          tokenStore: store
+      }
+    });
+
+    // Clean all nocks before each test
+    nock.cleanAll();
+  });
+
+  it('should handle L402 Payment Required response by retrying the request', async () => {
+    const resourceUrl = "https://ordinalsbot.ln.sulu.sh/satextractor/extract";
+    const invoice = 'mockinvoice';
+    
+    // Simulate a 402 response with invoice details
+    nock('https://ordinalsbot.ln.sulu.sh')
+      .post('/satextractor/extract')
+      .reply(402, '', {
+          'WWW-Authenticate': `L402 invoice="${invoice}", macaroon="mockmacaroon"`
+      });
+
+    // Simulate successful access after payment
+    nock('https://ordinalsbot.ln.sulu.sh')
+      .post('/satextractor/extract')
+      .reply(200, {data: 'Extraction data after L402 handled'});
+
+    const response = await satextractor.extract({}); // Assuming extract method accepts an object parameter
+    expect(response).to.equal('Extraction data after L402 handled');
+    expect(store.get(resourceUrl, "POST")).to.include('mock-preimage');
+  });
+
+  it('should store and reuse tokens for subsequent requests', async () => {
+    const resourceUrl = 'https://ordinalsbot.ln.sulu.sh/satextractor/extract';
+    store.put(resourceUrl, 'L402 mocktoken', "POST");
+
+    nock('https://ordinalsbot.ln.sulu.sh')
+        .post('/satextractor/extract')
+        .matchHeader('Authorization', 'L402 mocktoken')
+        .reply(200, {data: "Extracted data"});
+
+    const response = await satextractor.extract({});
+    expect(response).to.equal('Extracted data');
   });
 });

@@ -16,7 +16,7 @@ describe('Create Launchpad offer', function () {
       .stub(LaunchpadClient.prototype, 'createLaunchpadOffer')
       .resolves(mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.createLaunchpadOffer(inputRequest)
 
     expect(response).to.be.a('object')
@@ -46,7 +46,7 @@ describe('Create Launchpad offer', function () {
       txId: 'someTransactionID',
     })
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.createLaunchpadOffer(inputRequest)
 
     expect(response).to.be.a('object')

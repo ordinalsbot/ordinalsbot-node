@@ -10,7 +10,7 @@ describe('Marketplace Transfer Ordinals', function () {
   })
 
   it('should handle the ordinal transfer process without wallet provider', async () => {
-    const marketPlace = new MarketPlace('someApiKey', 'dev')
+    const marketPlace = new MarketPlace('someApiKey', 'testnet')
     const transferStub = sandbox.stub(marketPlace, 'transfer').resolves({
       psbtBase64: 'somePSBTString',
       senderOrdinalInputs: [0],
@@ -55,7 +55,7 @@ describe('Marketplace Transfer Ordinals', function () {
   })
 
   it('should handle the ordinal transfer process with wallet provider', async () => {
-    const marketPlace = new MarketPlace('someApiKey', 'dev')
+    const marketPlace = new MarketPlace('someApiKey', 'testnet')
     const transferStub = sandbox.stub(marketPlace, 'transfer').resolves({
       psbtBase64: 'somePSBTString',
       txId: 'someTransactionString'

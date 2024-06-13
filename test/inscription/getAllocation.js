@@ -43,7 +43,7 @@ describe("Get Allocation", function () {
       .stub(InscriptionClient.prototype, "getAllocation")
       .callsFake(() => mockResponse);
 
-    const inscription = new Inscription("someApiKey", "dev");
+    const inscription = new Inscription("someApiKey", "testnet");
     const response = await inscription.getAllocation(getAllocationRequest);
 
     expect(response).to.equal(mockResponse);
@@ -62,7 +62,7 @@ describe("Get Allocation", function () {
       receiveAddress: "someInvalidReceiveAddress",
     };
     try {
-      const inscription = new Inscription("someApiKey", "dev");
+      const inscription = new Inscription("someApiKey", "testnet");
       await inscription.getAllocation(getAllocationRequest);
     } catch (error) {
       expect(error.status).to.equal(400);

@@ -22,7 +22,7 @@ describe('Confirm Padding Outputs ', function () {
       .stub(LaunchpadClient.prototype, 'confirmPaddingOutputs')
       .resolves(mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.confirmPaddingOutputs(
       confirmPaddingOutputsRequest
     )
@@ -48,7 +48,7 @@ describe('Confirm Padding Outputs ', function () {
       .stub(LaunchpadClient.prototype, 'confirmPaddingOutputs')
       .resolves(mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.confirmPaddingOutputs(
       confirmPaddingOutputsRequest
     )

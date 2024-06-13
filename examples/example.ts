@@ -2,8 +2,10 @@ import {Inscription} from "../src";
 
 /**
  * Setup your API Key and environment
+ * Allowed environments are ('testnet', 'mainnet', 'signet')
+ * default environment is 'mainnet'.
  */
-const inscription = new Inscription("", "dev");
+const inscription = new Inscription("", "testnet");
 
 /**
  *
@@ -165,7 +167,13 @@ const runesMintOrder = {
 
 /** Satscanner - API Key is required */
 import { Satscanner } from "../src";
-const satscanner = new Satscanner("", "dev");
+
+/**
+ * Setup your API Key and environment
+ * Allowed environments are ('testnet', 'mainnet', 'signet')
+ * default environment is 'mainnet'.
+ */
+const satscanner = new Satscanner("", "testnet");
 
 /**
  * use satscanner to get information about utxos owned by an address
@@ -201,7 +209,13 @@ satscanner
 
 /** Satextractor - API Key is required */
 import { Satextractor } from "../src";
-const satextractor = new Satextractor("", "dev");
+
+/**
+ * Setup your API Key and environment
+ * Allowed environments are ('testnet', 'mainnet', 'signet')
+ * default environment is 'mainnet'.
+ */
+const satextractor = new Satextractor("", "testnet");
 
 /**
  * use satextractor to get a transaction that extracts special sats from an address's utxos
@@ -250,7 +264,13 @@ satextractor
 
 /** Mempool - API Key is required */
 import { Mempool } from "../src";
-const mempool = new Mempool("", "dev");
+
+/**
+ * Setup your API Key and environment
+ * Allowed environments are ('testnet', 'mainnet', 'signet')
+ * default environment is 'mainnet'.
+ */
+const mempool = new Mempool("", "testnet");
 
 /**
  * use mempool to get information about the bitcoin blockchain

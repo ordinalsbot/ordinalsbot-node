@@ -53,6 +53,18 @@ export interface InscriptionFile {
 
   /** Metaprotocol field to be included in the inscription data */
   metaprotocol?: string;
+
+  completed?: boolean;
+  inscriptionId?: string;
+
+  iqueued?: boolean;
+  iqueuedAt?: number;
+  processing?: boolean;
+  status?: string;
+  itemId?: string;
+  error?: string;
+
+
 }
 
 export interface Delegate {
@@ -164,6 +176,79 @@ export interface InscriptionOrderRequest {
   batchMode?: BatchModeType;
 }
 
+export interface DirectInscriptionOrderRequest {
+  /*
+   * An array of objects that includes:
+   *
+   * Mandatory
+   *    - name:string; => name of the file including extension.
+   *    - size:number; => size of the file in bytes
+   *    - url:string; => file URL hosted on OrdinalsBot buckets
+   *
+   * Optional
+   *    - metadataUrl:string; => metadata json file URL hosted on OrdinalsBot buckets
+   *    - metadataSize:number; => size of the metadata file in bytes
+   *    - metaprotocol:string; => Metaprotocol field to be included in the inscription data
+   *
+   * Note: you can send any dataURL text/json/image/video data in a parameter called dataURL instead of url for files
+   */
+  files?: InscriptionFile[];
+
+  /**
+   * Miner fee that will be paid while inscribing the ordinals in sats/byte.
+   * (default=2 sats/byte)
+   */
+  fee?: number;
+
+  /**
+   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
+   * (default=false)
+   */
+  lowPostage?: boolean;
+
+  /**
+   * A single Bitcoin address to receive the inscriptions for the whole order
+   * Or one receiver Address per file
+   */
+  receiveAddress?: string | string[];
+
+  /**
+   * Limit which sats can be used to inscribe onto this order.
+   * i.e. ['vintage', 'block78', 'pizza', 'uncommon']
+   * full list of supported satributes can be queried from satscanner endpoint
+   */
+  allowedSatributes?: string[];
+
+  /**
+   * Referral code to earn up to %15 of the order service fee.
+   */
+  referral?: string;
+
+  /**
+   * Amount of satoshis to charge extra for this order that will be added to "referral" account.
+   * Needs to be used together with "referral" parameter.
+   */
+  additionalFee?: number;
+
+  /** URL to receive a POST request when each file in the order is inscribed */
+  webhookUrl?: string;
+}
+
+export interface DirectInscriptionOrder extends DirectInscriptionOrderRequest {
+  id: string;
+  status: string;
+  // ... input parameters from DirectInscriptionOrderRequest
+  charge: DirectInscriptionCharge;
+  chainFee: number; // in satoshis
+  serviceFee: number; // in satoshis
+  baseFee: number;
+  postage: number;
+  orderType: OrderType;
+  state: InscriptionOrderState;
+  createdAt: number; // timestamp in ms,
+  paid?: boolean;
+}
+
 /**
  * Parent Reqeust object for the Inscription order
  */
@@ -194,6 +279,12 @@ export interface InscriptionCharge {
   transactions?: InscriptionChargeTransaction[];
   uri?: string;
   callback_url?: string;
+  hosted_checkout_url?: string;
+}
+
+export interface DirectInscriptionCharge {
+  amount: number;
+  address: string;
 }
 
 export interface InscriptionOrder extends InscriptionOrderRequest {
@@ -210,6 +301,17 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   zeroConf: string | null;
   state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
+  tx?: string;
+  error?: string;
+  refund?: string;
+  underpaid?: boolean;
+  overpaid?: boolean;
+  launchpadId?: string;
+  sent?: string;
+  expired?: boolean;
+  amount?: number;
+  inscribedCount?: number;
+
 
   paid?: boolean;
 }
@@ -592,7 +694,6 @@ export interface InscriptionTextOrderRequest {
   projectTag?: string;
 
   batchMode?: BatchModeType;
-  
 }
 
 type InscriptionInventoryData = {
@@ -706,8 +807,7 @@ export enum OrderType {
   RUNE_LAUNCHPAD_MINT = 'rune-launchpad-mint',
   BULK = 'bulk',
   DIRECT = 'direct',
-  BRC20 = 'brc20',
-  MANAGED = 'managed',
+  BRC20 = 'brc20'
 }
 
 export enum BatchModeType {
