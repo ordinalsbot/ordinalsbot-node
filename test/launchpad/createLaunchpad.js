@@ -16,7 +16,7 @@ describe('Create Launchpad', function () {
       launchpadId: 'someLaunchpadId',
       status: 'pending',
     })
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.createLaunchpad(inputRequest)
 
     expect(response).to.be.a('object')
@@ -53,7 +53,7 @@ describe('Create Launchpad', function () {
       message: 'Launchpad listing is updated successfully',
     })
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.createLaunchpad(inputRequest)
 
     expect(response).to.be.a('object')

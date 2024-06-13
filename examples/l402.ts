@@ -31,8 +31,13 @@ const options: ClientOptions = {
     }
 };
 
-// Create a new Satscanner instance
-const satscanner = new Satscanner("", "live", options);
+/**
+ * Create a new Satscanner instance
+ * Setup your API Key and environment
+ * Allowed environments are ('testnet', 'mainnet', 'signet')
+ * default environment is 'mainnet'.
+ */
+const satscanner = new Satscanner("", "mainnet", options);
 
 /**
  * use satscanner to get information about utxos owned by an address

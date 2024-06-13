@@ -1,3 +1,9 @@
+## [0.2.8]
+- Environment support added for all APIs except `marketplace` and `launchpad`
+  - Environment can be `tesnet`, `signet`, `mainnet`
+  - Default environment is `mainnet`
+  - Backward compatibility maintained for `live` as mainnet environment and `dev` as testnet environment
+
 ## [0.2.5]
 - `Types`
   - Added `direct` inscription types

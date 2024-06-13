@@ -13,7 +13,7 @@ describe("Runes SDK Tests", function () {
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
-    inscription = new Inscription("", "dev");
+    inscription = new Inscription("", "testnet");
     axiosStub = {
       get: sandbox.stub(inscription.instance.axiosInstance, 'get'),
       post: sandbox.stub(inscription.instance.axiosInstance, 'post')

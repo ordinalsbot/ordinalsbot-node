@@ -13,7 +13,7 @@ describe("Satscanner SDK Tests", function () {
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
-    satscanner = new Satscanner("", "dev");
+    satscanner = new Satscanner("", "testnet");
     axiosStub = {
       get: sandbox.stub(satscanner.satscannerInstance.instanceV1, 'get'),
       post: sandbox.stub(satscanner.satscannerInstance.instanceV1, 'post')
@@ -157,7 +157,7 @@ describe('Satscanner with L402 Handling', () => {
       store = new MemoryTokenStore();
 
       // Initialize Satscanner with L402 enabled
-      satscanner = new Satscanner("", "dev", {
+      satscanner = new Satscanner("", "testnet", {
           useL402: true,
           l402Config: {
               wallet: wallet,

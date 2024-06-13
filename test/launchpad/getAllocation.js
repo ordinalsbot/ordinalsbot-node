@@ -35,7 +35,7 @@ describe('Get Buyer Allocation', function () {
       .stub(LaunchpadClient.prototype, 'getAllocation')
       .resolves(mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.getAllocation(getAllocationRequest)
 
     expect(response).to.equal(mockResponse)
@@ -59,7 +59,7 @@ describe('Get Buyer Allocation', function () {
       .stub(LaunchpadClient.prototype, 'getAllocation')
       .resolves(mockResponse)
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.getAllocation(getAllocationRequest)
 
     expect(response).to.equal(mockResponse)
