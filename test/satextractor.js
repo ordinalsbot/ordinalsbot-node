@@ -13,7 +13,7 @@ describe("Satextractor SDK Tests", function () {
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
-    satextractor = new Satextractor("", "dev");
+    satextractor = new Satextractor("", "testnet");
     axiosStub = {
       get: sandbox.stub(satextractor.satextractorInstance.instanceV1, 'get'),
       post: sandbox.stub(satextractor.satextractorInstance.instanceV1, 'post')
@@ -73,7 +73,7 @@ describe("Satextractor with L402 Handling", () => {
     store = new MemoryTokenStore();
 
     // Initialize Satextractor with L402 enabled
-    satextractor = new Satextractor("", "dev", {
+    satextractor = new Satextractor("", "testnet", {
       useL402: true,
       l402Config: {
           wallet: wallet,

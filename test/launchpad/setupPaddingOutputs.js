@@ -16,7 +16,7 @@ describe('Setup Padding Outputs', function () {
       psbt: 'somePSBTString',
       buyerInputIndices: [1],
     })
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.setupPaddingOutputs(inputRequest)
 
     expect(response).to.be.a('object')
@@ -44,7 +44,7 @@ describe('Setup Padding Outputs', function () {
       txId: 'someTransactionID',
     })
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.setupPaddingOutputs(inputRequest)
 
     expect(response).to.be.a('object')

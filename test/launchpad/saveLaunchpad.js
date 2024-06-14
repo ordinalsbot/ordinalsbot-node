@@ -23,7 +23,7 @@ describe('Save Launchpad', function () {
       message: 'Launchpad listing is updated successfully',
     })
 
-    const launchpad = new Launchpad('someApiKey', 'dev')
+    const launchpad = new Launchpad('someApiKey', 'testnet')
     const response = await launchpad.saveLaunchpad(saveLaunchpadRequest)
 
     expect(response).to.be.a('object')

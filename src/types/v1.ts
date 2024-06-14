@@ -301,8 +301,6 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   zeroConf: string | null;
   state: InscriptionOrderState;
   createdAt: number; // timestamp in ms,
-  
-  
   tx?: string;
   error?: string;
   refund?: string;
@@ -312,7 +310,6 @@ export interface InscriptionOrder extends InscriptionOrderRequest {
   sent?: string;
   expired?: boolean;
   amount?: number;
-  
   inscribedCount?: number;
 
 
@@ -455,6 +452,7 @@ export interface InscriptionCollectionCreateRequest {
 
   // allowlist is optional
   allowList?: AllocationMap;
+  phases?: CollectionPhase[];
   discord?: string;
   parent?: InscriptionOrderParentRequest;
   /** brc20 collection fields */
@@ -469,12 +467,79 @@ export type AllocationMap = {
   };
 };
 
+/**
+ * API request object for the updating collection phases
+ */
+export interface UpdateCollectionPhasesRequest {
+
+  /** URL safe unique collection id */
+  id?: string;
+  /** updated collection phases */
+  phases: CollectionPhase[];
+}
+
+/**
+ * API request object for the updating collection phases
+ */
+export interface GetAllocationRequest {
+
+  /** URL safe unique collection id.*/
+  id: String;
+  /** Bitcoin address for allowlist in collection phases */
+  receiveAddress: String;
+}
+
+interface allocationPhase {
+  /** allowed phase id */
+  phaseId: String,
+  /** Access type of the phase. i.e public = 1, not public = 0*/
+  public: Boolean,
+  /** max allowed inscrptions to the reciever address*/
+  allocation?: Number,
+  /** total inscriptions claimed by the reciever address*/
+  inscribedCount?: Number
+  /** total paid item count by the reciever address*/
+  paidItemCount?: Number
+}
+
+export interface GetAllocationResponse {
+  /** collection phases */
+  phases: allocationPhase[]
+}
+
+/**
+ * collection phase object
+ */
+export type CollectionPhase = {
+  
+  /** phase id which is required for the update the collection phases */
+  id?: string,
+
+  /** total number of inscriptions in the phase */
+  inscriptionsCount: number,
+  /** An object for allow list allocation and claimed inscriptions */
+  allowList?: AllocationMap[];
+  /** 
+   * The isPublic key for the phase is public or protected,
+   * private = 0
+   * public = 1
+  */
+  isPublic: number;
+  /** phase price for inscriptions */
+  price: number;
+  /** start date of the phase */
+  startDate: number;
+  /** An optional date field. Which is requried for the protected phase */
+  endDate?: number | null;
+};
+
 export interface InscriptionCollectionCreateResponse
   extends InscriptionCollectionCreateRequest {
   averageSize: number;
   inscribedCount: number;
   status: string;
   active: boolean;
+  apikeyhash?: string;
   // ... input parameters from InscriptionCollectionCreateRequest
   createdAt: number;
 }
@@ -629,7 +694,6 @@ export interface InscriptionTextOrderRequest {
   projectTag?: string;
 
   batchMode?: BatchModeType;
-  
 }
 
 type InscriptionInventoryData = {
@@ -743,8 +807,7 @@ export enum OrderType {
   RUNE_LAUNCHPAD_MINT = 'rune-launchpad-mint',
   BULK = 'bulk',
   DIRECT = 'direct',
-  BRC20 = 'brc20',
-  MANAGED = 'managed',
+  BRC20 = 'brc20'
 }
 
 export enum BatchModeType {

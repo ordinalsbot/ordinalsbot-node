@@ -31,7 +31,7 @@ describe("Inscription with L402 Handling", () => {
       store = new MemoryTokenStore();
   
       // Initialize Mempool with L402 enabled
-      inscription = new Inscription("", "dev", {
+      inscription = new Inscription("", "testnet", {
         useL402: true,
         l402Config: {
             wallet: wallet,

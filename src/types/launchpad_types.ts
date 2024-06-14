@@ -58,7 +58,7 @@ export interface LaunchpadPhase {
   /** An array of string */
   ordinals: string[];
   /** An object for allow list allocation and claimed inscriptions */
-  allowList: AllowList;
+  allowList?: AllowList;
   /** The isPublic key for the phase is public or protected*/
   isPublic: Boolean;
   /** phase price for ordinal to buy */

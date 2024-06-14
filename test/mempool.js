@@ -12,7 +12,7 @@ describe("Mempool SDK Tests", function () {
 
   beforeEach(function () {
     sandbox = sinon.createSandbox();
-    mempool = new Mempool("", "dev");
+    mempool = new Mempool("", "testnet");
     axiosStub = {
       get: sandbox.stub(mempool.mempoolInstance.instanceV1, 'get'),
       post: sandbox.stub(mempool.mempoolInstance.instanceV1, 'post')
@@ -75,7 +75,7 @@ describe("Mempool with L402 Handling", () => {
     store = new MemoryTokenStore();
 
     // Initialize Mempool with L402 enabled
-    mempool = new Mempool("", "dev", {
+    mempool = new Mempool("", "testnet", {
       useL402: true,
       l402Config: {
           wallet: wallet,

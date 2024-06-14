@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { InscriptionError } from "./inscription/error";
-import { ClientOptions, InscriptionEnv } from "./types";
+import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "./types";
 import {
   InscriptionPriceRequest,
   InscriptionPriceResponse,
@@ -17,9 +17,13 @@ import {
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
+  UpdateCollectionPhasesRequest,
+  GetAllocationRequest,
+  GetAllocationResponse,
   DirectInscriptionOrderRequest,
   DirectInscriptionOrder,
 } from "./types/v1";
+import { sha256 } from 'bitcoinjs-lib/src/crypto';
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "./types/runes_types";
 import { setupL402Interceptor } from "l402";
 
@@ -38,16 +42,17 @@ export class InscriptionClient {
 
   private api_key: string;
   private instanceV1: AxiosInstance;
+  private apikeyhash: string;
 
   /**
    * Constructs an instance of InscriptionClient.
    * @param {string} [key=''] - The API key for authentication.
-   * @param {InscriptionEnv} [environment='live'] - The environment (live or dev) (optional, defaults to live).
+   * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
    * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
     this.api_key = key;
-    this.env = environment;
+    this.env = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
 
     /**
      * Creates a new Axios instance with appropriate headers.
@@ -68,9 +73,7 @@ export class InscriptionClient {
       // Choose the base URL based on whether L402 is used or not
       const baseURL = options?.useL402
         ? "https://ordinalsbot.ln.sulu.sh"
-        : this.env === "live"
-          ? "https://api.ordinalsbot.com"
-          : "https://testnet-api.ordinalsbot.com";
+        : EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet
 
       // Create the Axios client with the appropriate base URL
       const client = axios.create({
@@ -105,6 +108,8 @@ export class InscriptionClient {
 
     // Create the Axios instance
     this.instanceV1 = createInstance();
+
+    this.apikeyhash = sha256(Buffer.from(this.api_key)).toString("hex");
   }
 
   /**
@@ -177,7 +182,8 @@ export class InscriptionClient {
       }
     }
     delete plainObject.files;
-    let data = qs.stringify(plainObject);
+    plainObject.apikeyhash = this.apikeyhash;
+    const data = qs.stringify(plainObject);
     // modify normal json to valid form data for files
 
     let config = {
@@ -190,6 +196,30 @@ export class InscriptionClient {
       data: data,
     };
     return axios.request(config);
+  }
+
+  /**
+   * updates collection phases.
+   * @param {UpdateCollectionPhasesRequest} collection - The request object for updating the collection phases.
+   * @returns {Promise<InscriptionCollectionCreateResponse>} A promise resolving with the updated collection response.
+   */
+  async updateCollectionPhases(
+    collection: UpdateCollectionPhasesRequest
+  ): Promise<InscriptionCollectionCreateResponse> {
+    return this.instanceV1.post(`/updatecollectionphases`, {
+      ...collection
+    });
+  }
+
+  /**
+   * Fetch the allocation and inscribedCount of reciever address by phases from collection.
+   * @param {GetAllocationRequest} allocation - The request object for get allocation.
+   * @returns {Promise<GetAllocationResponse>} A promise resolving with the phases response.
+   */
+  async getAllocation(
+    allocation: GetAllocationRequest
+  ): Promise<GetAllocationResponse> {
+    return this.instanceV1.post(`/getallocation`, allocation);
   }
 
   /**

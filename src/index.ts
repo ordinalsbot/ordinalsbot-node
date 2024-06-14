@@ -1,11 +1,10 @@
-import { Store, Wallet } from "l402";
 import { Inscription } from "./inscription/index";
 import { Launchpad } from "./launchpad/index";
 import { MarketPlace } from "./marketplace";
 import { Mempool } from "./mempool/index";
 import { Satextractor } from "./satextractor/index";
 import { Satscanner } from "./satscanner/index";
-import { ClientOptions, InscriptionEnv } from "./types";
+import { ClientOptions, InscriptionEnv, InscriptionEnvNetwork } from "./types";
 
 export { InscriptionClient } from "./client";
 export { InscriptionError } from "./inscription/error";
@@ -54,10 +53,12 @@ export class Ordinalsbot {
   /**
    * Creates an instance of Ordinalsbot.
    * @param {string} key - The API key for authentication.
-   * @param {InscriptionEnv} environment - The environment (e.g., "live" or "dev") for the inscription.
+   * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
    * @param {ClientOptions} [options] - Options for enabling L402 support.
   */
-  constructor(key: string = "", environment: InscriptionEnv = "live", options?: ClientOptions) {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
+  
+    environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
     /**
      * initialising the marketplace instance
      */

@@ -26,7 +26,7 @@ describe('Create Special Sats PSBT', function () {
       .stub(InscriptionClient.prototype, 'createSpecialSatsPSBT')
       .callsFake(() => mockResponse)
 
-    const inscription = new Inscription('someApiKey', 'dev')
+    const inscription = new Inscription('someApiKey', 'testnet')
     const response = await inscription.createSpecialSatsPSBT(
       createSpecialSatsPSBTRequest
     )
