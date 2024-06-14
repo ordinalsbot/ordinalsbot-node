@@ -17,9 +17,13 @@ import {
   CreateSpecialSatsRequest,
   CreateSpecialSatsResponse,
   InscriptionCollectionOrderResponse,
+  UpdateCollectionPhasesRequest,
+  GetAllocationRequest,
+  GetAllocationResponse,
   DirectInscriptionOrderRequest,
   DirectInscriptionOrder,
 } from "./types/v1";
+import { sha256 } from 'bitcoinjs-lib/src/crypto';
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "./types/runes_types";
 import { setupL402Interceptor } from "l402";
 
@@ -38,6 +42,7 @@ export class InscriptionClient {
 
   private api_key: string;
   private instanceV1: AxiosInstance;
+  private apikeyhash: string;
 
   /**
    * Constructs an instance of InscriptionClient.
@@ -103,6 +108,8 @@ export class InscriptionClient {
 
     // Create the Axios instance
     this.instanceV1 = createInstance();
+
+    this.apikeyhash = sha256(Buffer.from(this.api_key)).toString("hex");
   }
 
   /**
@@ -175,7 +182,8 @@ export class InscriptionClient {
       }
     }
     delete plainObject.files;
-    let data = qs.stringify(plainObject);
+    plainObject.apikeyhash = this.apikeyhash;
+    const data = qs.stringify(plainObject);
     // modify normal json to valid form data for files
 
     let config = {
@@ -188,6 +196,30 @@ export class InscriptionClient {
       data: data,
     };
     return axios.request(config);
+  }
+
+  /**
+   * updates collection phases.
+   * @param {UpdateCollectionPhasesRequest} collection - The request object for updating the collection phases.
+   * @returns {Promise<InscriptionCollectionCreateResponse>} A promise resolving with the updated collection response.
+   */
+  async updateCollectionPhases(
+    collection: UpdateCollectionPhasesRequest
+  ): Promise<InscriptionCollectionCreateResponse> {
+    return this.instanceV1.post(`/updatecollectionphases`, {
+      ...collection
+    });
+  }
+
+  /**
+   * Fetch the allocation and inscribedCount of reciever address by phases from collection.
+   * @param {GetAllocationRequest} allocation - The request object for get allocation.
+   * @returns {Promise<GetAllocationResponse>} A promise resolving with the phases response.
+   */
+  async getAllocation(
+    allocation: GetAllocationRequest
+  ): Promise<GetAllocationResponse> {
+    return this.instanceV1.post(`/getallocation`, allocation);
   }
 
   /**

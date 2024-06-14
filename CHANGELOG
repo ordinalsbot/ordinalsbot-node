@@ -1,3 +1,9 @@
+## [0.2.9]
+- `Inscription`
+  - createCollection - Added phases in the request and response object.
+  - updateCollectionPhases - Added method for updating the phases of a collection.
+  - getAllocation - Added a method to check allowed and claimed inscription in collection phases for an address
+
 ## [0.2.8]
 - Environment support added for all APIs except `marketplace` and `launchpad`
   - Environment can be `tesnet`, `signet`, `mainnet`

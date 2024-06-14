@@ -74,6 +74,28 @@ export class Inscription {
   }
 
   /**
+   * updates collection phases with the given collection id.
+   * @param {v1.UpdateCollectionPhasesRequest} collection The request data.
+   * @returns {Promise<v1.InscriptionCollectionCreateResponse>} A promise that resolves with the updated collection response.
+   */
+  updateCollectionPhases(
+    collection: v1.UpdateCollectionPhasesRequest
+  ): Promise<v1.InscriptionCollectionCreateResponse> {
+    return this.instance.updateCollectionPhases(collection);
+  }
+
+  /**
+   * Fetch the allocation and inscribedCount of reciever address by phases from collection.
+   * @param {v1.GetAllocationRequest} allocation The request data.
+   * @returns {Promise<v1.GetAllocationResponse>} A promise that resolves with the allocation response.
+   */
+  getAllocation(
+    allocation: v1.GetAllocationRequest
+  ): Promise<v1.GetAllocationResponse> {
+    return this.instance.getAllocation(allocation);
+  }
+
+  /**
    * Creates a collection order with the given collection order request.
    * @param {v1.InscriptionCollectionOrderRequest} collectionOrder The collection order request.
    * @returns {Promise<v1.InscriptionCollectionOrderResponse>} A promise that resolves with the created collection order.
@@ -100,7 +122,9 @@ export class Inscription {
    * @param {RunesEtchOrderRequest} order The order request.
    * @returns {Promise<RunesEtchOrderResponse>} A promise that resolves with the created order.
    */
-  createRunesEtchOrder(order: RunesEtchOrderRequest): Promise<RunesEtchOrderResponse> {
+  createRunesEtchOrder(
+    order: RunesEtchOrderRequest
+  ): Promise<RunesEtchOrderResponse> {
     return this.instance.createRunesEtchOrder(order);
   }
 
@@ -109,7 +133,9 @@ export class Inscription {
    * @param {RunesMintOrderRequest} order The order request.
    * @returns {Promise<RunesMintOrderResponse>} A promise that resolves with the created order.
    */
-  createRunesMintOrder(order: RunesMintOrderRequest): Promise<RunesMintOrderResponse> {
+  createRunesMintOrder(
+    order: RunesMintOrderRequest
+  ): Promise<RunesMintOrderResponse> {
     return this.instance.createRunesMintOrder(order);
   }
 
