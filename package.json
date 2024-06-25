@@ -21,7 +21,7 @@
   "homepage": "https://github.com/ordinalsbot/ordinalsbot-node#readme",
   "dependencies": {
     "@bitcoin-js/tiny-secp256k1-asmjs": "^2.2.3",
-    "axios": "^1.6.8",
+    "axios": "^0.28.0",
     "bitcoinjs-lib": "^6.1.5",
     "dotenv": "^16.4.5",
     "l402": "^0.5.1",
