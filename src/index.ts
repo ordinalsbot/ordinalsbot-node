@@ -4,6 +4,7 @@ import { MarketPlace } from "./marketplace";
 import { Mempool } from "./mempool/index";
 import { Satextractor } from "./satextractor/index";
 import { Satscanner } from "./satscanner/index";
+import { TokenPay } from './tokenpay/index';
 import { ClientOptions, InscriptionEnv, InscriptionEnvNetwork } from "./types";
 
 export { InscriptionClient } from "./client";
@@ -14,6 +15,7 @@ export { Inscription } from "./inscription/index";
 export { Satscanner } from "./satscanner/index";
 export { Satextractor } from "./satextractor/index";
 export { Mempool } from "./mempool/index";
+export { TokenPay } from "./tokenpay/index";
 
 
 /**
@@ -49,6 +51,11 @@ export class Ordinalsbot {
    * The satscanner instance.
    */
   private satscannerObj!: Satscanner;
+
+  /**
+   * The tokenpay instance.
+   */
+  private tokenpayObj!: TokenPay;
 
   /**
    * Creates an instance of Ordinalsbot.
@@ -100,6 +107,13 @@ export class Ordinalsbot {
     if (this.satscannerObj === undefined) {
       this.satscannerObj = new Satscanner(key, environment, options);
     }
+    
+    /**
+     * initialising the tokenpay instance
+     */
+    if (this.tokenpayObj === undefined) {
+      this.tokenpayObj = new TokenPay(key, environment, options);
+    }
   }
 
   /**
@@ -148,5 +162,13 @@ export class Ordinalsbot {
    */
   Satscanner(): Satscanner {
     return this.satscannerObj;
+  }
+  
+  /**
+   * Returns the TokenPay instance.
+   * @returns {TokenPay} The TokenPay instance.
+   */
+  TokenPay(): TokenPay {
+    return this.tokenpayObj;
   }
 }

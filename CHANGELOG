@@ -1,3 +1,17 @@
+## [0.2.8]
+- `TokenPay`
+  - Added `createOrder`: for creating orders
+  - Added `createPaymentPSBT`: for creating payment psbt 
+
+  `Usage of TokenPay`
+  ```
+  import { Ordinalsbot } from 'ordinalsbot'
+
+  // If no parameter is given, the default environment is 'mainnet'
+  const ordinalsbot = new Ordinalsbot(API_KEY, 'testnet')
+  const tokenPay = ordinalsbot.TokenPay()
+  ```
+
 ## [0.2.5]
 - `Types`
   - Added `direct` inscription types
