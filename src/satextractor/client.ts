@@ -82,7 +82,7 @@ export class SatextractorClient {
 
       // If L402 is enabled and configuration is provided, set up the L402 interceptor
       if (options?.useL402 && options.l402Config) {
-        setupL402Interceptor(client, options.l402Config.wallet, options.l402Config.tokenStore);
+        setupL402Interceptor(client as any, options.l402Config.wallet, options.l402Config.tokenStore);
       };
 
       return client;
