@@ -1,3 +1,7 @@
+## [0.2.10]
+- Fixed
+  - Fixed the issue with the axios error when using sdk on frontend
+
 ## [0.2.9]
 - `Inscription`
   - createCollection - Added phases in the request and response object.
