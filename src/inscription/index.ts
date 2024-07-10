@@ -33,6 +33,7 @@ export class Inscription {
         this.network = BitcoinNetworkType.Testnet;
         break;
       case InscriptionEnvNetwork.signet:
+        // @ts-ignore
         this.network = BitcoinNetworkType.Signet;
         break;
     
