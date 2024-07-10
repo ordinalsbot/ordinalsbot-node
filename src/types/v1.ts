@@ -280,6 +280,7 @@ export interface InscriptionOrderParentRequest {
    */
   depositAddress?: string;
   parentReturnTx?: string;
+  value?: string;
 }
 
 export interface InscriptionCharge {
