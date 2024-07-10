@@ -850,22 +850,22 @@ export interface CreateParentChildPsbtRequest {
   /**
    * The payment address of the user.
    */
-  userAddress: string;
+  paymentAddress: string;
 
   /**
    * The payment address public key of the user.
    */
-  userPublicKey: string;
+  paymentPublicKey: string;
 
   /**
    * The ordinal address key of the user.
    */
-  userOrdinalsAddress: string;
+  ordinalsAddress: string;
   
   /**
    * The ordinal address public key of the user.
    */
-  userOrdinalPublicKey: string;
+  ordinalPublicKey: string;
 
   /**
    * The fee rate to be applied.

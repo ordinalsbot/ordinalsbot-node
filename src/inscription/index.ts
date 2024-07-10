@@ -215,11 +215,11 @@ export class Inscription {
     const result: CreateParentChildPsbtResponse = await this.instance.createParentChildPsbt(createParentChildPsbt);
     const inputsToSign = [
       {
-        address: createParentChildPsbt.userOrdinalsAddress,
+        address: createParentChildPsbt.ordinalsAddress,
         signingIndexes: result.ordinalInputIndices
       },
       {
-        address: createParentChildPsbt.userAddress,
+        address: createParentChildPsbt.paymentAddress,
         signingIndexes: result.paymentInputIndices
       },
     ];
