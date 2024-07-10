@@ -39,8 +39,8 @@ export interface InscriptionFile {
   tx?: InscriptionTransaction;
 
   /*
-   For some transactions this gets set to the txid 
-   that inscription gets sent to user receiveAddress
+    For some transactions this gets set to the txid 
+    that inscription gets sent to user receiveAddress
   */
   sent?: string;
 
@@ -75,8 +75,8 @@ export interface Delegate {
   tx?: InscriptionTransaction;
 
   /*
-   For some transactions this gets set to the txid 
-   that inscription gets sent to user receiveAddress
+    For some transactions this gets set to the txid 
+    that inscription gets sent to user receiveAddress
   */
   sent?: string;
 
@@ -194,6 +194,9 @@ export interface DirectInscriptionOrderRequest {
    */
   files?: InscriptionFile[];
 
+  /** files OR delegates array is mandatory for an order */
+  delegates?: Delegate[];
+
   /**
    * Miner fee that will be paid while inscribing the ordinals in sats/byte.
    * (default=2 sats/byte)
@@ -213,6 +216,11 @@ export interface DirectInscriptionOrderRequest {
   receiveAddress?: string | string[];
 
   /**
+   * Array of parent objects that will become parents to the inscriptions
+   */
+  parent?: InscriptionOrderParentRequest[];
+
+  /**
    * Limit which sats can be used to inscribe onto this order.
    * i.e. ['vintage', 'block78', 'pizza', 'uncommon']
    * full list of supported satributes can be queried from satscanner endpoint
@@ -229,6 +237,11 @@ export interface DirectInscriptionOrderRequest {
    * Needs to be used together with "referral" parameter.
    */
   additionalFee?: number;
+
+  /**
+   * We will grind an inscription id prefix if this option is specified. All inscriptions in the order will have this prefix.
+   */
+  inscriptionIdPrefix?:  string;
 
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string;
@@ -253,10 +266,20 @@ export interface DirectInscriptionOrder extends DirectInscriptionOrderRequest {
  * Parent Reqeust object for the Inscription order
  */
 export interface InscriptionOrderParentRequest {
+
+  /**
+   * the inscription id of the parent
+   */
   inscriptionId: string;
+  /**
+   * where to return this parent inscription
+   */
   returnAddress: string;
-  depositAddress: string;
-  parentReturnTx: string;
+  /**
+   * where to send this parent inscription
+   */
+  depositAddress?: string;
+  parentReturnTx?: string;
 }
 
 export interface InscriptionCharge {
