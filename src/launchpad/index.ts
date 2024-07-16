@@ -66,7 +66,7 @@ export class Launchpad {
         this.network = BitcoinNetworkType.Testnet;
         break;
       case InscriptionEnvNetwork.signet:
-        // this.network = '';
+        this.network = BitcoinNetworkType.Signet;
         break;
     
       default:
