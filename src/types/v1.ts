@@ -814,3 +814,69 @@ export enum BatchModeType {
   SEPARATE_OUTPUTS = 'separate-outputs',
   SHARED_OUTPUT = 'shared-output'
 }
+
+/**
+ * Interface representing a request to create a parent-child Partially Signed Bitcoin Transaction (PSBT).
+ */
+export interface CreateParentChildPsbtRequest {
+  /**
+   * The unique identifier for the order.
+   */
+  orderId: string;
+
+  /**
+   * The payment address of the user.
+   */
+  userAddress: string;
+
+  /**
+   * The payment address public key of the user.
+   */
+  userPublicKey: string;
+
+  /**
+   * The ordinal address key of the user.
+   */
+  userOrdinalsAddress: string;
+  
+  /**
+   * The ordinal address public key of the user.
+   */
+  userOrdinalPublicKey: string;
+
+  /**
+   * The fee rate to be applied.
+   */
+  feeRate: number;
+
+  /**
+   * The provider of the user's wallet. This field is optional.
+   */
+  walletProvider?: string;
+}
+
+
+/**
+ * Interface representing the response from creating a parent-child Partially Signed Bitcoin Transaction (PSBT).
+ */
+export interface CreateParentChildPsbtResponse {
+  /**
+   * The PSBT in Base64 format.
+   */
+  psbtBase64: string;
+
+  /**
+   * The indices of the inputs related to ordinals.
+   */
+  ordinalInputIndices: Array<number>;
+
+  /**
+   * The indices of the inputs related to payments.
+   */
+  paymentInputIndices: Array<number>;
+
+  /**
+   * The PSBT in hexadecimal format.
+   */
+  psbtHex: string;
+}
