@@ -166,7 +166,7 @@ export interface InscriptionOrderRequest {
   /**
    *
    */
-  parents?: InscriptionOrderParentRequest;
+  parent?: InscriptionOrderParentRequest;
 
   /**
    *
@@ -218,7 +218,7 @@ export interface DirectInscriptionOrderRequest {
   /**
    * Array of parent objects that will become parents to the inscriptions
    */
-  parent?: InscriptionOrderParentRequest[];
+  parents?: InscriptionOrderParentRequest[];
 
   /**
    * Limit which sats can be used to inscribe onto this order.
