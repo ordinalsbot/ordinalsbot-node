@@ -1,3 +1,8 @@
+## [0.2.11]
+- `Inscription`
+  - Updated `createDirectOrder` - method to create multi parent parent child inscription order.
+  - Added `createParentChildPsbt` - method for create parent child psbt for an order.
+
 ## [0.2.10]
 - Fixed
   - Fixed the issue with the axios error when using sdk on frontend
