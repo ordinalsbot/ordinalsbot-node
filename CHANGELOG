@@ -1,6 +1,7 @@
 ## [0.2.11]
 - `Inscription`
-  - createParentChildPsbt - Added method for create parent child psbt for an order.
+  - Updated `createDirectOrder` - method to create multi parent parent child inscription order.
+  - Added `createParentChildPsbt` - method for create parent child psbt for an order.
 
 ## [0.2.10]
 - Fixed
