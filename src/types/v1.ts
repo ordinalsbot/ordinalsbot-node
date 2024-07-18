@@ -166,7 +166,7 @@ export interface InscriptionOrderRequest {
   /**
    *
    */
-  parent?: InscriptionOrderParentRequest;
+  parents?: InscriptionOrderParentRequest;
 
   /**
    *
