@@ -13,13 +13,22 @@ describe("Create Payment PSBT", function () {
       orderId: "someOrderID",
       paymentAddress: "somePaymentAddress",
       paymentPublicKey: "somePaymentPublicKey",
+      runeOwnerAddress: "someRuneOwnerAddress",
       feeRate: 28,
     };
 
     const mockResponse = {
       psbtBase64: "somePsbtBase64String",
-      inputIndicesToSign: [0,1,2],
-      psbtHex: "somePSBTHexString",
+      runeInput: {
+        index: 0,
+        txid: "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+        vout: 0,
+      },
+      paymentInputs: {
+        indices: [1, 2],
+        address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      },
+      psbtHex: "70736274ff0100fd5f0102000000c11d65eeb3b956159...",
     };
 
     sinon
@@ -41,14 +50,23 @@ describe("Create Payment PSBT", function () {
       orderId: "someOrderID",
       paymentAddress: "somePaymentAddress",
       paymentPublicKey: "somePaymentPublicKey",
+      runeOwnerAddress: "someRuneOwnerAddress",
       feeRate: 28,
       walletProvider: "Xverse",
     };
 
     const mockResponse = {
       psbtBase64: "somePsbtBase64String",
-      inputIndicesToSign: [0,1,2],
-      psbtHex: "somePSBTHexString",
+      runeInput: {
+        index: 0,
+        txid: "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+        vout: 0,
+      },
+      paymentInputs: {
+        indices: [1, 2],
+        address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      },
+      psbtHex: "70736274ff0100fd5f0102000000c11d65eeb3b956159...",
     };
 
     sinon

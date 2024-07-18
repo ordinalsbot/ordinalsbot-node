@@ -147,6 +147,18 @@ export interface CreatePaymentPSBTRequest {
   paymentPublicKey: string;
 
   /**
+   * The rune owner (ordinal) address.
+   * @type {string}
+   */
+  runeOwnerAddress: string;
+
+  /**
+   * The ordinal public key.
+   * @type {string}
+   */
+  ordinalPublicKey: string;
+
+  /**
    * The fee rate for the transaction, specified in satoshis per byte.
    * This field is optional.
    * @type {number}
@@ -164,6 +176,46 @@ export interface CreatePaymentPSBTRequest {
 }
 
 /**
+ * Interface representing a rune input.
+ */
+interface RuneInput {
+  /**
+   * The index of the rune input.
+   * @type {number}
+   */
+  index: number;
+
+  /**
+   * The transaction ID associated with the rune input.
+   * @type {string}
+   */
+  txid: string;
+
+  /**
+   * The output index of the transaction.
+   * @type {number}
+   */
+  vout: number;
+}
+
+/**
+ * Interface representing the inputs for a payment.
+ */
+interface PaymentInputs {
+  /**
+   * An array of indices for the payment inputs.
+   * @type {number[]}
+   */
+  indices: number[];
+
+  /**
+   * The address associated with the payment inputs.
+   * @type {string}
+   */
+  address: string;
+}
+
+/**
  * Interface representing the response from creating a Payment Partially Signed Bitcoin Transaction (PSBT).
  */
 export interface CreatePaymentPSBTResponse {
@@ -174,10 +226,16 @@ export interface CreatePaymentPSBTResponse {
   psbtBase64: string;
 
   /**
-   * An array of indices indicating the inputs to sign in the PSBT.
-   * @type {number[]}
+   * The rune input used in the PSBT.
+   * @type {RuneInput}
    */
-  inputIndicesToSign: number[];
+  runeInput: RuneInput;
+
+  /**
+   * The payment inputs used in the PSBT.
+   * @type {PaymentInputs}
+   */
+  paymentInputs: PaymentInputs;
 
   /**
    * The PSBT encoded in hexadecimal format.

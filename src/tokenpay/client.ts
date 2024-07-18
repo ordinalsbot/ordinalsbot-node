@@ -55,9 +55,12 @@ export class TokenPayClient {
       }
 
       // Choose the base URL based on whether L402 is used or not
+      // const baseURL = options?.useL402
+      //   ? "https://ordinalsbot.ln.sulu.sh/tokenpay/"
+      //   : `${EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet}/tokenpay/`;
       const baseURL = options?.useL402
         ? "https://ordinalsbot.ln.sulu.sh/tokenpay/"
-        : `${EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet}/tokenpay/`;
+        : `http://localhost:3000/`;
 
       // Create the Axios client with the appropriate base URL
       const client = axios.create({

@@ -88,10 +88,16 @@ export class TokenPay {
       return this.tokenpayClientInstance.createPaymentPSBT(createPaymentPSBTRequest);
     } else if (createPaymentPSBTRequest.walletProvider === WALLET_PROVIDER.xverse) {
       const paymentPSBTResponse: CreatePaymentPSBTResponse = await this.tokenpayClientInstance.createPaymentPSBT(createPaymentPSBTRequest);
-      const inputsToSign = {
-        address: createPaymentPSBTRequest.paymentAddress,
-        signingIndexes: paymentPSBTResponse.inputIndicesToSign,
-      };
+      const inputsToSign = [
+        {
+          address: createPaymentPSBTRequest.runeOwnerAddress,
+          signingIndexes: [0],
+        },
+        {
+          address: createPaymentPSBTRequest.paymentAddress,
+          signingIndexes: paymentPSBTResponse.paymentInputs.indices,
+        },
+      ];
 
       const payload = {
         network: {
@@ -100,7 +106,7 @@ export class TokenPay {
         message: "Sign Payment PSBT Transaction",
         psbtBase64: paymentPSBTResponse.psbtBase64,
         broadcast: true,
-        inputsToSign: [inputsToSign],
+        inputsToSign,
       };
 
       return new Promise(async (resolve, reject) => {
