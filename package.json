@@ -1,6 +1,6 @@
 {
   "name": "ordinalsbot",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Node.js library for OrdinalsBot API",
   "main": "dist/index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "bitcoinjs-lib": "^6.1.5",
     "dotenv": "^16.4.5",
     "l402": "^0.5.1",
-    "sats-connect": "^1.1.2",
+    "sats-connect": "2.4.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
