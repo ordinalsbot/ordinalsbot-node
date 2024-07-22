@@ -1,7 +1,7 @@
 import { InscriptionClient } from "../client";
 import { ClientOptions, InscriptionEnv, InscriptionEnvNetwork, v1 } from "../types";
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "../types/runes_types";
-import { CreateParentChildPsbtRequest, CreateParentChildPsbtResponse } from '../types/v1';
+import { CreateParentChildPsbtRequest, CreateParentChildPsbtResponse, CreateSpecialSatsRequest, CreateSpecialSatsResponse } from '../types/v1';
 import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sats-connect';
 
 /**
@@ -191,13 +191,47 @@ export class Inscription {
 
   /**
    * Creates a special sats psbt.
-   * @param {v1.CreateSpecialSatsRequest} createSpecialSatsRequest The order request.
-   * @returns {Promise<v1.CreateSpecialSatsResponse>} A promise that resolves with the psbt for special sats.
+   * @param {CreateSpecialSatsRequest} createSpecialSatsRequest The order request.
+   * @returns {Promise<CreateSpecialSatsResponse>} A promise that resolves with the psbt for special sats.
    */
-  createSpecialSatsPSBT(
-    createSpecialSatsRequest: v1.CreateSpecialSatsRequest
-  ): Promise<v1.CreateSpecialSatsResponse> {
-    return this.instance.createSpecialSatsPSBT(createSpecialSatsRequest);
+  async createSpecialSatsPSBT(
+    createSpecialSatsRequest: CreateSpecialSatsRequest
+  ): Promise<SignTransactionResponse | CreateSpecialSatsResponse> {
+    if (!createSpecialSatsRequest.walletProvider) {
+      return this.instance.createSpecialSatsPSBT(createSpecialSatsRequest);
+    }
+    const result: CreateSpecialSatsResponse = await this.instance.createSpecialSatsPSBT(createSpecialSatsRequest);
+    const inputsToSign = [
+      {
+        address: createSpecialSatsRequest.ordinalAddress,
+        signingIndexes: result.ordinalInputIndices
+      },
+      {
+        address: createSpecialSatsRequest.paymentAddress,
+        signingIndexes: result.paymentInputIndices
+      },
+    ];
+
+    // Create the payload for signing the transaction
+    const payload = {
+      network: { type: this.network },
+      message: 'Sign Payment Transaction',
+      psbtBase64: result.psbtBase64,
+      broadcast: true,
+      inputsToSign,
+    };
+
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response: any) => {
+          return resolve(response)
+        },
+        onCancel: () => {
+          console.log('Payment canceled');
+        }
+      });
+    });
   }
 
   /**
