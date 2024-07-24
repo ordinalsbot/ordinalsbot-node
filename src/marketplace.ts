@@ -60,7 +60,8 @@ export class MarketPlace {
         this.network = BitcoinNetworkType.Testnet;
         break;
       case InscriptionEnvNetwork.signet:
-        // this.network = '';
+        // @ts-ignore
+        this.network = BitcoinNetworkType.Signet;
         break;
     
       default:

@@ -1,3 +1,22 @@
+## [0.2.12]
+- `Inscription`
+  - Updated `createSpecialSatsPSBT` - method request and response to create special sats psbt with XVerse wallet support.
+
+## [0.2.11]
+- `Inscription`
+  - Updated `createDirectOrder` - method to create multi parent parent child inscription order.
+  - Added `createParentChildPsbt` - method for create parent child psbt for an order.
+
+## [0.2.10]
+- Fixed
+  - Fixed the issue with the axios error when using sdk on frontend
+
+## [0.2.9]
+- `Inscription`
+  - createCollection - Added phases in the request and response object.
+  - updateCollectionPhases - Added method for updating the phases of a collection.
+  - getAllocation - Added a method to check allowed and claimed inscription in collection phases for an address
+
 ## [0.2.8]
 - `TokenPay`
   - Added `createOrder`: for creating orders

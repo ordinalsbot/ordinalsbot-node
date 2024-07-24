@@ -22,6 +22,8 @@ import {
   GetAllocationResponse,
   DirectInscriptionOrderRequest,
   DirectInscriptionOrder,
+  CreateParentChildPsbtRequest,
+  CreateParentChildPsbtResponse,
 } from "./types/v1";
 import { sha256 } from 'bitcoinjs-lib/src/crypto';
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "./types/runes_types";
@@ -308,6 +310,20 @@ export class InscriptionClient {
   ): Promise<CreateSpecialSatsResponse> {
     return this.instanceV1.post(`/create-special-sats-psbt`, {
       ...createSpecialSatsRequest,
+    });
+  }
+
+  /**
+   * Creates a parent-child PSBT (Partially Signed Bitcoin Transaction).
+   * 
+   * @param {CreateParentChildPsbtRequest} createParentChildPsbtRequest - The request object containing parameters to create the parent-child PSBT.
+   * @returns {Promise<CreateParentChildPsbtResponse>} - A promise that resolves to the response object containing the created parent-child PSBT.
+   */
+  async createParentChildPsbt(
+    createParentChildPsbtRequest: CreateParentChildPsbtRequest
+  ): Promise<CreateParentChildPsbtResponse> {
+    return this.instanceV1.post(`/create-parent-child-psbt`, {
+      ...createParentChildPsbtRequest,
     });
   }
 }

@@ -1,6 +1,8 @@
 import { InscriptionClient } from "../client";
 import { ClientOptions, InscriptionEnv, InscriptionEnvNetwork, v1 } from "../types";
 import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, RunesMintOrderResponse } from "../types/runes_types";
+import { CreateParentChildPsbtRequest, CreateParentChildPsbtResponse, CreateSpecialSatsRequest, CreateSpecialSatsResponse } from '../types/v1';
+import { BitcoinNetworkType, SignTransactionResponse, signTransaction } from 'sats-connect';
 
 /**
  * Main class for interacting with the Inscription API.
@@ -8,6 +10,8 @@ import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, R
 export class Inscription {
   /** The instance of InscriptionClient. */
   instance!: InscriptionClient;
+
+  private network: BitcoinNetworkType;
 
   /**
    * Creates an instance of Inscription.
@@ -21,6 +25,22 @@ export class Inscription {
       return;
     }
     environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
+    switch (environment) {
+      case InscriptionEnvNetwork.mainnet:
+        this.network = BitcoinNetworkType.Mainnet;
+        break;
+      case InscriptionEnvNetwork.testnet:
+        this.network = BitcoinNetworkType.Testnet;
+        break;
+      case InscriptionEnvNetwork.signet:
+        // @ts-ignore
+        this.network = BitcoinNetworkType.Signet;
+        break;
+    
+      default:
+        this.network = BitcoinNetworkType.Mainnet
+        break;
+    }
     this.instance = new InscriptionClient(key, environment, options);
   }
 
@@ -171,12 +191,92 @@ export class Inscription {
 
   /**
    * Creates a special sats psbt.
-   * @param {v1.CreateSpecialSatsRequest} createSpecialSatsRequest The order request.
-   * @returns {Promise<v1.CreateSpecialSatsResponse>} A promise that resolves with the psbt for special sats.
+   * @param {CreateSpecialSatsRequest} createSpecialSatsRequest The order request.
+   * @returns {Promise<CreateSpecialSatsResponse>} A promise that resolves with the psbt for special sats.
    */
-  createSpecialSatsPSBT(
-    createSpecialSatsRequest: v1.CreateSpecialSatsRequest
-  ): Promise<v1.CreateSpecialSatsResponse> {
-    return this.instance.createSpecialSatsPSBT(createSpecialSatsRequest);
+  async createSpecialSatsPSBT(
+    createSpecialSatsRequest: CreateSpecialSatsRequest
+  ): Promise<SignTransactionResponse | CreateSpecialSatsResponse> {
+    if (!createSpecialSatsRequest.walletProvider) {
+      return this.instance.createSpecialSatsPSBT(createSpecialSatsRequest);
+    }
+    const result: CreateSpecialSatsResponse = await this.instance.createSpecialSatsPSBT(createSpecialSatsRequest);
+    const inputsToSign = [
+      {
+        address: createSpecialSatsRequest.ordinalAddress,
+        signingIndexes: result.ordinalInputIndices
+      },
+      {
+        address: createSpecialSatsRequest.paymentAddress,
+        signingIndexes: result.paymentInputIndices
+      },
+    ];
+
+    // Create the payload for signing the transaction
+    const payload = {
+      network: { type: this.network },
+      message: 'Sign Payment Transaction',
+      psbtBase64: result.psbtBase64,
+      broadcast: true,
+      inputsToSign,
+    };
+
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response: any) => {
+          return resolve(response)
+        },
+        onCancel: () => {
+          console.log('Payment canceled');
+        }
+      });
+    });
+  }
+
+  /**
+   * Creates a Parent-Child PSBT (Partially Signed Bitcoin Transaction).
+   *
+   * @param {CreateParentChildPsbtRequest} createParentChildPsbt - The request object for creating the Parent-Child PSBT.
+   * @returns {Promise<SignTransactionResponse | CreateParentChildPsbtResponse>} A promise that resolves to either a SignTransactionResponse or CreateParentChildPsbtResponse.
+   */
+  async createParentChildPsbt(
+    createParentChildPsbt: CreateParentChildPsbtRequest
+  ): Promise<SignTransactionResponse | CreateParentChildPsbtResponse> {
+    if (!createParentChildPsbt.walletProvider) {
+      return this.instance.createParentChildPsbt(createParentChildPsbt);
+    }
+    const result: CreateParentChildPsbtResponse = await this.instance.createParentChildPsbt(createParentChildPsbt);
+    const inputsToSign = [
+      {
+        address: createParentChildPsbt.ordinalsAddress,
+        signingIndexes: result.ordinalInputIndices
+      },
+      {
+        address: createParentChildPsbt.paymentAddress,
+        signingIndexes: result.paymentInputIndices
+      },
+    ];
+
+    // Create the payload for signing the seller transaction
+    const payload = {
+      network: { type: this.network },
+      message: 'Sign Payment Transaction',
+      psbtBase64: result.psbtBase64,
+      broadcast: true,
+      inputsToSign,
+    };
+
+    return new Promise((resolve, reject) => {
+      signTransaction({
+        payload,
+        onFinish: async (response: any) => {
+          return resolve(response)
+        },
+        onCancel: () => {
+          console.log('Payment canceled');
+        }
+      });
+    });
   }
 }

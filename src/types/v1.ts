@@ -39,8 +39,8 @@ export interface InscriptionFile {
   tx?: InscriptionTransaction;
 
   /*
-   For some transactions this gets set to the txid 
-   that inscription gets sent to user receiveAddress
+    For some transactions this gets set to the txid 
+    that inscription gets sent to user receiveAddress
   */
   sent?: string;
 
@@ -75,8 +75,8 @@ export interface Delegate {
   tx?: InscriptionTransaction;
 
   /*
-   For some transactions this gets set to the txid 
-   that inscription gets sent to user receiveAddress
+    For some transactions this gets set to the txid 
+    that inscription gets sent to user receiveAddress
   */
   sent?: string;
 
@@ -194,6 +194,9 @@ export interface DirectInscriptionOrderRequest {
    */
   files?: InscriptionFile[];
 
+  /** files OR delegates array is mandatory for an order */
+  delegates?: Delegate[];
+
   /**
    * Miner fee that will be paid while inscribing the ordinals in sats/byte.
    * (default=2 sats/byte)
@@ -213,6 +216,11 @@ export interface DirectInscriptionOrderRequest {
   receiveAddress?: string | string[];
 
   /**
+   * Array of parent objects that will become parents to the inscriptions
+   */
+  parents?: InscriptionOrderParentRequest[];
+
+  /**
    * Limit which sats can be used to inscribe onto this order.
    * i.e. ['vintage', 'block78', 'pizza', 'uncommon']
    * full list of supported satributes can be queried from satscanner endpoint
@@ -229,6 +237,11 @@ export interface DirectInscriptionOrderRequest {
    * Needs to be used together with "referral" parameter.
    */
   additionalFee?: number;
+
+  /**
+   * We will grind an inscription id prefix if this option is specified. All inscriptions in the order will have this prefix.
+   */
+  inscriptionIdPrefix?:  string;
 
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string;
@@ -253,10 +266,21 @@ export interface DirectInscriptionOrder extends DirectInscriptionOrderRequest {
  * Parent Reqeust object for the Inscription order
  */
 export interface InscriptionOrderParentRequest {
+
+  /**
+   * the inscription id of the parent
+   */
   inscriptionId: string;
+  /**
+   * where to return this parent inscription
+   */
   returnAddress: string;
-  depositAddress: string;
-  parentReturnTx: string;
+  /**
+   * where to send this parent inscription
+   */
+  depositAddress?: string;
+  parentReturnTx?: string;
+  value?: string;
 }
 
 export interface InscriptionCharge {
@@ -758,9 +782,24 @@ export interface InscriptionReferralSetResponse {
  */
 export interface CreateSpecialSatsResponse {
   /**
-   * base64 transaction to be signed
+   * The PSBT in Base64 format.
    */
-  psbt: string;
+  psbtBase64: string;
+
+  /**
+   * The indices of the inputs related to ordinals.
+   */
+  ordinalInputIndices: Array<number>;
+
+  /**
+   * The indices of the inputs related to payments.
+   */
+  paymentInputIndices: Array<number>;
+
+  /**
+   * The PSBT in hexadecimal format.
+   */
+  psbtHex: string;
 }
 
 /**
@@ -777,13 +816,24 @@ export interface CreateSpecialSatsRequest {
   specialSatsOutput: string;
 
   /** user's payment address */
-  userAddress: string;
+  paymentAddress: string;
 
   /** user's payment public key*/
-  userPublicKey: string;
+  paymentPublicKey: string;
+  
+  /** user's ordinal address */
+  ordinalAddress: string;
 
+  /** user's ordinal public key*/
+  ordinalPublicKey: string;
+  
   /**feeRate */
   feeRate: number;
+
+  /**
+   * The provider of the user's wallet. This field is optional.
+   */
+  walletProvider?: string;
 }
 
 // Order states enum
@@ -813,4 +863,70 @@ export enum OrderType {
 export enum BatchModeType {
   SEPARATE_OUTPUTS = 'separate-outputs',
   SHARED_OUTPUT = 'shared-output'
+}
+
+/**
+ * Interface representing a request to create a parent-child Partially Signed Bitcoin Transaction (PSBT).
+ */
+export interface CreateParentChildPsbtRequest {
+  /**
+   * The unique identifier for the order.
+   */
+  orderId: string;
+
+  /**
+   * The payment address of the user.
+   */
+  paymentAddress: string;
+
+  /**
+   * The payment address public key of the user.
+   */
+  paymentPublicKey: string;
+
+  /**
+   * The ordinal address key of the user.
+   */
+  ordinalsAddress: string;
+  
+  /**
+   * The ordinal address public key of the user.
+   */
+  ordinalPublicKey: string;
+
+  /**
+   * The fee rate to be applied.
+   */
+  feeRate: number;
+
+  /**
+   * The provider of the user's wallet. This field is optional.
+   */
+  walletProvider?: string;
+}
+
+
+/**
+ * Interface representing the response from creating a parent-child Partially Signed Bitcoin Transaction (PSBT).
+ */
+export interface CreateParentChildPsbtResponse {
+  /**
+   * The PSBT in Base64 format.
+   */
+  psbtBase64: string;
+
+  /**
+   * The indices of the inputs related to ordinals.
+   */
+  ordinalInputIndices: Array<number>;
+
+  /**
+   * The indices of the inputs related to payments.
+   */
+  paymentInputIndices: Array<number>;
+
+  /**
+   * The PSBT in hexadecimal format.
+   */
+  psbtHex: string;
 }
