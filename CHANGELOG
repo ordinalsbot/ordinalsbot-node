@@ -1,3 +1,7 @@
+## [0.2.12]
+- `Inscription`
+  - Updated `createSpecialSatsPSBT` - method request and response to create special sats psbt with XVerse wallet support.
+
 ## [0.2.11]
 - `Inscription`
   - Updated `createDirectOrder` - method to create multi parent parent child inscription order.

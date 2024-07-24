@@ -782,9 +782,24 @@ export interface InscriptionReferralSetResponse {
  */
 export interface CreateSpecialSatsResponse {
   /**
-   * base64 transaction to be signed
+   * The PSBT in Base64 format.
    */
-  psbt: string;
+  psbtBase64: string;
+
+  /**
+   * The indices of the inputs related to ordinals.
+   */
+  ordinalInputIndices: Array<number>;
+
+  /**
+   * The indices of the inputs related to payments.
+   */
+  paymentInputIndices: Array<number>;
+
+  /**
+   * The PSBT in hexadecimal format.
+   */
+  psbtHex: string;
 }
 
 /**
@@ -801,13 +816,24 @@ export interface CreateSpecialSatsRequest {
   specialSatsOutput: string;
 
   /** user's payment address */
-  userAddress: string;
+  paymentAddress: string;
 
   /** user's payment public key*/
-  userPublicKey: string;
+  paymentPublicKey: string;
+  
+  /** user's ordinal address */
+  ordinalAddress: string;
 
+  /** user's ordinal public key*/
+  ordinalPublicKey: string;
+  
   /**feeRate */
   feeRate: number;
+
+  /**
+   * The provider of the user's wallet. This field is optional.
+   */
+  walletProvider?: string;
 }
 
 // Order states enum
