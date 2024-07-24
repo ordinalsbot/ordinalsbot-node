@@ -3,8 +3,8 @@ import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwor
 import {
   CreatePaymentPSBTRequest,
   CreatePaymentPSBTResponse,
-  CreateOrderRequest,
-  OrderResponse,  
+  CreateRuneOrderRequest,
+  RuneOrderResponse,  
 } from "../types/tokenpay_types";
 import { InscriptionError } from "../inscription/error";
 import { setupL402Interceptor } from "l402";
@@ -45,7 +45,6 @@ export class TokenPayClient {
      */
     const createInstance = (): AxiosInstance => {
       const headers: Record<string, string> = {
-        Connection: "Keep-Alive",
         "Content-Type": "application/json",
       };
 
@@ -55,12 +54,10 @@ export class TokenPayClient {
       }
 
       // Choose the base URL based on whether L402 is used or not
-      // const baseURL = options?.useL402
-      //   ? "https://ordinalsbot.ln.sulu.sh/tokenpay/"
-      //   : `${EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet}/tokenpay/`;
       const baseURL = options?.useL402
         ? "https://ordinalsbot.ln.sulu.sh/tokenpay/"
-        : `http://localhost:3000/`;
+        : `${EnvNetworkExplorer[this.env] || EnvNetworkExplorer.mainnet}/tokenpay/`;
+      
 
       // Create the Axios client with the appropriate base URL
       const client = axios.create({
@@ -99,14 +96,14 @@ export class TokenPayClient {
 
   /**
    * Creates a new order.
-   * @param {CreateOrderRequest} createOrderRequest The request body for creating a order.
-   * @returns {Promise<OrderResponse>} A promise that resolves to the response from the API.
+   * @param {CreateRuneOrderRequest} createRuneOrderRequest The request body for creating a order.
+   * @returns {Promise<RuneOrderResponse>} A promise that resolves to the response from the API.
    */
-  async createOrder(
-    createOrderRequest: CreateOrderRequest
-  ): Promise<OrderResponse> {
-    return this.instanceV1.post(`/order`, {
-      ...createOrderRequest,
+  async createRuneOrder(
+    createRuneOrderRequest: CreateRuneOrderRequest
+  ): Promise<RuneOrderResponse> {
+    return this.instanceV1.post(`/user/order/rune`, {
+      ...createRuneOrderRequest,
     });
   }
 

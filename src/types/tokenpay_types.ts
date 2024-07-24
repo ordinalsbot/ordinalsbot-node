@@ -1,9 +1,9 @@
 /**
- * Represents a request to create an order.
+ * Represents a request to create an rune order.
  *
- * @interface CreateOrderRequest
+ * @interface CreateRuneOrderRequest
  */
-export interface CreateOrderRequest {
+export interface CreateRuneOrderRequest {
   /**
    * The amount for the order.
    *
@@ -19,11 +19,11 @@ export interface CreateOrderRequest {
   token: string;
 
   /**
-   * The account ID related to the order.
+   * The webhook Url
    *
    * @type {string}
    */
-  accountId: string;
+  webhookUrl?: string;
 }
 
 /**
@@ -61,19 +61,33 @@ interface Charge {
   state: string;
 
   /**
-   * The type of the token.
+   * The protocol used for the charge.
    *
    * @type {string}
    */
-  tokenType: string;
+  protocol: string;
+
+  /**
+   * The transaction ID of the charge.
+   *
+   * @type {string | null}
+   */
+  txid: string | null;
+
+  /**
+   * The creation timestamp of the charge.
+   *
+   * @type {number}
+   */
+  createdAt: number;
 }
 
 /**
  * Represents an order.
  *
- * @interface Order
+ * @interface RuneOrderResponse
  */
-export interface OrderResponse {
+export interface RuneOrderResponse {
   /**
    * The ID of the order.
    *
@@ -110,11 +124,11 @@ export interface OrderResponse {
   tokenCharge: Charge;
 
   /**
-   * The type of the order.
+   * The webhook URL for the order.
    *
-   * @type {string}
+   * @type {string | null}
    */
-  type: string;
+  webhookUrl: string | null;
 
   /**
    * The state of the order.
@@ -147,10 +161,10 @@ export interface CreatePaymentPSBTRequest {
   paymentPublicKey: string;
 
   /**
-   * The rune owner (ordinal) address.
+   * The ordinal address.
    * @type {string}
    */
-  runeOwnerAddress: string;
+  ordinalAddress: string;
 
   /**
    * The ordinal public key.
@@ -180,22 +194,16 @@ export interface CreatePaymentPSBTRequest {
  */
 interface RuneInput {
   /**
-   * The index of the rune input.
-   * @type {number}
+   * An array of indices for the rune inputs.
+   * @type {number[]}
    */
-  index: number;
+  indices: number[];
 
   /**
-   * The transaction ID associated with the rune input.
+   * The address associated with the rune inputs.
    * @type {string}
    */
-  txid: string;
-
-  /**
-   * The output index of the transaction.
-   * @type {number}
-   */
-  vout: number;
+  address: string;
 }
 
 /**
@@ -229,7 +237,7 @@ export interface CreatePaymentPSBTResponse {
    * The rune input used in the PSBT.
    * @type {RuneInput}
    */
-  runeInput: RuneInput;
+  runeInputs: RuneInput;
 
   /**
    * The payment inputs used in the PSBT.

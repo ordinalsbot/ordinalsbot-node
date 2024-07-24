@@ -1,6 +1,11 @@
+## [0.2.13]
+- `TokenPay`
+  - Added `createRuneOrder` - method to create rune order.
+  - Added `createPaymentPSBT` - method for create payment psbt for an order.
+
 ## [0.2.12]
 - `Inscription`
-  - Updated `createSpecialSatsPSBT` - method request and response to create special sats psbt with XVerse wallet support.
+  - Updated `createSpecialSatsPSBT` - method request and response to create special sats psbt and xverse wallet support.
 
 ## [0.2.11]
 - `Inscription`
@@ -18,18 +23,10 @@
   - getAllocation - Added a method to check allowed and claimed inscription in collection phases for an address
 
 ## [0.2.8]
-- `TokenPay`
-  - Added `createOrder`: for creating orders
-  - Added `createPaymentPSBT`: for creating payment psbt 
-
-  `Usage of TokenPay`
-  ```
-  import { Ordinalsbot } from 'ordinalsbot'
-
-  // If no parameter is given, the default environment is 'mainnet'
-  const ordinalsbot = new Ordinalsbot(API_KEY, 'testnet')
-  const tokenPay = ordinalsbot.TokenPay()
-  ```
+- Environment support added for all APIs except `marketplace` and `launchpad`
+  - Environment can be `tesnet`, `signet`, `mainnet`
+  - Default environment is `mainnet`
+  - Backward compatibility maintained for `live` as mainnet environment and `dev` as testnet environment
 
 ## [0.2.5]
 - `Types`
@@ -75,14 +72,6 @@
 - `Types`
 
   - type syncronization with OrdinalsBot API
-
-## [0.1.6]
-
-#### APIs Updated
-- `Inscription`
-  - createCollection - Added the phases in the request and response object.
-  - updateCollectionPhases - Added the method for updating the phases of collection object.
-  - getAllocation - Added method to check allowed and claimed inscription in collection phases for the allowed address
 
 ## [0.1.5]
 
@@ -136,8 +125,8 @@
   ```
   import { Ordinalsbot } from 'ordinalsbot'
 
-  // If no parameter is given, the default environment is 'mainnet'
-  const ordinalsbotObj = new Ordinalsbot(API_KEY, 'testnet')
+  // If no parameter is given, the default environment is 'live'
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
   const marketPlace = ordinalsbotObj.MarketPlace()
   const inscription = ordinalsbotObj.Inscription()
   const launchpad = ordinalsbotObj.Launchpad()
@@ -173,8 +162,8 @@
   ```
   import { Ordinalsbot } from 'ordinalsbot'
 
-  // If no parameter is given, the default environment is 'mainnet'
-  const ordinalsbotObj = new Ordinalsbot(API_KEY, 'testnet')
+  // If no parameter is given, the default environment is 'live'
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, 'dev')
   const marketPlace = ordinalsbotObj.MarketPlace
   const inscription = ordinalsbotObj.Inscription
 

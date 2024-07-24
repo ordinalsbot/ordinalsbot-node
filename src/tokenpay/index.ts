@@ -9,8 +9,8 @@ import {
 import {
   CreatePaymentPSBTRequest,
   CreatePaymentPSBTResponse,
-  CreateOrderRequest,
-  OrderResponse,
+  CreateRuneOrderRequest,
+  RuneOrderResponse,
   SatsConnectWrapperResponse,
 } from "../types/tokenpay_types";
 import { WALLET_PROVIDER } from "../types/marketplace_types";
@@ -54,7 +54,8 @@ export class TokenPay {
         this.network = BitcoinNetworkType.Testnet;
         break;
       case InscriptionEnvNetwork.signet:
-        // this.network = '';
+        // @ts-ignore
+        this.network = BitcoinNetworkType.Signet;
         break;
 
       default:
@@ -65,12 +66,12 @@ export class TokenPay {
   }
 
   /**
-   * Creates a new order.
-   * @param {CreateOrderRequest} createOrderRequest The request body for creating a order.
-   * @returns {Promise<OrderResponse>} A promise that resolves to the response from the API.
+   * Creates a new Rune order.
+   * @param {CreateRuneOrderRequest} CreateRuneOrderRequest The request body for creating a order.
+   * @returns {Promise<RuneOrderResponse>} A promise that resolves to the response from the API.
    */
-  createOrder(createOrderRequest: CreateOrderRequest): Promise<OrderResponse> {
-    return this.tokenpayClientInstance.createOrder(createOrderRequest);
+  createRuneOrder(CreateRuneOrderRequest: CreateRuneOrderRequest): Promise<RuneOrderResponse> {
+    return this.tokenpayClientInstance.createRuneOrder(CreateRuneOrderRequest);
   }
 
   /**
@@ -90,8 +91,8 @@ export class TokenPay {
       const paymentPSBTResponse: CreatePaymentPSBTResponse = await this.tokenpayClientInstance.createPaymentPSBT(createPaymentPSBTRequest);
       const inputsToSign = [
         {
-          address: createPaymentPSBTRequest.runeOwnerAddress,
-          signingIndexes: [0],
+          address: createPaymentPSBTRequest.ordinalAddress,
+          signingIndexes: paymentPSBTResponse.runeInputs.indices,
         },
         {
           address: createPaymentPSBTRequest.paymentAddress,

@@ -25,6 +25,9 @@ describe("Create Order", function () {
         address: "abc",
         state: "pending_payment",
         tokenType: "btc",
+        protocol: "bitcoin",
+        txid: null,
+        createdAt: 1721384941957,
       },
       tokenCharge: {
         amount: 2000,
@@ -32,17 +35,21 @@ describe("Create Order", function () {
         address: "def",
         state: "pending_payment",
         tokenType: "rune",
+        protocol: "bitcoin",
+        txid: null,
+        createdAt: 1721384941957,
       },
+      webhookUrl: null,
       type: "rune",
       state: "pending",
     };
 
-    sinon.stub(TokenPayClient.prototype, "createOrder").resolves(mockOrderResponse);
+    sinon.stub(TokenPayClient.prototype, "createRuneOrder").resolves(mockOrderResponse);
     const tokenPay = new TokenPay("someApiKey", "testnet");
-    const response = await tokenPay.createOrder(inputRequest);
+    const response = await tokenPay.createRuneOrder(inputRequest);
     expect(response).to.be.a("object");
     expect(response).to.deep.equal(mockOrderResponse);
-    expect(TokenPayClient.prototype.createOrder.calledOnce).to.be.true;
+    expect(TokenPayClient.prototype.createRuneOrder.calledOnce).to.be.true;
     sinon.restore();
   });
 });
