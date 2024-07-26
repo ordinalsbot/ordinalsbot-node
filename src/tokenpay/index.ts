@@ -7,9 +7,16 @@ import {
   signTransaction,
 } from "sats-connect";
 import {
+  AccountWithdrawRequest,
+  AccountWithdrawResponse,
+  CheckTransactionAsTxidRequest,
+  CheckTransactionAsTxidResponse,
   CreatePaymentPSBTRequest,
   CreatePaymentPSBTResponse,
   CreateRuneOrderRequest,
+  GetAccountWithdrawRequest,
+  GetOrderRequest,
+  GetOrderResponse,
   RuneOrderResponse,
   SatsConnectWrapperResponse,
 } from "../types/tokenpay_types";
@@ -73,7 +80,7 @@ export class TokenPay {
   createRuneOrder(CreateRuneOrderRequest: CreateRuneOrderRequest): Promise<RuneOrderResponse> {
     return this.tokenpayClientInstance.createRuneOrder(CreateRuneOrderRequest);
   }
-
+  
   /**
    * Creates a payment PSBT (Partially Signed Bitcoin Transaction) based on the provided request.
    * If a wallet provider is specified, it signs the PSBT using the appropriate wallet.
@@ -150,4 +157,43 @@ export class TokenPay {
     });
   }
 
+  /**
+   * Checks the transaction status using the provided transaction ID (txid).
+   * 
+   * @param {CheckTransactionAsTxidRequest} checkTransactionAsTxidRequest - The request object containing the transaction ID to be checked.
+   * @returns {Promise<CheckTransactionAsTxidResponse>} A promise that resolves to the response containing the transaction status.
+   */
+  checkTransactionAsTxid(CheckTransactionAsTxidRequest: CheckTransactionAsTxidRequest): Promise<CheckTransactionAsTxidResponse> {
+    return this.tokenpayClientInstance.checkTransactionAsTxid(CheckTransactionAsTxidRequest);
+  }
+  
+  /**
+   * Retrieves the details of an order.
+   * 
+   * @param {GetOrderRequest} getOrderRequest - The request object containing the order ID.
+   * @returns {Promise<GetOrderResponse>} A promise that resolves to the order response.
+   */
+  getOrder(getOrderRequest: GetOrderRequest): Promise<GetOrderResponse> {
+    return this.tokenpayClientInstance.getOrder(getOrderRequest);
+  }
+  
+  /**
+   * Initiates an account withdrawal request.
+   * 
+   * @param {AccountWithdrawRequest} accountWithdrawRequest - The request object containing the withdrawal details.
+   * @returns {Promise<AccountWithdrawResponse>} A promise that resolves to the account withdrawal response.
+   */
+  accountWithdraw(accountWithdrawRequest: AccountWithdrawRequest): Promise<AccountWithdrawResponse> {
+    return this.tokenpayClientInstance.accountWithdraw(accountWithdrawRequest);
+  }
+
+  /**
+   * Retrieves the account withdrawal details.
+   * 
+   * @param {GetAccountWithdrawRequest} getAccountWithdrawRequest - The request object containing the withdrawal ID.
+   * @returns {Promise<AccountWithdrawResponse>} A promise that resolves to the account withdrawal response.
+   */
+  getAccountWithdraw(getAccountWithdrawRequest: GetAccountWithdrawRequest): Promise<AccountWithdrawResponse> {
+    return this.tokenpayClientInstance.getAccountWithdraw(getAccountWithdrawRequest);
+  }
 }

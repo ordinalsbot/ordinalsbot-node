@@ -2,6 +2,10 @@
 - `TokenPay`
   - Added `createRuneOrder` - method to create rune order.
   - Added `createPaymentPSBT` - method for create payment psbt for an order.
+  - Added `checkTransactionAsTxid` - method to checks the transaction status using the provided transaction ID (txid).
+  - Added `getOrder` - method to retrieve the details of an order.
+  - Added `accountWithdraw` - method to initiates an account withdrawal request.
+  - Added `getAccountWithdraw` - method to retrieves the account withdrawal details.
 
 ## [0.2.12]
 - `Inscription`

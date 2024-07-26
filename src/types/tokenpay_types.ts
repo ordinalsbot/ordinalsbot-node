@@ -276,3 +276,146 @@ export interface SatsConnectWrapperResponse {
    */
   txId?: string;
 }
+
+/**
+ * Represents the request payload from a CheckTransactionAsTxid method.
+ */
+export interface CheckTransactionAsTxidRequest {
+  /**
+   * The transaction ID.
+   */
+  txid: string;
+}
+
+/**
+ * Represents the response from a CheckTransactionAsTxidResponse operation.
+ */
+export interface CheckTransactionAsTxidResponse {
+  /**
+   * The transaction ID.
+   */
+  txid: string;
+}
+
+/**
+ * Represents the request payload from a getOrder method.
+ */
+export interface GetOrderRequest {
+  /**
+   * The order ID.
+   */
+  orderId: string;
+}
+
+/**
+ * Represents the response from a CheckTransactionAsTxidResponse operation.
+ */
+export interface GetOrderResponse extends RuneOrderResponse {
+  // ... response from RuneOrderResponse
+}
+
+/**
+ * Interface representing a request to withdraw an account.
+ */
+export interface AccountWithdrawRequest {
+  /**
+   * The protocol used for the withdraw (e.g., "rune").
+   */
+  protocol: string;
+
+  /**
+   * The token to be withdrawn (e.g., 'SHITCOIN').
+   */
+  token: string;
+
+  /**
+   * The amount of the token to be withdrawn.
+   */
+  amount: number;
+
+  /**
+   * The address to which the token will be sent.
+   */
+  address: string;
+}
+
+/**
+ * Represents the response from a AccountWithDraw Response operation.
+ */
+export interface AccountWithdrawResponse {
+  /**
+   * The unique identifier for the withdraw.
+   */
+  id: string;
+
+  /**
+   * The timestamp when the withdraw was created.
+   */
+  createdAt: number;
+
+  /**
+   * The account ID associated with the withdraw.
+   */
+  accountId: string;
+
+  /**
+   * The protocol used for the withdraw (e.g., "rune").
+   */
+  protocol: string;
+
+  /**
+   * The token involved in the withdraw (e.g., "SHITCOIN").
+   */
+  token: string;
+
+  /**
+   * The amount of the token being transacted.
+   */
+  amount: number;
+
+  /**
+   * The address to which the withdraw is sent.
+   */
+  address: string;
+
+  /**
+   * The current state of the withdraw.
+   */
+  state: string;
+
+  /**
+   * The withdraw ID (if available).
+   */
+  txid: string | null;
+
+  /**
+   * The fee charged by the blockchain network for processing the withdraw (if available).
+   */
+  chainFee: number | null;
+
+  /**
+   * The number of attempts made to process the withdraw.
+   */
+  tries: number;
+
+  /**
+   * The timestamp when the withdraw started processing (in milliseconds since epoch, if available).
+   */
+  processingAt: number | null;
+
+  /**
+   * The fee per byte for the withdraw (if available).
+   */
+  feePerByte: number | null;
+}
+
+
+/**
+ * Represents the request payload from a getAccountWithdraw method.
+ */
+export interface GetAccountWithdrawRequest {
+  /**
+   * The unique identifier for the withdraw .
+   */
+  withdrawalId: string;
+}

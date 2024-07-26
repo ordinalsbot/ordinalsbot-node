@@ -1,9 +1,16 @@
 import axios, { AxiosInstance } from "axios";
 import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "../types";
 import {
+  AccountWithdrawRequest,
+  AccountWithdrawResponse,
+  CheckTransactionAsTxidRequest,
+  CheckTransactionAsTxidResponse,
   CreatePaymentPSBTRequest,
   CreatePaymentPSBTResponse,
   CreateRuneOrderRequest,
+  GetAccountWithdrawRequest,
+  GetOrderRequest,
+  GetOrderResponse,
   RuneOrderResponse,  
 } from "../types/tokenpay_types";
 import { InscriptionError } from "../inscription/error";
@@ -119,5 +126,61 @@ export class TokenPayClient {
     return this.instanceV1.post(`/create-payment-psbt`, {
       ...createPaymentRequest,
     });
+  }
+
+  /**
+   * Checks the transaction status using the provided transaction ID (txid).
+   * 
+   * @param {CheckTransactionAsTxidRequest} checkTransactionAsTxidRequest - The request object containing the transaction ID to be checked.
+   * @returns {Promise<CheckTransactionAsTxidResponse>} A promise that resolves to the response containing the transaction status.
+   */
+  async checkTransactionAsTxid(
+    checkTransactionAsTxidRequest: CheckTransactionAsTxidRequest
+  ): Promise<CheckTransactionAsTxidResponse> {
+    return this.instanceV1.post(`/utils/checktx`, {
+      ...checkTransactionAsTxidRequest,
+    });
+  }
+
+  /**
+   * Retrieves the details of an order.
+   * 
+   * @param {GetOrderRequest} getOrderRequest - The request object containing the order ID.
+   * @returns {Promise<GetOrderResponse>} A promise that resolves to the order response.
+   */
+  async getOrder(
+    getOrderRequest: GetOrderRequest
+  ): Promise<GetOrderResponse> {
+    return this.instanceV1.get(
+      `/order/${getOrderRequest.orderId}`
+    );
+  }
+
+  /**
+   * Initiates an account withdrawal request.
+   * 
+   * @param {AccountWithdrawRequest} accountWithdrawRequest - The request object containing the withdrawal details.
+   * @returns {Promise<AccountWithdrawResponse>} A promise that resolves to the account withdrawal response.
+   */
+  async accountWithdraw(
+    accountWithdrawRequest: AccountWithdrawRequest
+  ): Promise<AccountWithdrawResponse> {
+    return this.instanceV1.post(`/user/account/withdraw`, {
+      ...accountWithdrawRequest,
+    });
+  }
+
+  /**
+   * Retrieves the account withdrawal details.
+   * 
+   * @param {GetAccountWithdrawRequest} getAccountWithdrawRequest - The request object containing the withdrawal ID.
+   * @returns {Promise<AccountWithdrawResponse>} A promise that resolves to the account withdrawal response.
+   */
+  async getAccountWithdraw(
+    getAccountWithdrawRequest: GetAccountWithdrawRequest
+  ): Promise<AccountWithdrawResponse> {
+    return this.instanceV1.get(
+      `/user/account/withdraw/${getAccountWithdrawRequest.withdrawalId}`
+    );
   }
 }
