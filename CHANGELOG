@@ -6,6 +6,7 @@
   - Added `getOrder` - method to retrieve the details of an order.
   - Added `accountWithdraw` - method to initiates an account withdrawal request.
   - Added `getAccountWithdraw` - method to retrieves the account withdrawal details.
+  - Added `getAccountBalance` - method to retrieves the account balance.
 
 ## [0.2.12]
 - `Inscription`
