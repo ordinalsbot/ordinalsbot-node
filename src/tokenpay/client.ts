@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "../types";
 import {
+  AccountBalanceResponse,
   AccountWithdrawRequest,
   AccountWithdrawResponse,
   CheckTransactionAsTxidRequest,
@@ -181,6 +182,17 @@ export class TokenPayClient {
   ): Promise<AccountWithdrawResponse> {
     return this.instanceV1.get(
       `/user/account/withdraw/${getAccountWithdrawRequest.withdrawalId}`
+    );
+  }
+  
+  /**
+   * Retrieves the account balance.
+   * 
+   * @returns {Promise<AccountBalanceResponse>} A promise that resolves to the account balance response.
+   */
+  async getAccountBalance(): Promise<AccountBalanceResponse> {
+    return this.instanceV1.get(
+      `/user/account/balance`
     );
   }
 }

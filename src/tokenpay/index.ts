@@ -7,6 +7,7 @@ import {
   signTransaction,
 } from "sats-connect";
 import {
+  AccountBalanceResponse,
   AccountWithdrawRequest,
   AccountWithdrawResponse,
   CheckTransactionAsTxidRequest,
@@ -195,5 +196,14 @@ export class TokenPay {
    */
   getAccountWithdraw(getAccountWithdrawRequest: GetAccountWithdrawRequest): Promise<AccountWithdrawResponse> {
     return this.tokenpayClientInstance.getAccountWithdraw(getAccountWithdrawRequest);
+  }
+  
+  /**
+   * Retrieves the account balance.
+   * 
+   * @returns {Promise<AccountBalanceResponse>} A promise that resolves to the account balance response.
+   */
+  getAccountBalance(): Promise<AccountBalanceResponse> {
+    return this.tokenpayClientInstance.getAccountBalance();
   }
 }

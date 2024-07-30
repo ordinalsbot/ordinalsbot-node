@@ -24,6 +24,20 @@ export interface CreateRuneOrderRequest {
    * @type {string}
    */
   webhookUrl?: string;
+  
+  /**
+   * The Additional Fee
+   *
+   * @type {number}
+   */
+  additionalFee?: number;
+
+  /**
+   * The description for the order
+   *
+   * @type {string}
+   */
+  description?: string;
 }
 
 /**
@@ -80,6 +94,13 @@ interface Charge {
    * @type {number}
    */
   createdAt: number;
+
+  /**
+   * The additional of the charge.
+   *
+   * @type {number}
+   */
+  additionalFee: number;
 }
 
 /**
@@ -136,6 +157,13 @@ export interface RuneOrderResponse {
    * @type {string}
    */
   state: string;
+
+  /**
+   * The description for the order.
+   *
+   * @type {string | null}
+   */
+  description: string | null;
 }
 
 /**
@@ -418,4 +446,20 @@ export interface GetAccountWithdrawRequest {
    * The unique identifier for the withdraw .
    */
   withdrawalId: string;
+}
+
+/**
+ * Represents a rune token balances.
+ * Each key in the object is a rune token type, and the value is the balance.
+ */
+interface RuneTokenBalance {
+  [key: string]: number;
+}
+
+/**
+ * Represents account balances where each key is a unique account identifier.
+ * The value for each key is a `CoinData` object, which contains the balances of various coins for that account.
+ */
+export interface AccountBalanceResponse {
+  [key: string]: RuneTokenBalance;
 }
