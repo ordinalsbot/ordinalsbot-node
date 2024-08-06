@@ -41,15 +41,21 @@ export class TokenPay {
    * @param key The API key (optional).
    * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
    * @param {ClientOptions} [options] - Options for enabling L402 support.
+   * @param tokenPayApiKey The Token Pay API key (optional).
    */
   constructor(
     key: string = "",
     environment: InscriptionEnv = InscriptionEnvNetwork.mainnet,
-    options?: ClientOptions
+    options?: ClientOptions,
+    tokenPayApiKey: string = "",
   ) {
     if (this.tokenpayClientInstance !== undefined) {
       console.error("tokenpay constructor was called multiple times");
       return;
+    }
+
+    if (!tokenPayApiKey) {
+      throw new Error("tokenpay api key is not defined");
     }
 
     environment =
@@ -70,7 +76,7 @@ export class TokenPay {
         this.network = BitcoinNetworkType.Mainnet;
         break;
     }
-    this.tokenpayClientInstance = new TokenPayClient(key, environment, options);
+    this.tokenpayClientInstance = new TokenPayClient(key, environment, options, tokenPayApiKey);
   }
 
   /**

@@ -35,6 +35,11 @@ export class TokenPayClient {
    * The Axios instance for making API requests.
    */
   private instanceV1: AxiosInstance;
+  
+  /**
+   * The API key used for tokenpay backend api authentication.
+   */
+  private tokenpay_api_key: string;
 
   /**
    * Creates a new TokenPay instance.
@@ -42,8 +47,9 @@ export class TokenPayClient {
    * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
    * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions) {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions, tokenPayApiKey: string = "") {
     this.api_key = key;
+    this.tokenpay_api_key = tokenPayApiKey;
     environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
     this.env = environment;
 
@@ -58,9 +64,9 @@ export class TokenPayClient {
 
       // Add the API key header only if this.api_key has a value
       if (this.api_key) {
-        headers["x-api-key"] = this.api_key;
+        headers["x-api-key"] = this.tokenpay_api_key;
       }
-
+      
       // Choose the base URL based on whether L402 is used or not
       const baseURL = options?.useL402
         ? "https://ordinalsbot.ln.sulu.sh/tokenpay/"
