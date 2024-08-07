@@ -45,7 +45,7 @@ describe("Order", function () {
     };
 
     sinon.stub(TokenPayClient.prototype, "createRuneOrder").resolves(mockOrderResponse);
-    const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+    const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
     const response = await tokenPay.createRuneOrder(inputRequest);
     expect(response).to.be.a("object");
     expect(response).to.deep.equal(mockOrderResponse);
@@ -88,7 +88,7 @@ describe("Order", function () {
     };
 
     sinon.stub(TokenPayClient.prototype, "getOrder").resolves(mockOrderResponse);
-    const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+    const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
     const response = await tokenPay.getOrder(inputRequest);
     expect(response).to.be.a("object");
     expect(response).to.deep.equal(mockOrderResponse);
@@ -114,7 +114,7 @@ describe("Order", function () {
       const inputRequest = {
         orderId: 'invalidOrderId',
       };
-      const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+      const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
       await tokenPay.getOrder(inputRequest);
     } catch (error) {
       // Assuming your error handling converts the 404 error to a 400 error

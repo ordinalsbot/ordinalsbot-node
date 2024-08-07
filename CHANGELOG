@@ -1,3 +1,23 @@
+## [0.2.14]
+- `TokenPay`
+  - Moved `options` parameter to the 4th position in the `Ordinalsbot` constructor.
+  - Added `TOKENPAY_API_KEY` as an optional 3rd parameter in the `Ordinalsbot` constructor to support TokenPay functionality.
+
+  ### Example
+  ```js
+  // Updated constructor usage
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet", TOKENPAY_API_KEY, options);
+
+  // Usage with only the TOKENPAY_API_KEY
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet", TOKENPAY_API_KEY);
+
+  // Usage with only the options parameter
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet", undefined, options);
+
+  // Or without optional parameters
+  const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet");
+  ```
+
 ## [0.2.13]
 - `TokenPay`
   - Added `createRuneOrder` - method to create rune order.

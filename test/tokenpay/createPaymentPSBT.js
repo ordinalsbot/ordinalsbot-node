@@ -35,7 +35,7 @@ describe("Create Payment PSBT", function () {
       .stub(TokenPayClient.prototype, "createPaymentPSBT")
       .resolves(mockResponse);
 
-    const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+    const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
     const response = await tokenPay.createPaymentPSBT(inputRequest);
 
     expect(response).to.be.a("object");
@@ -79,7 +79,7 @@ describe("Create Payment PSBT", function () {
       txId: "someTransactionID",
     });
 
-    const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+    const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
     const response = await tokenPay.createPaymentPSBT(inputRequest);
     
     expect(response.txId).to.be.a("string");

@@ -45,13 +45,17 @@ export class TokenPayClient {
    * Creates a new TokenPay instance.
    * @param {string} [key=''] - The API key for authentication.
    * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
+   * @param tokenPayApiKey The Token Pay API key (optional).
    * @param {ClientOptions} [options] - Options for enabling L402 support.
    */
-  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions, tokenPayApiKey: string = "") {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, tokenPayApiKey?: string, options?: ClientOptions) {
     this.api_key = key;
-    this.tokenpay_api_key = tokenPayApiKey;
     environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
     this.env = environment;
+    if (!tokenPayApiKey || (typeof tokenPayApiKey !== 'string')) {
+      throw new Error("tokenpay api key is not defined");
+    }
+    this.tokenpay_api_key = tokenPayApiKey;
 
     /**
      * Creates a new Axios instance with appropriate headers.

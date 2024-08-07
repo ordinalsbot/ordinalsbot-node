@@ -33,7 +33,7 @@ describe("Account Withdraw", function () {
     };
 
     sinon.stub(TokenPayClient.prototype, "accountWithdraw").resolves(mockWithdraw);
-    const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+    const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
     const response = await tokenPay.accountWithdraw(inputRequest);
     expect(response).to.be.a("object");
     expect(response).to.deep.equal(mockWithdraw);
@@ -55,7 +55,7 @@ describe("Account Withdraw", function () {
     };
 
     sinon.stub(TokenPayClient.prototype, "accountWithdraw").resolves(mockWithdraw);
-    const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+    const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
     const response = await tokenPay.accountWithdraw(inputRequest);
     expect(response).to.be.a("object");
     expect(response).to.deep.equal(mockWithdraw);
@@ -85,7 +85,7 @@ describe("Account Withdraw", function () {
     };
 
     sinon.stub(TokenPayClient.prototype, "getAccountWithdraw").resolves(mockWithdraw);
-    const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+    const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
     const response = await tokenPay.getAccountWithdraw(inputRequest);
     expect(response).to.be.a("object");
     expect(response).to.deep.equal(mockWithdraw);
@@ -111,7 +111,7 @@ describe("Account Withdraw", function () {
       const inputRequest = {
         orderId: 'invalidOrderId',
       };
-      const tokenPay = new TokenPay("someApiKey", "testnet", {}, "someTokenPayApiKey");
+      const tokenPay = new TokenPay("someApiKey", "testnet", "someTokenPayApiKey");
       await tokenPay.getAccountWithdraw(inputRequest);
     } catch (error) {
       // Assuming your error handling converts the 404 error to a 400 error

@@ -61,10 +61,10 @@ export class Ordinalsbot {
    * Creates an instance of Ordinalsbot.
    * @param {string} key - The API key for authentication.
    * @param {InscriptionEnv} [environment='mainnet'] - The environment (e.g., "testnet" , "mainnet", "signet") (optional, defaults to mainnet).
-   * @param {ClientOptions} [options] - Options for enabling L402 support.
-   * @param {string} tokenPayApiKey - The TokenPay API key for tokenpay backend api authentication.
+   * @param {string} tokenPayApiKey - The TokenPay API key for tokenpay backend api authentication (optional).
+   * @param {ClientOptions} [options] - Options for enabling L402 support (optional).
   */
-  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, options?: ClientOptions, tokenPayApiKey: string = "") {
+  constructor(key: string = "", environment: InscriptionEnv = InscriptionEnvNetwork.mainnet, tokenPayApiKey?: string, options?: ClientOptions) {
   
     environment = InscriptionEnvNetwork[environment]??InscriptionEnvNetwork.mainnet;
     /**
@@ -113,7 +113,7 @@ export class Ordinalsbot {
      * initialising the tokenpay instance
      */
     if (this.tokenpayObj === undefined && tokenPayApiKey) {
-      this.tokenpayObj = new TokenPay(key, environment, options, tokenPayApiKey);
+      this.tokenpayObj = new TokenPay(key, environment, tokenPayApiKey, options);
     }
   }
 
