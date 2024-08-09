@@ -33,9 +33,6 @@ import {
 import { ClientOptions, EnvNetworkExplorer, InscriptionEnv, InscriptionEnvNetwork } from "./types";
 import { setupL402Interceptor } from "l402";
 
-const version = require("../package.json")?.version || "local";
-const packageVersion = `npm-inscription-v${version}`;
-
 export class MarketPlaceClient {
   public env: InscriptionEnv;
   private api_key: string;
@@ -58,10 +55,7 @@ export class MarketPlaceClient {
      */
     const createInstance = (): AxiosInstance => {
       const headers: Record<string, string> = {
-        Connection: "Keep-Alive",
-        "Content-Type": "application/json",
-        "Keep-Alive": "timeout=10",
-        "User-Agent": packageVersion,
+        "Content-Type": "application/json"
       };
 
       // Add the API key header only if this.api_key has a value

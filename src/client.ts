@@ -30,8 +30,6 @@ import { RunesEtchOrderRequest, RunesEtchOrderResponse, RunesMintOrderRequest, R
 import { setupL402Interceptor } from "l402";
 
 const qs = require("qs");
-const version = require("../package.json")?.version || "local";
-const packageVersion = `npm-inscription-v${version}`;
 
 /**
  * Represents a client for interacting with the Inscription API.
@@ -62,9 +60,7 @@ export class InscriptionClient {
      */
     const createInstance = (): AxiosInstance => {
       const headers: Record<string, string> = {
-        Connection: "Keep-Alive",
-        "Content-Type": "application/json",
-        "User-Agent": packageVersion,
+        "Content-Type": "application/json"
       };
 
       // Add the API key header only if this.api_key has a value

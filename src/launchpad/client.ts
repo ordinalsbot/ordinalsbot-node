@@ -61,7 +61,6 @@ export class LaunchpadClient {
      */
     const createInstance = (): AxiosInstance => {
       const headers: Record<string, string> = {
-        Connection: "Keep-Alive",
         "Content-Type": "application/json",
       };
 
