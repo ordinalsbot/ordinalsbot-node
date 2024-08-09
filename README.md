@@ -26,8 +26,33 @@ The package needs to be configured with your account's API key which you can get
 ```js
 import { Ordinalsbot } from "ordinalsbot";
 
-// Allowed environments are ('testnet', 'mainnet', 'signet')
-// default environment is 'mainnet'.
+/**
+ * Options for configuring the Ordinalsbot client.
+ * 
+ * @typedef {Object} ClientOptions
+ * @property {boolean} useL402 - Flag to enable or disable L402 usage.
+ * @property {Object} l402Config - Configuration for L402.
+ * @property {Object} l402Config.wallet - Wallet instance for L402.
+ * @property {Object} l402Config.tokenStore - Token store instance for L402.
+ */
+const options: ClientOptions = {
+    useL402: true,
+    l402Config: {
+        wallet: albyWallet,
+        tokenStore: store
+    }
+};
+
+
+/**
+ * Creates a new instance of Ordinalsbot with the provided API key, network type, optional TokenPay API key, and options.
+ *
+ * @param {string} API_KEY - The API key to authenticate requests.
+ * @param {string} network - The network type to be used. Allowed values are 'testnet', 'mainnet', 'signet'. Defaults to 'mainnet'.
+ * @param {string} [TOKENPAY_API_KEY] - Optional API key for TokenPay.
+ * @param {ClientOptions} [options] - Optional configuration options for the client.
+ * @returns {Ordinalsbot} An instance of the Ordinalsbot class.
+ */
 const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet");
 const marketPlace = ordinalsbotObj.MarketPlace();
 const inscription = ordinalsbotObj.Inscription();
@@ -35,6 +60,8 @@ const launchpad = ordinalsbotObj.Launchpad();
 const mempool = ordinalsbotObj.Mempool();
 const satextractor = ordinalsbotObj.Satextractor();
 const satscanner = ordinalsbotObj.Satscanner();
+// To use TokenPay, the `TOKENPAY_API_KEY` must be passed to the Ordinalsbot class
+const tokenPay = ordinalsbotObj.TokenPay();
 ```
 
 ## Usage
@@ -123,8 +150,15 @@ The following example demonstrates how to create a listing for sale. When you in
 ```js
 import { Ordinalsbot } from "ordinalsbot";
 
-// Allowed environments are ('testnet', 'mainnet', 'signet')
-// default environment is 'mainnet'.
+/**
+ * Creates a new instance of Ordinalsbot with the provided API key, network type, optional TokenPay API key, and options.
+ *
+ * @param {string} API_KEY - The API key to authenticate requests.
+ * @param {string} network - The network type to be used. Allowed values are 'testnet', 'mainnet', 'signet'. Defaults to 'mainnet'.
+ * @param {string} [TOKENPAY_API_KEY] - Optional API key for TokenPay.
+ * @param {ClientOptions} [options] - Optional configuration options for the client.
+ * @returns {Ordinalsbot} An instance of the Ordinalsbot class.
+ */
 const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet");
 const marketPlace = ordinalsbotObj.MarketPlace();
 

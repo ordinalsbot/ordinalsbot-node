@@ -43,7 +43,6 @@ export class MempoolClient {
      */
     const createInstance = (): AxiosInstance => {
       const headers: Record<string, string> = {
-        Connection: "Keep-Alive",
         "Content-Type": "application/json",
       };
 
@@ -84,7 +83,7 @@ export class MempoolClient {
       if (options?.useL402 && options.l402Config) {
         setupL402Interceptor(client as any, options.l402Config.wallet, options.l402Config.tokenStore);
       };
-
+      console.log({environment, key});
       return client;
     };
 
