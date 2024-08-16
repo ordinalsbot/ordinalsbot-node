@@ -164,6 +164,25 @@ const runesMintOrder = {
   }
 })();
 
+/**
+ * Create a tokenpay order
+ */
+import { TokenPay } from "../src";
+const tokenpayApiKey = ""; // this can not be blank
+const tokenpay = new TokenPay("", "testnet", tokenpayApiKey);
+
+(async () => {
+  try {
+    const data = await tokenpay.createRuneOrder({
+      amount: 100,
+      token: 'TOKENPAY•TOKEN',
+      description: 'This is a test order',
+    });
+    console.log(data);
+  } catch (error) {
+    console.error(`${error.status} | ${error.message}`);
+  }
+})();
 
 /** Satscanner - API Key is required */
 import { Satscanner } from "../src";

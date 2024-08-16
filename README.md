@@ -27,24 +27,6 @@ The package needs to be configured with your account's API key which you can get
 import { Ordinalsbot } from "ordinalsbot";
 
 /**
- * Options for configuring the Ordinalsbot client.
- * 
- * @typedef {Object} ClientOptions
- * @property {boolean} useL402 - Flag to enable or disable L402 usage.
- * @property {Object} l402Config - Configuration for L402.
- * @property {Object} l402Config.wallet - Wallet instance for L402.
- * @property {Object} l402Config.tokenStore - Token store instance for L402.
- */
-const options: ClientOptions = {
-    useL402: true,
-    l402Config: {
-        wallet: albyWallet,
-        tokenStore: store
-    }
-};
-
-
-/**
  * Creates a new instance of Ordinalsbot with the provided API key, network type, optional TokenPay API key, and options.
  *
  * @param {string} API_KEY - The API key to authenticate requests.
