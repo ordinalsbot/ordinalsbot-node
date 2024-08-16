@@ -35,7 +35,7 @@ import { Ordinalsbot } from "ordinalsbot";
  * @param {ClientOptions} [options] - Optional configuration options for the client.
  * @returns {Ordinalsbot} An instance of the Ordinalsbot class.
  */
-const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet");
+const ordinalsbotObj = new Ordinalsbot(API_KEY, "testnet", TOKENPAY_API_KEY);
 const marketPlace = ordinalsbotObj.MarketPlace();
 const inscription = ordinalsbotObj.Inscription();
 const launchpad = ordinalsbotObj.Launchpad();
