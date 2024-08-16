@@ -1,3 +1,8 @@
+## [0.2.15]
+- `TokenPay`
+  - Updated tokenpay client so tokenpay api key is passed in header.
+  - Added tokenpay sample code in examples
+
 ## [0.2.14]
 - `TokenPay`
   - Moved `options` parameter to the 4th position in the `Ordinalsbot` constructor.

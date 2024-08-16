@@ -66,8 +66,8 @@ export class TokenPayClient {
         "Content-Type": "application/json",
       };
 
-      // Add the API key header only if this.api_key has a value
-      if (this.api_key) {
+      // Add the API key header only if this.tokenpay_api_key has a value
+      if (this.tokenpay_api_key) {
         headers["x-api-key"] = this.tokenpay_api_key;
       }
       
