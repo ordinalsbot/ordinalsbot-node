@@ -119,10 +119,10 @@ export interface InscriptionOrderRequest {
   fee?: number;
 
   /**
-   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-   * (default=false)
+   * Inscribe file with minimum postage (padding).
+   * (default=546)
    */
-  lowPostage?: boolean;
+  postage?: number;
 
   /**
    * A single Bitcoin address to receive the inscriptions for the whole order
@@ -204,10 +204,10 @@ export interface DirectInscriptionOrderRequest {
   fee?: number;
 
   /**
-   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-   * (default=false)
+   * Inscribe file with minimum postage (padding).
+   * (default=546)
    */
-  lowPostage?: boolean;
+  postage?: number;
 
   /**
    * A single Bitcoin address to receive the inscriptions for the whole order
@@ -241,7 +241,7 @@ export interface DirectInscriptionOrderRequest {
   /**
    * We will grind an inscription id prefix if this option is specified. All inscriptions in the order will have this prefix.
    */
-  inscriptionIdPrefix?:  string;
+  inscriptionIdPrefix?: string;
 
   /** URL to receive a POST request when each file in the order is inscribed */
   webhookUrl?: string;
@@ -383,11 +383,11 @@ export interface InscriptionPriceRequest {
   */
   rareSats: string;
 
-  /** Esitmate fees for the files with minimum postage
-   * (padding) 546 sats instead of the standard 10,000 sats
-   * (default = false)
+  /**
+   * Inscribe file with minimum postage (padding).
+   * (default=546)
    */
-  lowPostage?: boolean;
+  postage?: number;
 
   /**
    * Type of inscription order that is being requested.
@@ -421,7 +421,7 @@ export interface InscriptionPriceResponse {
   serviceFee: number; // total service fee taken by inscription.com
   rareSatsFee: number;
   additionalFee: number; //the additinal fee per file
-  postage: number; //postage fee according to provided lowPostage. i.e lowPostage is 546 and normalPostage is 10,000
+  postage: number; // postage min 330 max 10,000
   amount: number; // amount to be paid by the user
   totalFee: number; // total amount to be paid by the user
 }
@@ -535,7 +535,7 @@ export interface GetAllocationResponse {
  * collection phase object
  */
 export type CollectionPhase = {
-  
+
   /** phase id which is required for the update the collection phases */
   id?: string,
 
@@ -632,7 +632,6 @@ export interface InscriptionCollectionOrderResponse {
   fileCount: number;
   orderType: string;
   postage: number;
-  lowPostage: number;
   chainFee: number; // in satoshis
   amount: number; // in satoshis
   id: string;
@@ -663,10 +662,10 @@ export interface InscriptionTextOrderRequest {
   fee?: number;
 
   /**
-   * Inscribe file with minimum postage (padding) 546 sats instead of the standard 10,000 sats.
-   * (default=false)
+   * Inscribe file with minimum postage (padding).
+   * (default=546)
    */
-  lowPostage?: boolean;
+  postage?: number;
 
   /**
    * A single Bitcoin address to receive the inscriptions for the whole order
@@ -820,13 +819,13 @@ export interface CreateSpecialSatsRequest {
 
   /** user's payment public key*/
   paymentPublicKey: string;
-  
+
   /** user's ordinal address */
   ordinalAddress: string;
 
   /** user's ordinal public key*/
   ordinalPublicKey: string;
-  
+
   /**feeRate */
   feeRate: number;
 
@@ -888,7 +887,7 @@ export interface CreateParentChildPsbtRequest {
    * The ordinal address key of the user.
    */
   ordinalsAddress: string;
-  
+
   /**
    * The ordinal address public key of the user.
    */
