@@ -20,7 +20,7 @@ describe("Inscription with L402 Handling", () => {
       fee: 0,
       count: 0,
       rareSats: "",
-      lowPostage: false,
+      postage: 10000,
       direct: false,
       additionalFee: 0,
       baseFee: 0

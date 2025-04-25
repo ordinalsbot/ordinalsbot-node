@@ -45,7 +45,7 @@ describe("Inscription SDK Tests", function () {
           dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
         },
       ],
-      lowPostage: true,
+      postage: 330,
       receiveAddress: "",
       fee: 10,
       timeout: 1440,
@@ -65,7 +65,7 @@ describe("Inscription SDK Tests", function () {
           delegateId: '552448ac8b668f2b8610a4c9aa1d82dbcc3cb1b28139ad99309563aad4f1b0c1i0'
         },
       ],
-      lowPostage: true,
+      postage: 330,
       receiveAddress: "",
       fee: 10,
       timeout: 1440,
@@ -88,7 +88,7 @@ describe("Inscription SDK Tests", function () {
           dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
         },
       ],
-      lowPostage: true,
+      postage: 330,
       receiveAddress: "",
       fee: 10,
       timeout: 1440,
@@ -114,7 +114,7 @@ describe("Inscription SDK Tests", function () {
           metadataSize: 35
         },
       ],
-      lowPostage: true,
+      postage: 330,
       receiveAddress: "",
       fee: 10,
       timeout: 1440,
@@ -138,7 +138,7 @@ describe("Inscription SDK Tests", function () {
           metaprotocol: "some-protocol"
         },
       ],
-      lowPostage: true,
+      postage: 330,
       receiveAddress: "",
       fee: 10,
       timeout: 1440,
@@ -263,7 +263,7 @@ describe("create text inscription order", function () {
       texts: ["text inscription 1", "text inscription 2"],
       fee: 10,
       receiveAddress: sampleTestNetAddress,
-      lowPostage: false,
+      postage: 10000,
     });
 
     assert.isNotNull(order.data.id);
@@ -333,7 +333,7 @@ describe("create text inscription order", function () {
           dataURL: "data:plain/text;base64,dGVzdCBvcmRlcg==",
         },
       ],
-      lowPostage: true,
+      postage: 330,
       receiveAddress: "",
       fee: 10,
       timeout: 1440,
