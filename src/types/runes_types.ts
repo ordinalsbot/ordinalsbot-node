@@ -55,7 +55,6 @@ export interface RunesEtchOrderResponse {
   baseFee: number;
   rareSatsFee: number;
   postage: number;
-  lowPostage: boolean
   id: string;
   orderType: OrderType;
   state: InscriptionOrderState;

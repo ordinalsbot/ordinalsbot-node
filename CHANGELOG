@@ -1,3 +1,6 @@
+## [0.2.16]
+- Remove `lowPostage` param on order/price methods in favor of a `postage` accepting min value of 330 and max value of 10,000 sats
+
 ## [0.2.15]
 - `TokenPay`
   - Updated tokenpay client so tokenpay api key is passed in header.
